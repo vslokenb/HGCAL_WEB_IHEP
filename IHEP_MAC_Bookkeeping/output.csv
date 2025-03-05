@@ -1,0 +1,111 @@
+Username,UserGroup,DateAndTime,Module Number,Sensor ID,Hexboard Number,Baseplate Number,Remeasurement Number,Checklist Name,Step,Flag,Comment
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP before assembly,Visual inspection for damage and thickness for sensor,yellow,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP before assembly,Thickness and inspection for baseplate,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP before assembly,Thickness and inspection for hexboard,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP before assembly,"Cleaning of Sensor, baseplate and Hexa- board",green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Assembly1,Gluing of Silicon Sensor on base plate,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP after assembly1,Inspection of glued Base plate + Sensor,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Assembly2,Gluing of Hexa-board on Protomodule,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP after assembly2,Inspection of Module,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Electrical before backside bonding,delay scan,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Electrical before backside bonding,pedestal run,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Backside bonding,Backside Wire Bonding of the module,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP after backside bonding,Visual Inspection of backside wirebonds,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Backside encapsolation,Encapsulation of backside and curing,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP after backside encapsolation,Visual Inspection of backside encapsulation,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Pull test,Pull Testing for frontside bonding,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Frontside bonding,Wire Bonding frontside of the module,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP after frontside bonding,Visual Inspection of Bonded module before encapsulation,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Module encapsolation,Encapsulation of the module and curing,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,OGP after module encapsolation,Visual Inspection of encapsulated module,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Final electrical test,Electrical Test of the final module,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Final electrical test,IV Curves,green,
+zhanghq@ihep.ac.cn,All,2025-03-03 19:40:31,1,1,1,1,0,Final electrical test,Single Module Test Stand,green,
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP before assembly,Visual inspection for damage and thickness for sensor,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP before assembly,Thickness and inspection for baseplate,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP before assembly,Thickness and inspection for hexboard,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP before assembly,"Cleaning of Sensor, baseplate and Hexa- board",red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Assembly1,Gluing of Silicon Sensor on base plate,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP after assembly1,Inspection of glued Base plate + Sensor,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Assembly2,Gluing of Hexa-board on Protomodule,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP after assembly2,Inspection of Module,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Electrical before backside bonding,delay scan,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Electrical before backside bonding,pedestal run,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Backside bonding,Backside Wire Bonding of the module,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP after backside bonding,Visual Inspection of backside wirebonds,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Backside encapsolation,Encapsulation of backside and curing,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP after backside encapsolation,Visual Inspection of backside encapsulation,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Pull test,Pull Testing for frontside bonding,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Frontside bonding,Wire Bonding frontside of the module,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP after frontside bonding,Visual Inspection of Bonded module before encapsulation,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Module encapsolation,Encapsulation of the module and curing,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,OGP after module encapsolation,Visual Inspection of encapsulated module,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Final electrical test,Electrical Test of the final module,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Final electrical test,IV Curves,red,1.0
+laipz@ihep.ac.cn,Electrical,2025-02-21 17:43:05,Test123,Test123,Test123,Test123,0,Final electrical test,Single Module Test Stand,red,1.0
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP before assembly,Visual inspection for damage and thickness for sensor,green,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP before assembly,Thickness and inspection for baseplate,green,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP before assembly,Thickness and inspection for hexboard,green,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP before assembly,"Cleaning of Sensor, baseplate and Hexa- board",green,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Assembly1,Gluing of Silicon Sensor on base plate,green,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP after assembly1,Inspection of glued Base plate + Sensor,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Assembly2,Gluing of Hexa-board on Protomodule,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP after assembly2,Inspection of Module,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Electrical before backside bonding,delay scan,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Electrical before backside bonding,pedestal run,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Backside bonding,Backside Wire Bonding of the module,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP after backside bonding,Visual Inspection of backside wirebonds,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Backside encapsolation,Encapsulation of backside and curing,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP after backside encapsolation,Visual Inspection of backside encapsulation,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Pull test,Pull Testing for frontside bonding,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Frontside bonding,Wire Bonding frontside of the module,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP after frontside bonding,Visual Inspection of Bonded module before encapsulation,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Module encapsolation,Encapsulation of the module and curing,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,OGP after module encapsolation,Visual Inspection of encapsulated module,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Final electrical test,Electrical Test of the final module,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Final electrical test,IV Curves,red,
+houbr@ihep.ac.cn,All,2025-03-03 19:42:28,1,1,1,1,1,Final electrical test,Single Module Test Stand,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP before assembly,Visual inspection for damage and thickness for sensor,green,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP before assembly,Thickness and inspection for baseplate,green,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP before assembly,Thickness and inspection for hexboard,green,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP before assembly,"Cleaning of Sensor, baseplate and Hexa- board",green,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Assembly1,Gluing of Silicon Sensor on base plate,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP after assembly1,Inspection of glued Base plate + Sensor,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Assembly2,Gluing of Hexa-board on Protomodule,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP after assembly2,Inspection of Module,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Electrical before backside bonding,delay scan,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Electrical before backside bonding,pedestal run,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Backside bonding,Backside Wire Bonding of the module,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP after backside bonding,Visual Inspection of backside wirebonds,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Backside encapsolation,Encapsulation of backside and curing,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP after backside encapsolation,Visual Inspection of backside encapsulation,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Pull test,Pull Testing for frontside bonding,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Frontside bonding,Wire Bonding frontside of the module,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP after frontside bonding,Visual Inspection of Bonded module before encapsulation,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Module encapsolation,Encapsulation of the module and curing,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,OGP after module encapsolation,Visual Inspection of encapsulated module,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Final electrical test,Electrical Test of the final module,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Final electrical test,IV Curves,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:25:44,0304,0304,0304,0304,0304,Final electrical test,Single Module Test Stand,red,
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP before assembly,Visual inspection for damage and thickness for sensor,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP before assembly,Thickness and inspection for baseplate,yellow,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP before assembly,Thickness and inspection for hexboard,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP before assembly,"Cleaning of Sensor, baseplate and Hexa- board",red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Assembly1,Gluing of Silicon Sensor on base plate,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP after assembly1,Inspection of glued Base plate + Sensor,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Assembly2,Gluing of Hexa-board on Protomodule,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP after assembly2,Inspection of Module,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Electrical before backside bonding,delay scan,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Electrical before backside bonding,pedestal run,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Backside bonding,Backside Wire Bonding of the module,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP after backside bonding,Visual Inspection of backside wirebonds,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Backside encapsolation,Encapsulation of backside and curing,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP after backside encapsolation,Visual Inspection of backside encapsulation,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Pull test,Pull Testing for frontside bonding,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Frontside bonding,Wire Bonding frontside of the module,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP after frontside bonding,Visual Inspection of Bonded module before encapsulation,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Module encapsolation,Encapsulation of the module and curing,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,OGP after module encapsolation,Visual Inspection of encapsulated module,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Final electrical test,Electrical Test of the final module,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Final electrical test,IV Curves,red,nan
+houbr@ihep.ac.cn,All,2025-03-04 16:40:46,0304,0304,0304,0304,304,Final electrical test,Single Module Test Stand,red,nan
