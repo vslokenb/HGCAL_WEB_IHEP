@@ -1550,7 +1550,7 @@ def main():
 
     if show_image:
         st.title("Login")
-        st.image("CMS_detector.jpeg", use_column_width=True)
+        st.image("CMS_detector.jpeg", use_container_width=True)
         st.write("Welcome to the HGCal lab")
 
         if not login_button and not logged_in:
