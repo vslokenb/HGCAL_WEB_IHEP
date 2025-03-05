@@ -16,7 +16,7 @@ jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 kiwisolver==1.4.7
 MarkupSafe==3.0.2
-matplotlib==3.10.1
+matplotlib==3.9.4
 narwhals==1.29.0
 numpy==2.2.3
 packaging==24.2
