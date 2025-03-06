@@ -1409,9 +1409,18 @@ def plot_selected_module():
 
             return image_tag
 ###################################################################################################################################################################
-def plot_modules():
+
+def plot_modules(start_date=None, end_date=None):
     # Read the IHEP_MAC_Bookkeeping/output.csv file
     df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv")
+
+    # Convert 'DateAndTime' to datetime
+    df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
+
+    if start_date:
+        df = df[df["DateAndTime"] >= start_date]
+    if end_date:
+        df = df[df["DateAndTime"] <= end_date]
 
     # Filter for only the rows where the flag is 'green'
     finished_modules = df[df['Flag'] == 'green'].groupby(['Step', 'Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number']).size().reset_index(name='count')
@@ -1434,6 +1443,8 @@ def plot_modules():
 
     # Adjust font size of x-axis labels
     plt.xticks(rotation=22, ha='right', fontsize=8)
+    # Adjust padding to prevent overlap
+    plt.subplots_adjust(bottom=0.3) 
 
     # Convert plot to HTML image tag
     buffer = BytesIO()
@@ -1543,7 +1554,20 @@ def main():
             if option == "Unfinished Modules":
                 show_unfinished_modules(username)
             if option== "Module Status Summary":
-                plot = plot_modules()
+                # Date selection for filtering
+                df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv")
+                df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
+                min_date = df["DateAndTime"].min()
+                max_date = df["DateAndTime"].max()
+
+                start_date = st.date_input("Select Start Date", min_value=min_date, max_value=max_date, value=min_date)
+                end_date = st.date_input("Select End Date", min_value=min_date, max_value=max_date, value=max_date)
+
+                # Convert selected dates to datetime
+                start_date = pd.to_datetime(start_date)
+                end_date = pd.to_datetime(end_date)
+
+                plot = plot_modules(start_date, end_date)
                 st.markdown(plot, unsafe_allow_html=True)
         else:
             st.error("Please enter the correct username and password")
