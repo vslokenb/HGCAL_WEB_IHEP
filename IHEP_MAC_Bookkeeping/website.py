@@ -1444,7 +1444,7 @@ def plot_modules(start_date=None, end_date=None):
     # Adjust font size of x-axis labels
     plt.xticks(rotation=22, ha='right', fontsize=8)
     # Adjust padding to prevent overlap
-
+    plt.subplots_adjust(bottom=0.3) 
 
     # Convert plot to HTML image tag
     buffer = BytesIO()
