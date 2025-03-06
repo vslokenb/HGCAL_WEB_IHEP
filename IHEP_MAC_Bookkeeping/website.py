@@ -153,7 +153,7 @@ def initialize_session_state(module_number, sensor_id, hexboard_number, baseplat
 #################################################################################################
 
 def Module_Assembly_Check_List(username):
-    st.title("Welcome to the HGCal module assembly")
+    st.title("Welcome to the HGCal module assembly checklist")
     module_number = st.text_input("Enter Module Number")
     sensor_id = st.text_input("Enter Sensor ID")
     hexboard_number = st.text_input("Enter Hexboard Number")
@@ -162,92 +162,135 @@ def Module_Assembly_Check_List(username):
     comment = st.text_input("Entre Comment(Can be empty)")
     usergroup=read_user_group(username)
         # Checkbox to submit the details
-    if st.checkbox("Submit"):
+    if st.checkbox("Display status"):
         if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
-            option1=st.selectbox("Select an option", ("Overview","OGP before assembly","Assembly1","OGP after assembly1","Assembly2","OGP after assembly2","Electrical before backside bonding","Backside bonding","OGP after backside bonding","Backside encapsolation","OGP after backside encapsolation","Pull test","Frontside bonding","OGP after frontside bonding","Module encapsolation","OGP after module encapsolation","Final electrical test"),key="option1")
+            option1=st.selectbox("Select a step", ("Overview","OGP before assembly","Assembly1","OGP after assembly1","Assembly2","OGP after assembly2","Electrical before backside bonding","Backside bonding","OGP after backside bonding","Backside encapsolation","OGP after backside encapsolation","Pull test","Frontside bonding","OGP after frontside bonding","Module encapsolation","OGP after module encapsolation","Final electrical test"),key="option1")
             if option1=='Overview':
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
                 ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
                 Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
                 Ogp_Before_Assembly_Icon = '\u2705' if Ogp_Before_Assembly_Flag == 'green' else '\u274C'
-                st.header(f"OGP Before Assembly: {Ogp_Before_Assembly_Icon}")
+                #st.header(f"OGP Before Assembly: {Ogp_Before_Assembly_Icon}")
 
 
                 assembly1_steps_completed = all(flag == 'green' for flag in assembly1_flags.values())
                 Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
                 Assembly1_Flag_Icon = '\u2705' if Assembly1_Checklist_Flag == 'green' else '\u274C'
-                st.header(f"Assembly1: {Assembly1_Flag_Icon}")
+                #st.header(f"Assembly1: {Assembly1_Flag_Icon}")
 
                 ogp_after_assembly1_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly1_flags.values()))
                 Ogp_After_Assembly1_Checklist_Flag = 'green' if ogp_after_assembly1_steps_completed else 'red'
                 Ogp_After_Assembly1_Checklist_Flag_Icon = '\u2705' if Ogp_After_Assembly1_Checklist_Flag == 'green' else '\u274C'
-                st.header(f"Ogp After Assembly1: {Ogp_After_Assembly1_Checklist_Flag_Icon}")
+                #st.header(f"Ogp After Assembly1: {Ogp_After_Assembly1_Checklist_Flag_Icon}")
 
                 assembly2_steps_completed = (all(flag == 'green' for flag in assembly2_flags.values()))
                 Assembly2_Checklist_Flag = 'green' if assembly2_steps_completed else 'red'
                 Assembly2_Checklist_Flag_Icon = '\u2705' if Assembly2_Checklist_Flag == 'green' else '\u274C'
-                st.header(f"Assembly2: {Assembly2_Checklist_Flag_Icon}")
+                #st.header(f"Assembly2: {Assembly2_Checklist_Flag_Icon}")
 
                 ogp_after_assembly2_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
                 Ogp_After_Assembly2_Flags = 'green' if ogp_after_assembly2_steps_completed else 'red'
                 Ogp_After_Assembly2_Flags_Icon = '\u2705' if Ogp_After_Assembly2_Flags == 'green' else '\u274C'
-                st.header(f"Ogp After Assembly2: {Ogp_After_Assembly2_Flags_Icon}")
+                #st.header(f"Ogp After Assembly2: {Ogp_After_Assembly2_Flags_Icon}")
 
                 electrical_before_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
                 Electrical_Before_Backside_Bonding_Flags = 'green' if electrical_before_backside_bonding_steps_completed else 'red'
                 Electrical_Before_Backside_Bonding_Flags_Icon = '\u2705' if Electrical_Before_Backside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Electrical test Before Backside Bonding: {Electrical_Before_Backside_Bonding_Flags_Icon}")
+                #st.header(f"Electrical test Before Backside Bonding: {Electrical_Before_Backside_Bonding_Flags_Icon}")
 
                 Backside_bonding_steps_completed = (all(flag == 'green' for flag in Backside_bonding_flags.values()))
                 Backside_Bonding_Flags = 'green' if Backside_bonding_steps_completed else 'red'
                 Backside_Bonding_Flags_Icon = '\u2705' if Backside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Backside_Bonding: {Backside_Bonding_Flags_Icon}")
+                #st.header(f"Backside_Bonding: {Backside_Bonding_Flags_Icon}")
 
                 ogp_after_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values()))
                 Ogp_After_Backside_Bonding_Flags = 'green' if ogp_after_backside_bonding_steps_completed else 'red'
                 Ogp_After_Backside_Bonding_Flags_Icon = '\u2705' if Ogp_After_Backside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Ogp After Backside Bonding: {Ogp_After_Backside_Bonding_Flags_Icon}")
+                #st.header(f"Ogp After Backside Bonding: {Ogp_After_Backside_Bonding_Flags_Icon}")
 
                 Backside_encapsolation_steps_completed = (all(flag == 'green' for flag in Backside_encapsolation_flags.values()))
                 Backside_Encapsolation_Flags = 'green' if Backside_encapsolation_steps_completed else 'red'
                 Backside_Encapsolation_Flags_Icon = '\u2705' if Backside_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"Backside Encapsolation: {Backside_Encapsolation_Flags_Icon}")
+                
+                #st.header(f"Backside Encapsolation: {Backside_Encapsolation_Flags_Icon}")
 
                 ogp_after_backside_encapsolation_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_encapsolation_flags.values()))
                 Ogp_After_Backside_Encapsolation_Flags = 'green' if ogp_after_backside_encapsolation_steps_completed else 'red'
                 Ogp_After_Backside_Encapsolation_Flags_Icon = '\u2705' if Ogp_After_Backside_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"Ogp after backside encapsolation: {Ogp_After_Backside_Encapsolation_Flags_Icon}")
+                #st.header(f"Ogp after backside encapsolation: {Ogp_After_Backside_Encapsolation_Flags_Icon}")
 
                 Pull_test_steps_completed = (all(flag == 'green' for flag in Pull_test_flags.values()))
                 Pull_Test_Flags = 'green' if Pull_test_steps_completed else 'red'
                 Pull_Test_Flags_Icon = '\u2705' if Pull_Test_Flags == 'green' else '\u274C'
-                st.header(f"Pull Test: {Pull_Test_Flags_Icon}")
+                #st.header(f"Pull Test: {Pull_Test_Flags_Icon}")
 
                 Frontside_bonding_steps_completed = (all(flag == 'green' for flag in Frontside_bonding_flags.values()))
                 Frontside_Bonding_Flags = 'green' if Frontside_bonding_steps_completed else 'red'
                 Frontside_Bonding_Flags_Icon = '\u2705' if Frontside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Frontside Bonding: {Frontside_Bonding_Flags_Icon}")
+                #st.header(f"Frontside Bonding: {Frontside_Bonding_Flags_Icon}")
 
                 OGP_after_frontside_bounding_steps_completed = (all(flag == 'green' for flag in OGP_after_frontside_bounding_flags.values()))
                 OGP_After_Frontside_Bounding_Flags = 'green' if OGP_after_frontside_bounding_steps_completed else 'red'
                 OGP_After_Frontside_Bounding_Flags_Icon = '\u2705' if OGP_After_Frontside_Bounding_Flags == 'green' else '\u274C'
-                st.header(f"OGP After Frontside Bounding: {OGP_After_Frontside_Bounding_Flags_Icon}")
+                #st.header(f"OGP After Frontside Bounding: {OGP_After_Frontside_Bounding_Flags_Icon}")
 
                 Module_encapsolation_steps_completed = (all(flag == 'green' for flag in Module_encapsolation_flags.values()))
                 Module_Encapsolation_Flags = 'green' if Module_encapsolation_steps_completed else 'red'
                 Module_Encapsolation_Flags_Icon = '\u2705' if Module_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"Module Encapsolation: {Module_Encapsolation_Flags_Icon}")
+                #st.header(f"Module Encapsolation: {Module_Encapsolation_Flags_Icon}")
 
                 OGP_after_module_encapsolation_steps_completed = (all(flag == 'green' for flag in OGP_after_module_encapsolation_flags.values()))
                 OGP_After_Module_Encapsolation_Flags = 'green' if OGP_after_module_encapsolation_steps_completed else 'red'
                 OGP_After_Module_Encapsolation_Flags_Icon = '\u2705' if OGP_After_Module_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"OGP After Module Encapsolation: {OGP_After_Module_Encapsolation_Flags_Icon}")
+                #st.header(f"OGP After Module Encapsolation: {OGP_After_Module_Encapsolation_Flags_Icon}")
 
                 Final_electrical_test_steps_completed = (all(flag == 'green' for flag in Final_electrical_test_flags.values()))
                 Final_Electrical_Test_Flags = 'green' if Final_electrical_test_steps_completed else 'red'
                 Final_Electrical_Test_Flags_Icon = '\u2705' if Final_Electrical_Test_Flags == 'green' else '\u274C'
-                st.header(f"Final Electrical Test: {Final_Electrical_Test_Flags_Icon}")
+                #st.header(f"Final Electrical Test: {Final_Electrical_Test_Flags_Icon}")
 
+                # Create a DataFrame for a cleaner display
+                checklist_df = pd.DataFrame({
+                    "Step": [
+                        "OGP Before Assembly",
+                        "Assembly1",
+                        "OGP After Assembly1",
+                        "Assembly2",
+                        "OGP After Assembly2",
+                        "Electrical Test Before Backside Bonding",
+                        "Backside Bonding",
+                        "OGP After Backside Bonding",
+                        "Backside Encapsulation",
+                        "OGP After Backside Encapsulation",
+                        "Pull Test",
+                        "Frontside Bonding",
+                        "OGP After Frontside Bonding",
+                        "Module Encapsulation",
+                        "OGP After Module Encapsulation",
+                        "Final Electrical Test",
+                    ],
+                    "Status": [
+                        Ogp_Before_Assembly_Icon,
+                        Assembly1_Flag_Icon,
+                        Ogp_After_Assembly1_Checklist_Flag_Icon,
+                        Assembly2_Checklist_Flag_Icon,
+                        Ogp_After_Assembly2_Flags_Icon,
+                        Electrical_Before_Backside_Bonding_Flags_Icon,
+                        Backside_Bonding_Flags_Icon,
+                        Ogp_After_Backside_Bonding_Flags_Icon,
+                        Backside_Encapsolation_Flags_Icon,
+                        Ogp_After_Backside_Encapsolation_Flags_Icon,
+                        Pull_Test_Flags_Icon,
+                        Frontside_Bonding_Flags_Icon,
+                        OGP_After_Frontside_Bounding_Flags_Icon,
+                        Module_Encapsolation_Flags_Icon,
+                        OGP_After_Module_Encapsolation_Flags_Icon,
+                        Final_Electrical_Test_Flags_Icon
+                    ]
+                })
+
+                # Display as a table
+                st.table(checklist_df)
 
             if option1=="OGP before assembly":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
@@ -1529,118 +1572,84 @@ def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, 
         st.success(f"Flags saved to {filename}")
 ################################################################################################################################################
 def home_page():
-    st.title("Home Page")
+    st.title("CMS HGCal IHEP MAC: Module Assembly and Status Bookkeeping System")
+    st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
     # Add content for the home page
 ##############################################################################################################################################
 def main():
-    st.set_page_config(layout="wide", page_title="Your Title", page_icon=":smiley:")
+    st.set_page_config(layout="wide", page_title="HGCAL IHEP MAC", page_icon="IHEP_MAC_Bookkeeping/hex_ver_1.png")
+
+
     show_image = True
     logged_in = False
 
-    username = st.sidebar.text_input("Username", key="username_input")  # Unique key for username input
-    password_input = st.sidebar.text_input("Password", type="password", key="password_input")  # Unique key for password input
-    login_button = st.sidebar.checkbox("Login", key="login_button")  # Unique key for login button
-    option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
+    #username = None  # Initialize the username variable
+    #password_input = None  # Initialize the password variable
 
-    if login_button:
-        if authenticate_user(username, password_input):
-            logged_in = True
-            show_image = False
 
-            if option == "Home":
-                home_page()
-            if option == "Module Assembly Check List":
-                Module_Assembly_Check_List(username)
-            if option == "Unfinished Modules":
-                show_unfinished_modules(username)
-            if option== "Module Status Summary":
-                # Date selection for filtering
-                df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv")
-                df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
-                min_date = df["DateAndTime"].min()
-                max_date = df["DateAndTime"].max()
+    # Session state to track login status
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+    if "username" not in st.session_state:
+        st.session_state.username = None  # Store username persistently
 
-                start_date = st.date_input("Select Start Date", min_value=min_date, max_value=max_date, value=min_date)
-                end_date = st.date_input("Select End Date", min_value=min_date, max_value=max_date, value=max_date)
 
-                # Convert selected dates to datetime
-                start_date = pd.to_datetime(start_date)
-                end_date = pd.to_datetime(end_date)
+    if not st.session_state.authenticated:
+        username = st.sidebar.text_input("Username", key="username_input")  # Unique key for username input
+        password_input = st.sidebar.text_input("Password", type="password", key="password_input")  # Unique key for password input
+        login_button = st.sidebar.button("Login", key="login_button")  # Unique key for login button
 
-                plot = plot_modules(start_date, end_date)
-                st.markdown(plot, unsafe_allow_html=True)
-        else:
-            st.error("Please enter the correct username and password")
+        if login_button:
+            if authenticate_user(username, password_input):
+                st.session_state.authenticated = True  # Mark as logged in
+                st.session_state.username = username  # Store username
+                st.sidebar.success("Login successful!")
+                logged_in = True
+                show_image = False
+            else:
+                st.sidebar.error("Invalid username or password")
+
+    if st.session_state.authenticated:
+
+        show_image = False
+        username = st.session_state.username  # Retrieve username
+        option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
+        
+        if option == "Home":
+            home_page()
+        if option == "Module Assembly Check List":
+            Module_Assembly_Check_List(username)
+        if option == "Unfinished Modules":
+            show_unfinished_modules(username)
+        if option== "Module Status Summary":
+            # Date selection for filtering
+            df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv")
+            df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
+            min_date = df["DateAndTime"].min()
+            max_date = df["DateAndTime"].max()
+            start_date = st.date_input("Select Start Date", min_value=min_date, max_value=max_date, value=min_date)
+            end_date = st.date_input("Select End Date", min_value=min_date, max_value=max_date, value=max_date)
+            # Convert selected dates to datetime
+            start_date = pd.to_datetime(start_date)
+            end_date = pd.to_datetime(end_date)
+            plot = plot_modules(start_date, end_date)
+            st.markdown(plot, unsafe_allow_html=True)
+        
+        st.sidebar.button("Logout", on_click=lambda: st.session_state.update(authenticated=False))  # Logout Button
 
     if show_image:
-        st.title("Login")
+        st.title("Welcome to the HGCal IHEP MAC Bookkeeping Site")
+
         st.image("IHEP_MAC_Bookkeeping/CMS_detector.jpeg", use_container_width=True)
-        st.write("Welcome to the HGCal lab")
+        #st.write("Welcome to the CMS HGCal IHEP MAC Bookkeeping System")
+        col1, col2, col3 = st.columns([3, 2, 1])  # Equal width for both columns
+        with col2:
+            st.image("IHEP_MAC_Bookkeeping/ihep.png",  width=300)
+        with col3:
+            st.image("IHEP_MAC_Bookkeeping/CMS.png",  width=150)
 
         if not login_button and not logged_in:
             st.error("Please log in")
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
