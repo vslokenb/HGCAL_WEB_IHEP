@@ -97,13 +97,13 @@ click_counts_OGP_after_module_encapsolation={step: 0 for step in OGP_after_modul
 click_counts_Final_electrical_test={step: 0 for step in Final_electrical_test_flags}
 ###############################################################################################
 def read_user_group(username):
-    user_info = pd.read_csv("user_info.csv")
+    user_info = pd.read_csv("IHEP_MAC_Bookkeeping/user_info.csv")
     user_group = user_info.loc[user_info['username'] == username, 'group'].values
     return user_group[0] if len(user_group) > 0 else None
 ##################################################################################################
 
 def authenticate_user(username, password):
-    user_info = pd.read_csv("user_info.csv")   
+    user_info = pd.read_csv("IHEP_MAC_Bookkeeping/user_info.csv")   
     user_info['password'] = user_info['password'].astype(str) 
     print(user_info['username'])
     print(user_info['password'])
@@ -114,8 +114,8 @@ def authenticate_user(username, password):
 #################################################################################################
 
 def initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number,remeasurement_number):
-    if os.path.exists("output.csv"):
-        existing_flags_df = pd.read_csv("output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
+    if os.path.exists("IHEP_MAC_Bookkeeping/output.csv"):
+        existing_flags_df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
 
         existing_flags = existing_flags_df[
             (existing_flags_df['Module Number'] == module_number) &
@@ -345,7 +345,7 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 #####################################################################################################################################
 def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -398,7 +398,7 @@ def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ######################################################################################################################################
 def OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -451,7 +451,7 @@ def OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,basepla
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ######################################################################################################################################
 def Assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -504,7 +504,7 @@ def Assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###############################################################################################################################
 def OGP_after_assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -558,7 +558,7 @@ def OGP_after_assembly2(username,module_number,sensor_id,hexboard_number,basepla
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###########################################################################################################################
 def Electrical_before_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -611,7 +611,7 @@ def Electrical_before_backside_bonding(username,module_number,sensor_id,hexboard
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ########################################################################################################
 def Backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -665,7 +665,7 @@ def Backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ######################################################################################################
 def Ogp_after_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -718,7 +718,7 @@ def Ogp_after_backside_bonding(username,module_number,sensor_id,hexboard_number,
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###########################################################################################################################
 def Backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -772,7 +772,7 @@ def Backside_encapsolation(username,module_number,sensor_id,hexboard_number,base
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###########################################################################################################################
 def Ogp_after_backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -826,7 +826,7 @@ def Ogp_after_backside_encapsolation(username,module_number,sensor_id,hexboard_n
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###########################################################################################################################
 def Pull_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -880,7 +880,7 @@ def Pull_test(username,module_number,sensor_id,hexboard_number,baseplate_number,
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###########################################################################################################################
 def Frontside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -934,7 +934,7 @@ def Frontside_bonding(username,module_number,sensor_id,hexboard_number,baseplate
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ###########################################################################################################################
 def OGP_after_frontside_bounding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -988,7 +988,7 @@ def OGP_after_frontside_bounding(username,module_number,sensor_id,hexboard_numbe
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ############################################################################################################################
 def Module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -1042,7 +1042,7 @@ def Module_encapsolation(username,module_number,sensor_id,hexboard_number,basepl
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ############################################################################################################################
 def OGP_after_module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -1096,7 +1096,7 @@ def OGP_after_module_encapsolation(username,module_number,sensor_id,hexboard_num
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ############################################################################################################################
 def Final_electrical_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -1150,12 +1150,12 @@ def Final_electrical_test(username,module_number,sensor_id,hexboard_number,basep
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 ############################################################################################################################
 def find_unfinished_modules():
-    # Read the output.csv file
-    df = pd.read_csv("output.csv")
+    # Read the IHEP_MAC_Bookkeeping/output.csv file
+    df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv")
 
     # Group by the specified criteria and check for unfinished modules
     grouped = df.groupby(['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number'])
@@ -1170,11 +1170,11 @@ def find_unfinished_modules():
     unfinished_df = pd.concat(unfinished_modules)
 
     # Save the unfinished modules to a new CSV file
-    unfinished_df.to_csv("unfinished_module.csv", index=False)
+    unfinished_df.to_csv("IHEP_MAC_Bookkeeping/unfinished_module.csv", index=False)
 ############################################################################################################################
 def show_unfinished_modules(username):
     # Read the unfinished_module.csv file
-    unfinished_df = pd.read_csv("unfinished_module.csv")
+    unfinished_df = pd.read_csv("IHEP_MAC_Bookkeeping/unfinished_module.csv")
 
     # Filter the unfinished modules with red flags
     unfinished_red_flags = unfinished_df[unfinished_df['Flag'] == 'red']
@@ -1377,8 +1377,8 @@ def plot_selected_module():
     remeasurement_number=st.text_input("Enter Remeasurement Number(0 for the first measurement)")
     if st.checkbox("Submit"):
         if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
-    # Read the output.csv file
-            df = pd.read_csv("output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
+    # Read the IHEP_MAC_Bookkeeping/output.csv file
+            df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
 
     # Filter data for the selected module
             module_filter = (
@@ -1410,8 +1410,8 @@ def plot_selected_module():
             return image_tag
 ###################################################################################################################################################################
 def plot_modules():
-    # Read the output.csv file
-    df = pd.read_csv("output.csv")
+    # Read the IHEP_MAC_Bookkeeping/output.csv file
+    df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv")
 
     # Filter for only the rows where the flag is 'green'
     finished_modules = df[df['Flag'] == 'green'].groupby(['Step', 'Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number']).size().reset_index(name='count')
