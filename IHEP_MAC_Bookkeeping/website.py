@@ -159,7 +159,7 @@ def Module_Assembly_Check_List(username):
     hexboard_number = st.text_input("Enter Hexboard Number")
     baseplate_number = st.text_input("Enter Baseplate Number")
     remeasurement_number=st.text_input("Enter Remeasurement Number(0 for the first measurement)")
-    comment = st.text_input("Entre Comment(Can be empty)")
+    comment = st.text_input("Comment*(Optional)")
     usergroup=read_user_group(username)
         # Checkbox to submit the details
     if st.checkbox("Display status"):
@@ -344,20 +344,34 @@ def Module_Assembly_Check_List(username):
 #######################################################################################################
 def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
     if(read_user_group(username) == 'OGP' or read_user_group(username) == 'All'):
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
         for step, flag in ogp_before_assembly_flags.items():
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_ogp_before_assembly[step]}')
-            
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_ogp_before_assembly[step]}'
+            )
+
             # Update flag and click count based on selected option
-            ogp_before_assembly_flags[step] = selected_flag
+            ogp_before_assembly_flags[step] = status_options[selected_label]
             click_counts_ogp_before_assembly[step] += 1
 
-        for step, flag in ogp_before_assembly_flags.items():
-            ogp_before_assembly_flag_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {ogp_before_assembly_flag_icon}")
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in ogp_before_assembly_flags.items()]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
+        # Display step-wise table
+        st.write("### OGP Before Assembly Steps Overview")
+        st.table(df_steps)
+
+    # Determine overall checklist status
     ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
     Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
-
     Ogp_Before_Assembly_Icon = '\u2705' if Ogp_Before_Assembly_Flag == 'green' else '\u274C'
     st.header(f"OGP Before Assembly Check List: {Ogp_Before_Assembly_Icon}")
 
@@ -400,9 +414,21 @@ def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Gantry' or read_user_group(username)=='All') and Ogp_Before_Assembly_Flag=='green':
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
+
         for step, flag in assembly1_flags.items():
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_assembly1[step]}')
-            assembly1_flags[step] = selected_flag
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_assembly1[step]}'
+            )
+            assembly1_flags[step] = status_options[selected_label]
             click_counts_assembly1[step] += 1
 
         for step, flag in assembly1_flags.items():
@@ -412,7 +438,6 @@ def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,
     assembly1_steps_completed = (all(flag == 'green' for flag in assembly1_flags.values()))
     Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
     Assembly1_Flag_Icon = '\u2705' if Assembly1_Checklist_Flag == 'green' else '\u274C'
-    st.header(f"Assembly Check List: {Assembly1_Flag_Icon}")
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -447,6 +472,7 @@ def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,
 def OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
     assembly1_steps_completed = all(flag == 'green' for flag in assembly1_flags.values())
     Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
+
 
     if Assembly1_Checklist_Flag=='red':
         st.write("Please finish the previous step first")
