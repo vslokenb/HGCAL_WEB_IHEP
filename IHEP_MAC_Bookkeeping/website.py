@@ -431,14 +431,17 @@ def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,
             assembly1_flags[step] = status_options[selected_label]
             click_counts_assembly1[step] += 1
 
-        for step, flag in assembly1_flags.items():
-            assembly_flag_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {assembly_flag_icon}")
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in assembly1_flags.items()]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Assembly 1 Steps Overview")
+        st.table(df_steps)
+
 
     assembly1_steps_completed = (all(flag == 'green' for flag in assembly1_flags.values()))
     Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
     Assembly1_Flag_Icon = '\u2705' if Assembly1_Checklist_Flag == 'green' else '\u274C'
-
+    st.header(f"Assembly 1 Check List: {Assembly1_Flag_Icon}")
     if st.button("Save Flags to File"):
         all_checklists_flags = {
                 'OGP before assembly': ogp_before_assembly_flags,
@@ -477,22 +480,41 @@ def OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,basepla
     if Assembly1_Checklist_Flag=='red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Assembly1_Checklist_Flag=='green':
-        for step, flag in ogp_after_assembly1_flags.items():
+    if (read_user_group(username) == 'OGP' or read_user_group(username) == 'All') and Assembly1_Checklist_Flag == 'green':
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_ogp_after_assembly1[step]}')
-            ogp_after_assembly1_flags[step] = selected_flag
+        for step, flag in ogp_after_assembly1_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show radio buttons for selection
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_ogp_after_assembly1[step]}'
+            )
+            ogp_after_assembly1_flags[step] = status_options[selected_label]
             click_counts_ogp_after_assembly1[step] += 1
 
-        for step, flag in ogp_after_assembly1_flags.items():
-            ogp_after_assembly1_flags_icon ='\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {ogp_after_assembly1_flags_icon}")
+        # Create a DataFrame for displaying the table
+        table_data = [
+            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+            for step, flag in ogp_after_assembly1_flags.items()
+        ]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
-    ogp_after_assembly1_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly1_flags.values()))
+        st.write("### OGP After Assembly 1 Steps Overview")
+        st.table(df_steps)
+
+    # Check if all steps are completed
+    ogp_after_assembly1_steps_completed = all(flag == 'green' for flag in ogp_after_assembly1_flags.values())
     Ogp_After_Assembly1_Checklist_Flag = 'green' if ogp_after_assembly1_steps_completed else 'red'
-    Ogp_After_Assembly1_Checklist_Flag_Icon = '\u2705' if Ogp_After_Assembly1_Checklist_Flag == 'green' else '\u274C'
-    st.header(f"Assembly Check List: {Ogp_After_Assembly1_Checklist_Flag_Icon}")
+    Ogp_After_Assembly1_Flag_Icon = '\u2705' if Ogp_After_Assembly1_Checklist_Flag == 'green' else '\u274C'
 
+    # Display checklist header with final status
+    st.header(f"OGP After Assembly 1 Check List: {Ogp_After_Assembly1_Flag_Icon}")
     if st.button("Save Flags to File"):
         all_checklists_flags = {
                 'OGP before assembly': ogp_before_assembly_flags,
@@ -531,20 +553,40 @@ def Assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Gantry' or read_user_group(username)=='All') and Ogp_After_Assembly1_Checklist_Flag=='green':
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
+
         for step, flag in assembly2_flags.items():
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_assembly2[step]}')
-            assembly2_flags[step] = selected_flag
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show radio buttons for selection
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_assembly2[step]}'
+            )
+            assembly2_flags[step] = status_options[selected_label]
             click_counts_assembly2[step] += 1
 
-        for step, flag in assembly2_flags.items():
-            assembly2_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {assembly2_flags_icon}")
+        # Create a DataFrame for displaying the table
+        table_data = [
+            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+            for step, flag in assembly2_flags.items()
+        ]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
-    assembly2_steps_completed = (all(flag == 'green' for flag in assembly2_flags.values()))
+        st.write("### Assembly 2 Steps Overview")
+        st.table(df_steps)
+
+    # Check if all steps are completed
+    assembly2_steps_completed = all(flag == 'green' for flag in assembly2_flags.values())
     Assembly2_Checklist_Flag = 'green' if assembly2_steps_completed else 'red'
+    Assembly2_Flag_Icon = '\u2705' if Assembly2_Checklist_Flag == 'green' else '\u274C'
 
-    Assembly2_Checklist_Flag_Icon = '\u2705' if Assembly2_Checklist_Flag == 'green' else '\u274C'
-    st.header(f"Assembly Check List: {Assembly2_Checklist_Flag_Icon}")
+    # Display checklist header with final status
+    st.header(f"Assembly 2 Check List: {Assembly2_Flag_Icon}")
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -584,21 +626,40 @@ def OGP_after_assembly2(username,module_number,sensor_id,hexboard_number,basepla
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Assembly2_Checklist_Flag=='green':
-        for step, flag in ogp_after_assembly2_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_ogp_after_assembly2[step]}')
-            ogp_after_assembly2_flags[step] = selected_flag
+        for step, flag in ogp_after_assembly2_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show radio buttons for selection
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_ogp_after_assembly2[step]}'
+            )
+            ogp_after_assembly2_flags[step] = status_options[selected_label]
             click_counts_ogp_after_assembly2[step] += 1
 
-        for step, flag in ogp_after_assembly2_flags.items():
-            ogp_after_assembly2_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {ogp_after_assembly2_flags_icon}")
+        # Create a DataFrame for displaying the table
+        table_data = [
+            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+            for step, flag in ogp_after_assembly2_flags.items()
+        ]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
-    ogp_after_assembly2_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-    Ogp_After_Assembly2_Flags = 'green' if ogp_after_assembly2_steps_completed else 'red'
+        st.write("### OGP After Assembly 2 Steps Overview")
+        st.table(df_steps)
 
-    Ogp_After_Assembly2_Flags_Icon = '\u2705' if Ogp_After_Assembly2_Flags == 'green' else '\u274C'
-    st.header(f"Assembly Check List: {Ogp_After_Assembly2_Flags_Icon}")
+    # Check if all steps are completed
+    ogp_after_assembly2_steps_completed = all(flag == 'green' for flag in ogp_after_assembly2_flags.values())
+    Ogp_After_Assembly2_Flag = 'green' if ogp_after_assembly2_steps_completed else 'red'
+    Ogp_After_Assembly2_Flag_Icon = '\u2705' if Ogp_After_Assembly2_Flag == 'green' else '\u274C'
+
+    # Display checklist header with final status
+    st.header(f"OGP After Assembly 2 Check List: {Ogp_After_Assembly2_Flag_Icon}")
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -638,21 +699,40 @@ def Electrical_before_backside_bonding(username,module_number,sensor_id,hexboard
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Electrical' or read_user_group(username)=='All') and Ogp_After_Assembly2_Flags=='green':
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
+
         for step, flag in electrical_before_backside_bonding_flags.items():
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_electrical_before_backside_bonding[step]}')
-            electrical_before_backside_bonding_flags[step] = selected_flag
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show radio buttons for selection
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_electrical_before_backside_bonding[step]}'
+            )
+            electrical_before_backside_bonding_flags[step] = status_options[selected_label]
             click_counts_electrical_before_backside_bonding[step] += 1
 
-        for step, flag in electrical_before_backside_bonding_flags.items():
-            electrical_before_backside_bonding_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {electrical_before_backside_bonding_flags_icon}")
+        # Create a DataFrame for displaying the table
+        table_data = [
+            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+            for step, flag in electrical_before_backside_bonding_flags.items()
+        ]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
-    electrical_before_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
+        st.write("### Electrical Before Backside Bonding Steps Overview")
+        st.table(df_steps)
+
+    # Check if all steps are completed
+    electrical_before_backside_bonding_steps_completed = all(flag == 'green' for flag in electrical_before_backside_bonding_flags.values())
     Electrical_Before_Backside_Bonding_Flags = 'green' if electrical_before_backside_bonding_steps_completed else 'red'
-
     Electrical_Before_Backside_Bonding_Flags_Icon = '\u2705' if Electrical_Before_Backside_Bonding_Flags == 'green' else '\u274C'
-    st.header(f"Assembly Check List: {Electrical_Before_Backside_Bonding_Flags_Icon}")
 
+    # Display checklist header with final status
+    st.header(f"Electrical Before Backside Bonding Check List: {Electrical_Before_Backside_Bonding_Flags_Icon}")
     if st.button("Save Flags to File"):
         all_checklists_flags = {
                 'OGP before assembly': ogp_before_assembly_flags,
@@ -691,21 +771,40 @@ def Backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Bonding' or read_user_group(username)=='All') and Electrical_Before_Backside_Bonding_Flags=='green':
-        for step, flag in Backside_bonding_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_Backside_bonding[step]}')
-            Backside_bonding_flags[step] = selected_flag
+        for step, flag in Backside_bonding_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show radio buttons for selection
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_Backside_bonding[step]}'
+            )
+            Backside_bonding_flags[step] = status_options[selected_label]
             click_counts_Backside_bonding[step] += 1
 
-        for step, flag in Backside_bonding_flags.items():
-            Backside_bonding_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {Backside_bonding_flags_icon}")
+        # Create a DataFrame for displaying the table
+        table_data = [
+            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+            for step, flag in Backside_bonding_flags.items()
+        ]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
-    Backside_bonding_steps_completed = (all(flag == 'green' for flag in Backside_bonding_flags.values()))
+        st.write("### Backside Bonding Steps Overview")
+        st.table(df_steps)
+
+    # Check if all steps are completed
+    Backside_bonding_steps_completed = all(flag == 'green' for flag in Backside_bonding_flags.values())
     Backside_Bonding_Flags = 'green' if Backside_bonding_steps_completed else 'red'
-
     Backside_Bonding_Flags_Icon = '\u2705' if Backside_Bonding_Flags == 'green' else '\u274C'
-    st.header(f"Backside_Bonding: {Backside_Bonding_Flags_Icon}")
+
+    # Display checklist header with final status
+    st.header(f"Backside Bonding Checklist: {Backside_Bonding_Flags_Icon}")
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -745,14 +844,33 @@ def Ogp_after_backside_bonding(username,module_number,sensor_id,hexboard_number,
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Backside_Bonding_Flags=='green':
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
+
+        # Display each step with options for the status
         for step, flag in ogp_after_backside_bonding_flags.items():
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_ogp_after_backside_bonding[step]}')
-            ogp_after_backside_bonding_flags[step] = selected_flag
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_ogp_after_backside_bonding[step]}'
+            )
+            ogp_after_backside_bonding_flags[step] = status_options[selected_label]
             click_counts_ogp_after_backside_bonding[step] += 1
 
-        for step, flag in ogp_after_backside_bonding_flags.items():
-            ogp_after_backside_bonding_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {ogp_after_backside_bonding_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in ogp_after_backside_bonding_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Ogp After Backside Bonding Steps Overview")
+        st.table(df_steps)
 
     ogp_after_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values()))
     Ogp_After_Backside_Bonding_Flags = 'green' if ogp_after_backside_bonding_steps_completed else 'red'
@@ -798,22 +916,39 @@ def Backside_encapsolation(username,module_number,sensor_id,hexboard_number,base
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Encapsolation' or read_user_group(username)=='All') and Ogp_After_Backside_Bonding_Flags=='green':
-        for step, flag in Backside_encapsolation_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_Backside_encapsolation[step]}')
-            Backside_encapsolation_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in Backside_encapsolation_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_Backside_encapsolation[step]}'
+            )
+            Backside_encapsolation_flags[step] = status_options[selected_label]
             click_counts_Backside_encapsolation[step] += 1
 
-        for step, flag in Backside_encapsolation_flags.items():
-            Backside_encapsolation_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {Backside_encapsolation_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in Backside_encapsolation_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Backside Encapsolation Steps Overview")
+        st.table(df_steps)
 
     Backside_encapsolation_steps_completed = (all(flag == 'green' for flag in Backside_encapsolation_flags.values()))
     Backside_Encapsolation_Flags = 'green' if Backside_encapsolation_steps_completed else 'red'
 
     Backside_Encapsolation_Flags_Icon = '\u2705' if Backside_Encapsolation_Flags == 'green' else '\u274C'
     st.header(f"Backside Encapsolation: {Backside_Encapsolation_Flags_Icon}")
-
     if st.button("Save Flags to File"):
         all_checklists_flags = {
                 'OGP before assembly': ogp_before_assembly_flags,
@@ -852,21 +987,40 @@ def Ogp_after_backside_encapsolation(username,module_number,sensor_id,hexboard_n
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Backside_Encapsolation_Flags=='green':
-        for step, flag in ogp_after_backside_encapsolation_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_ogp_after_backside_encapsolation[step]}')
-            ogp_after_backside_encapsolation_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in ogp_after_backside_encapsolation_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_ogp_after_backside_encapsolation[step]}'
+            )
+            ogp_after_backside_encapsolation_flags[step] = status_options[selected_label]
             click_counts_ogp_after_backside_encapsolation[step] += 1
 
-        for step, flag in ogp_after_backside_encapsolation_flags.items():
-            ogp_after_backside_encapsolation_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {ogp_after_backside_encapsolation_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in ogp_after_backside_encapsolation_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Ogp After Backside Encapsolation Steps Overview")
+        st.table(df_steps)
 
     ogp_after_backside_encapsolation_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_encapsolation_flags.values()))
     Ogp_After_Backside_Encapsolation_Flags = 'green' if ogp_after_backside_encapsolation_steps_completed else 'red'
 
     Ogp_After_Backside_Encapsolation_Flags_Icon = '\u2705' if Ogp_After_Backside_Encapsolation_Flags == 'green' else '\u274C'
     st.header(f"Ogp after backside encapsolation: {Ogp_After_Backside_Encapsolation_Flags_Icon}")
+  
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -906,15 +1060,33 @@ def Pull_test(username,module_number,sensor_id,hexboard_number,baseplate_number,
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Bonding' or read_user_group(username)=='All') and Ogp_After_Backside_Encapsolation_Flags=='green':
-        for step, flag in Pull_test_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_Pull_test[step]}')
-            Pull_test_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in Pull_test_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_Pull_test[step]}'
+            )
+            Pull_test_flags[step] = status_options[selected_label]
             click_counts_Pull_test[step] += 1
 
-        for step, flag in Pull_test_flags.items():
-            Pull_test_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {Pull_test_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in Pull_test_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Pull Test Steps Overview")
+        st.table(df_steps)
 
     Pull_test_steps_completed = (all(flag == 'green' for flag in Pull_test_flags.values()))
     Pull_Test_Flags = 'green' if Pull_test_steps_completed else 'red'
@@ -960,22 +1132,39 @@ def Frontside_bonding(username,module_number,sensor_id,hexboard_number,baseplate
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Bonding' or read_user_group(username)=='All') and Pull_Test_Flags=='green':
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
+
+        # Display each step with options for the status
         for step, flag in Frontside_bonding_flags.items():
-           
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_Frontside_bonding[step]}')
-            Frontside_bonding_flags[step] = selected_flag
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_Frontside_bonding[step]}'
+            )
+            Frontside_bonding_flags[step] = status_options[selected_label]
             click_counts_Frontside_bonding[step] += 1
-           
-        for step, flag in Frontside_bonding_flags.items():
-            Frontside_bonding_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {Frontside_bonding_flags_icon}")
+
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in Frontside_bonding_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Frontside Bonding Steps Overview")
+        st.table(df_steps)
 
     Frontside_bonding_steps_completed = (all(flag == 'green' for flag in Frontside_bonding_flags.values()))
     Frontside_Bonding_Flags = 'green' if Frontside_bonding_steps_completed else 'red'
 
     Frontside_Bonding_Flags_Icon = '\u2705' if Frontside_Bonding_Flags == 'green' else '\u274C'
     st.header(f"Frontside Bonding: {Frontside_Bonding_Flags_Icon}")
-
     if st.button("Save Flags to File"):
         all_checklists_flags = {
                 'OGP before assembly': ogp_before_assembly_flags,
@@ -1014,22 +1203,39 @@ def OGP_after_frontside_bounding(username,module_number,sensor_id,hexboard_numbe
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Frontside_Bonding_Flags=='green':
-        for step, flag in OGP_after_frontside_bounding_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_OGP_after_frontside_bounding[step]}')
-            OGP_after_frontside_bounding_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in OGP_after_frontside_bounding_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_OGP_after_frontside_bounding[step]}'
+            )
+            OGP_after_frontside_bounding_flags[step] = status_options[selected_label]
             click_counts_OGP_after_frontside_bounding[step] += 1
 
-        for step, flag in OGP_after_frontside_bounding_flags.items():
-            OGP_after_frontside_bounding_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {OGP_after_frontside_bounding_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in OGP_after_frontside_bounding_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### OGP After Frontside Bounding Steps Overview")
+        st.table(df_steps)
 
     OGP_after_frontside_bounding_steps_completed = (all(flag == 'green' for flag in OGP_after_frontside_bounding_flags.values()))
     OGP_After_Frontside_Bounding_Flags = 'green' if OGP_after_frontside_bounding_steps_completed else 'red'
 
     OGP_After_Frontside_Bounding_Flags_Icon = '\u2705' if OGP_After_Frontside_Bounding_Flags == 'green' else '\u274C'
     st.header(f"OGP After Frontside Bounding: {OGP_After_Frontside_Bounding_Flags_Icon}")
-
     if st.button("Save Flags to File"):
         all_checklists_flags = {
                 'OGP before assembly': ogp_before_assembly_flags,
@@ -1068,21 +1274,39 @@ def Module_encapsolation(username,module_number,sensor_id,hexboard_number,basepl
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Encapsolation' or read_user_group(username)=='All') and OGP_After_Frontside_Bounding_Flags=='green':
-        for step, flag in Module_encapsolation_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_Module_encapsolation[step]}')
-            Module_encapsolation_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in Module_encapsolation_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_Module_encapsolation[step]}'
+            )
+            Module_encapsolation_flags[step] = status_options[selected_label]
             click_counts_Module_encapsolation[step] += 1
 
-        for step, flag in Module_encapsolation_flags.items():
-            Module_encapsolation_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {Module_encapsolation_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in Module_encapsolation_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Module Encapsulation Steps Overview")
+        st.table(df_steps)
 
     Module_encapsolation_steps_completed = (all(flag == 'green' for flag in Module_encapsolation_flags.values()))
     Module_Encapsolation_Flags = 'green' if Module_encapsolation_steps_completed else 'red'
 
     Module_Encapsolation_Flags_Icon = '\u2705' if Module_Encapsolation_Flags == 'green' else '\u274C'
-    st.header(f"Module Encapsolation: {Module_Encapsolation_Flags_Icon}")
+    st.header(f"Module Encapsulation: {Module_Encapsolation_Flags_Icon}")
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -1122,21 +1346,39 @@ def OGP_after_module_encapsolation(username,module_number,sensor_id,hexboard_num
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Module_Encapsolation_Flags=='green':
-        for step, flag in OGP_after_module_encapsolation_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_OGP_after_module_encapsolation[step]}')
-            OGP_after_module_encapsolation_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in OGP_after_module_encapsolation_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_OGP_after_module_encapsolation[step]}'
+            )
+            OGP_after_module_encapsolation_flags[step] = status_options[selected_label]
             click_counts_OGP_after_module_encapsolation[step] += 1
 
-        for step, flag in OGP_after_module_encapsolation_flags.items():
-            OGP_after_module_encapsolation_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {OGP_after_module_encapsolation_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in OGP_after_module_encapsolation_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### OGP After Module Encapsulation Steps Overview")
+        st.table(df_steps)
 
     OGP_after_module_encapsolation_steps_completed = (all(flag == 'green' for flag in OGP_after_module_encapsolation_flags.values()))
     OGP_After_Module_Encapsolation_Flags = 'green' if OGP_after_module_encapsolation_steps_completed else 'red'
 
     OGP_After_Module_Encapsolation_Flags_Icon = '\u2705' if OGP_After_Module_Encapsolation_Flags == 'green' else '\u274C'
-    st.header(f"OGP After Module Encapsolation: {OGP_After_Module_Encapsolation_Flags_Icon}")
+    st.header(f"OGP After Module Encapsulation: {OGP_After_Module_Encapsolation_Flags_Icon}")
 
     if st.button("Save Flags to File"):
         all_checklists_flags = {
@@ -1176,15 +1418,33 @@ def Final_electrical_test(username,module_number,sensor_id,hexboard_number,basep
         st.write("Please finish the previous step first")
 
     if (read_user_group(username)=='Electrical' or read_user_group(username)=='All') and OGP_After_Module_Encapsolation_Flags=='green':
-        for step, flag in Final_electrical_test_flags.items():
+        status_options = {
+            '\u2705 Green': 'green',
+            '\u26A0\uFE0F Yellow': 'yellow',
+            '\u274C Red': 'red'
+        }
 
-            selected_flag = st.selectbox(f"{step} Flag:", ['green', 'yellow', 'red'], index=['green', 'yellow', 'red'].index(flag), key=f'{step}_selectbox', help=f'Click count: {click_counts_Final_electrical_test[step]}')
-            Final_electrical_test_flags[step] = selected_flag
+        # Display each step with options for the status
+        for step, flag in Final_electrical_test_flags.items():
+            selected_label = st.radio(
+                f"{step} Flag:",
+                list(status_options.keys()),  # Show all options as radio buttons
+                index=list(status_options.values()).index(flag),
+                key=f'{step}_radio',
+                help=f'Click count: {click_counts_Final_electrical_test[step]}'
+            )
+            Final_electrical_test_flags[step] = status_options[selected_label]
             click_counts_Final_electrical_test[step] += 1
 
-        for step, flag in Final_electrical_test_flags.items():
-            Final_electrical_test_flags_icon = '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C'
-            st.write(f"{step}: {Final_electrical_test_flags_icon}")
+        # Prepare data for the table
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+                      for step, flag in Final_electrical_test_flags.items()]
+
+        # Create a DataFrame to display the table
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+
+        st.write("### Final Electrical Test Steps Overview")
+        st.table(df_steps)
 
     Final_electrical_test_steps_completed = (all(flag == 'green' for flag in Final_electrical_test_flags.values()))
     Final_Electrical_Test_Flags = 'green' if Final_electrical_test_steps_completed else 'red'
