@@ -9,93 +9,6 @@ from io import BytesIO
 import base64
 
 # Initialize flag status as global variables
-ogp_before_assembly_flags = {
-    'Visual inspection for damage and thickness for sensor': 'red',
-    'Thickness and inspection for baseplate': 'red',
-    'Thickness and inspection for hexboard': 'red',
-    'Cleaning of Sensor, baseplate and Hexa- board': 'red'
-}
-
-# Flag for the OGP Check List title
-assembly1_flags={
-    "Gluing of Silicon Sensor on base plate":"red",
-}
-
-ogp_after_assembly1_flags = {
-    'Inspection of glued Base plate + Sensor': "red",
-}
-
-assembly2_flags={
-    "Gluing of Hexa-board on Protomodule":"red",
-}
-
-ogp_after_assembly2_flags = {
-    'Inspection of Module': "red",
-}
-
-electrical_before_backside_bonding_flags={
-    'delay scan':'red',
-    'pedestal run':'red',
-}
-
-Backside_bonding_flags={
-    'Backside Wire Bonding of the module':'red',
-}
-ogp_after_backside_bonding_flags={
-    'Visual Inspection of backside wirebonds':'red',
-}
-
-Backside_encapsolation_flags={
-    'Encapsulation of backside and curing':'red'
-}
-
-ogp_after_backside_encapsolation_flags={
-    'Visual Inspection of backside encapsulation':'red',
-}
-
-Pull_test_flags={
-    'Pull Testing for frontside bonding':'red',
-}
-
-Frontside_bonding_flags={
-    'Wire Bonding frontside of the module':'red',
-}
-
-OGP_after_frontside_bounding_flags={
-    'Visual Inspection of Bonded module before encapsulation':
-    'red'
-}
-
-Module_encapsolation_flags={
-    'Encapsulation of the module and curing':'red',
-}
-
-OGP_after_module_encapsolation_flags={
-    'Visual Inspection of encapsulated module':'red',
-}
-
-Final_electrical_test_flags={
-    "Electrical Test of the final module":'red',
-    'IV Curves':'red',
-    'Single Module Test Stand':'red'
-}
-click_counts_ogp_before_assembly = {step: 0 for step in ogp_before_assembly_flags}
-click_counts_assembly1={step: 0 for step in assembly1_flags}
-click_counts_ogp_after_assembly1={step: 0 for step in ogp_after_assembly1_flags}
-click_counts_assembly2={step: 0 for step in assembly2_flags}
-click_counts_ogp_after_assembly2={step: 0 for step in ogp_after_assembly2_flags}
-click_counts_electrical_before_backside_bonding={step: 0 for step in electrical_before_backside_bonding_flags}
-click_counts_Backside_bonding={step: 0 for step in Backside_bonding_flags}
-click_counts_ogp_after_backside_bonding={step: 0 for step in ogp_after_backside_bonding_flags}
-click_counts_Backside_encapsolation={step: 0 for step in Backside_encapsolation_flags}
-click_counts_ogp_after_backside_encapsolation={step: 0 for step in ogp_after_backside_encapsolation_flags}
-click_counts_Pull_test={step: 0 for step in Pull_test_flags}
-click_counts_Frontside_bonding={step: 0 for step in Frontside_bonding_flags}
-click_counts_OGP_after_frontside_bounding={step: 0 for step in OGP_after_frontside_bounding_flags}
-click_counts_Module_encapsolation={step: 0 for step in Module_encapsolation_flags}
-click_counts_OGP_after_module_encapsolation={step: 0 for step in OGP_after_module_encapsolation_flags}
-click_counts_Final_electrical_test={step: 0 for step in Final_electrical_test_flags}
-
 
 Apply_double_sided_tape_flags = {
     'Apply double-sided tape': 'red',
@@ -184,13 +97,7 @@ def initialize_session_state(module_number, sensor_id, hexboard_number, baseplat
                 step_ = row['Step']
                 flag_ = row['Flag']
                 # Update the flags if found in existing data
-                for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
-    assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
-    Backside_bonding_flags, ogp_after_backside_bonding_flags,
-    Backside_encapsolation_flags, ogp_after_backside_encapsolation_flags,
-    Pull_test_flags, Frontside_bonding_flags, OGP_after_frontside_bounding_flags,
-    Module_encapsolation_flags, OGP_after_module_encapsolation_flags,
-    Final_electrical_test_flags, 
+                for flags in [
     Apply_double_sided_tape_flags, First_electrical_test_flags, 
     Gantry_assembly_flags,OGP_gantry_assembly_flags,Ready_for_bonding_flags, Bonding_completed_flags,
     OGP_bonding_flags,Encapsulation_flags,Ready_for_second_electrical_test_flags,Second_electrical_test_flags]:
@@ -198,13 +105,7 @@ def initialize_session_state(module_number, sensor_id, hexboard_number, baseplat
                         flags[step_] = flag_
         else:
             # Set default values for all flags if not found in existing data
-            for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
-    assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
-    Backside_bonding_flags, ogp_after_backside_bonding_flags,
-    Backside_encapsolation_flags, ogp_after_backside_encapsolation_flags,
-    Pull_test_flags, Frontside_bonding_flags, OGP_after_frontside_bounding_flags,
-    Module_encapsolation_flags, OGP_after_module_encapsolation_flags,
-    Final_electrical_test_flags,
+            for flags in [
     Apply_double_sided_tape_flags, First_electrical_test_flags, 
     Gantry_assembly_flags,OGP_gantry_assembly_flags,Ready_for_bonding_flags, Bonding_completed_flags,
     OGP_bonding_flags,Encapsulation_flags,Ready_for_second_electrical_test_flags,Second_electrical_test_flags]:
@@ -224,90 +125,10 @@ def Module_Assembly_Check_List(username):
         # Checkbox to submit the details
     if st.checkbox("Display status"):
         if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
-            option1=st.selectbox("Select a step", ("Overview","OGP before assembly","Assembly1","OGP after assembly1","Assembly2","OGP after assembly2","Electrical before backside bonding","Backside bonding","OGP after backside bonding","Backside encapsolation","OGP after backside encapsolation","Pull test","Frontside bonding","OGP after frontside bonding","Module encapsolation","OGP after module encapsolation","Final electrical test", "Apply double-sided tape", "1st Electrical test" , "Gantry assembly",   "OGP of gantry assembly", "Ready for bonding", "Bonding completed",  "OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"),key="option1")
+            option1=st.selectbox("Select a step", ("Overview", "Apply double-sided tape", "1st Electrical test" , "Gantry assembly",   "OGP of gantry assembly", "Ready for bonding", "Bonding completed",  "OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"),key="option1")
             if option1=='Overview':
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
-                Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
-                Ogp_Before_Assembly_Icon = '\u2705' if Ogp_Before_Assembly_Flag == 'green' else '\u274C'
-                #st.header(f"OGP Before Assembly: {Ogp_Before_Assembly_Icon}")
 
-
-                assembly1_steps_completed = all(flag == 'green' for flag in assembly1_flags.values())
-                Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
-                Assembly1_Flag_Icon = '\u2705' if Assembly1_Checklist_Flag == 'green' else '\u274C'
-                #st.header(f"Assembly1: {Assembly1_Flag_Icon}")
-
-                ogp_after_assembly1_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly1_flags.values()))
-                Ogp_After_Assembly1_Checklist_Flag = 'green' if ogp_after_assembly1_steps_completed else 'red'
-                Ogp_After_Assembly1_Checklist_Flag_Icon = '\u2705' if Ogp_After_Assembly1_Checklist_Flag == 'green' else '\u274C'
-                #st.header(f"Ogp After Assembly1: {Ogp_After_Assembly1_Checklist_Flag_Icon}")
-
-                assembly2_steps_completed = (all(flag == 'green' for flag in assembly2_flags.values()))
-                Assembly2_Checklist_Flag = 'green' if assembly2_steps_completed else 'red'
-                Assembly2_Checklist_Flag_Icon = '\u2705' if Assembly2_Checklist_Flag == 'green' else '\u274C'
-                #st.header(f"Assembly2: {Assembly2_Checklist_Flag_Icon}")
-
-                ogp_after_assembly2_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-                Ogp_After_Assembly2_Flags = 'green' if ogp_after_assembly2_steps_completed else 'red'
-                Ogp_After_Assembly2_Flags_Icon = '\u2705' if Ogp_After_Assembly2_Flags == 'green' else '\u274C'
-                #st.header(f"Ogp After Assembly2: {Ogp_After_Assembly2_Flags_Icon}")
-
-                electrical_before_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-                Electrical_Before_Backside_Bonding_Flags = 'green' if electrical_before_backside_bonding_steps_completed else 'red'
-                Electrical_Before_Backside_Bonding_Flags_Icon = '\u2705' if Electrical_Before_Backside_Bonding_Flags == 'green' else '\u274C'
-                #st.header(f"Electrical test Before Backside Bonding: {Electrical_Before_Backside_Bonding_Flags_Icon}")
-
-                Backside_bonding_steps_completed = (all(flag == 'green' for flag in Backside_bonding_flags.values()))
-                Backside_Bonding_Flags = 'green' if Backside_bonding_steps_completed else 'red'
-                Backside_Bonding_Flags_Icon = '\u2705' if Backside_Bonding_Flags == 'green' else '\u274C'
-                #st.header(f"Backside_Bonding: {Backside_Bonding_Flags_Icon}")
-
-                ogp_after_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values()))
-                Ogp_After_Backside_Bonding_Flags = 'green' if ogp_after_backside_bonding_steps_completed else 'red'
-                Ogp_After_Backside_Bonding_Flags_Icon = '\u2705' if Ogp_After_Backside_Bonding_Flags == 'green' else '\u274C'
-                #st.header(f"Ogp After Backside Bonding: {Ogp_After_Backside_Bonding_Flags_Icon}")
-
-                Backside_encapsolation_steps_completed = (all(flag == 'green' for flag in Backside_encapsolation_flags.values()))
-                Backside_Encapsolation_Flags = 'green' if Backside_encapsolation_steps_completed else 'red'
-                Backside_Encapsolation_Flags_Icon = '\u2705' if Backside_Encapsolation_Flags == 'green' else '\u274C'
-                
-                #st.header(f"Backside Encapsolation: {Backside_Encapsolation_Flags_Icon}")
-
-                ogp_after_backside_encapsolation_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_encapsolation_flags.values()))
-                Ogp_After_Backside_Encapsolation_Flags = 'green' if ogp_after_backside_encapsolation_steps_completed else 'red'
-                Ogp_After_Backside_Encapsolation_Flags_Icon = '\u2705' if Ogp_After_Backside_Encapsolation_Flags == 'green' else '\u274C'
-                #st.header(f"Ogp after backside encapsolation: {Ogp_After_Backside_Encapsolation_Flags_Icon}")
-
-                Pull_test_steps_completed = (all(flag == 'green' for flag in Pull_test_flags.values()))
-                Pull_Test_Flags = 'green' if Pull_test_steps_completed else 'red'
-                Pull_Test_Flags_Icon = '\u2705' if Pull_Test_Flags == 'green' else '\u274C'
-                #st.header(f"Pull Test: {Pull_Test_Flags_Icon}")
-
-                Frontside_bonding_steps_completed = (all(flag == 'green' for flag in Frontside_bonding_flags.values()))
-                Frontside_Bonding_Flags = 'green' if Frontside_bonding_steps_completed else 'red'
-                Frontside_Bonding_Flags_Icon = '\u2705' if Frontside_Bonding_Flags == 'green' else '\u274C'
-                #st.header(f"Frontside Bonding: {Frontside_Bonding_Flags_Icon}")
-
-                OGP_after_frontside_bounding_steps_completed = (all(flag == 'green' for flag in OGP_after_frontside_bounding_flags.values()))
-                OGP_After_Frontside_Bounding_Flags = 'green' if OGP_after_frontside_bounding_steps_completed else 'red'
-                OGP_After_Frontside_Bounding_Flags_Icon = '\u2705' if OGP_After_Frontside_Bounding_Flags == 'green' else '\u274C'
-                #st.header(f"OGP After Frontside Bounding: {OGP_After_Frontside_Bounding_Flags_Icon}")
-
-                Module_encapsolation_steps_completed = (all(flag == 'green' for flag in Module_encapsolation_flags.values()))
-                Module_Encapsolation_Flags = 'green' if Module_encapsolation_steps_completed else 'red'
-                Module_Encapsolation_Flags_Icon = '\u2705' if Module_Encapsolation_Flags == 'green' else '\u274C'
-                #st.header(f"Module Encapsolation: {Module_Encapsolation_Flags_Icon}")
-
-                OGP_after_module_encapsolation_steps_completed = (all(flag == 'green' for flag in OGP_after_module_encapsolation_flags.values()))
-                OGP_After_Module_Encapsolation_Flags = 'green' if OGP_after_module_encapsolation_steps_completed else 'red'
-                OGP_After_Module_Encapsolation_Flags_Icon = '\u2705' if OGP_After_Module_Encapsolation_Flags == 'green' else '\u274C'
-                #st.header(f"OGP After Module Encapsolation: {OGP_After_Module_Encapsolation_Flags_Icon}")
-
-                Final_electrical_test_steps_completed = (all(flag == 'green' for flag in Final_electrical_test_flags.values()))
-                Final_Electrical_Test_Flags = 'green' if Final_electrical_test_steps_completed else 'red'
-                Final_Electrical_Test_Flags_Icon = '\u2705' if Final_Electrical_Test_Flags == 'green' else '\u274C'
-                #st.header(f"Final Electrical Test: {Final_Electrical_Test_Flags_Icon}")
 
                 apply_double_sided_tape_completed = all(flag == 'green' for flag in Apply_double_sided_tape_flags.values())
                 Apply_Double_Sided_Tape_Flag = 'green' if apply_double_sided_tape_completed else 'red'
@@ -352,23 +173,7 @@ def Module_Assembly_Check_List(username):
 
                 # Create a DataFrame for a cleaner display
                 checklist_df = pd.DataFrame({
-                    "Step": [
-                        "OGP Before Assembly",
-                        "Assembly1",
-                        "OGP After Assembly1",
-                        "Assembly2",
-                        "OGP After Assembly2",
-                        "Electrical Test Before Backside Bonding",
-                        "Backside Bonding",
-                        "OGP After Backside Bonding",
-                        "Backside Encapsulation",
-                        "OGP After Backside Encapsulation",
-                        "Pull Test",
-                        "Frontside Bonding",
-                        "OGP After Frontside Bonding",
-                        "Module Encapsulation",
-                        "OGP After Module Encapsulation",
-                        "Final Electrical Test",
+                    "Step": [                        
                         "Apply double-sided tape", 
                         "1st Electrical test", 
                         "Gantry assembly",   
@@ -382,22 +187,6 @@ def Module_Assembly_Check_List(username):
 
                     ],
                     "Status": [
-                        Ogp_Before_Assembly_Icon,
-                        Assembly1_Flag_Icon,
-                        Ogp_After_Assembly1_Checklist_Flag_Icon,
-                        Assembly2_Checklist_Flag_Icon,
-                        Ogp_After_Assembly2_Flags_Icon,
-                        Electrical_Before_Backside_Bonding_Flags_Icon,
-                        Backside_Bonding_Flags_Icon,
-                        Ogp_After_Backside_Bonding_Flags_Icon,
-                        Backside_Encapsolation_Flags_Icon,
-                        Ogp_After_Backside_Encapsolation_Flags_Icon,
-                        Pull_Test_Flags_Icon,
-                        Frontside_Bonding_Flags_Icon,
-                        OGP_After_Frontside_Bounding_Flags_Icon,
-                        Module_Encapsolation_Flags_Icon,
-                        OGP_After_Module_Encapsolation_Flags_Icon,
-                        Final_Electrical_Test_Flags_Icon,
                         Apply_double_sided_tape_Icon,
                         First_Electrical_Test_Icon,
                         Gantry_Assembly_Icon,
@@ -413,55 +202,6 @@ def Module_Assembly_Check_List(username):
 
                 # Display as a table
                 st.table(checklist_df)
-
-            if option1=="OGP before assembly":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_before_assembly(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=="Assembly1":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after assembly1':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Assembly2':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after assembly2':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Electrical before backside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Electrical_before_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Backside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after backside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Ogp_after_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Backside encapsolation':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after backside encapsolation':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Ogp_after_backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Pull test':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Pull_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Frontside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Frontside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after frontside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_frontside_bounding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Module encapsolation':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after module encapsolation':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Final electrical test':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Final_electrical_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
 
             if option1 == "Apply double-sided tape":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
@@ -505,1146 +245,7 @@ def Module_Assembly_Check_List(username):
             
 
 
-#######################################################################################################
-def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
-    if(read_user_group(username) == 'OGP' or read_user_group(username) == 'All'):
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-        for step, flag in ogp_before_assembly_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_ogp_before_assembly[step]}'
-            )
 
-            # Update flag and click count based on selected option
-            ogp_before_assembly_flags[step] = status_options[selected_label]
-            click_counts_ogp_before_assembly[step] += 1
-
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in ogp_before_assembly_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        # Display step-wise table
-        st.write("### OGP Before Assembly Steps Overview")
-        st.table(df_steps)
-
-    # Determine overall checklist status
-    ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
-    Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
-    Ogp_Before_Assembly_Icon = '\u2705' if Ogp_Before_Assembly_Flag == 'green' else '\u274C'
-    st.header(f"OGP Before Assembly Check List: {Ogp_Before_Assembly_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-#####################################################################################################################################
-def Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-
-    ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
-    Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
-
-    if Ogp_Before_Assembly_Flag=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Gantry' or read_user_group(username)=='All') and Ogp_Before_Assembly_Flag=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        for step, flag in assembly1_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_assembly1[step]}'
-            )
-            assembly1_flags[step] = status_options[selected_label]
-            click_counts_assembly1[step] += 1
-
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in assembly1_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Assembly 1 Steps Overview")
-        st.table(df_steps)
-
-
-    assembly1_steps_completed = (all(flag == 'green' for flag in assembly1_flags.values()))
-    Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
-    Assembly1_Flag_Icon = '\u2705' if Assembly1_Checklist_Flag == 'green' else '\u274C'
-    st.header(f"Assembly 1 Check List: {Assembly1_Flag_Icon}")
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-######################################################################################################################################
-def OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    assembly1_steps_completed = all(flag == 'green' for flag in assembly1_flags.values())
-    Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
-
-
-    if Assembly1_Checklist_Flag=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username) == 'OGP' or read_user_group(username) == 'All') and Assembly1_Checklist_Flag == 'green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        for step, flag in ogp_after_assembly1_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show radio buttons for selection
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_ogp_after_assembly1[step]}'
-            )
-            ogp_after_assembly1_flags[step] = status_options[selected_label]
-            click_counts_ogp_after_assembly1[step] += 1
-
-        # Create a DataFrame for displaying the table
-        table_data = [
-            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
-            for step, flag in ogp_after_assembly1_flags.items()
-        ]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### OGP After Assembly 1 Steps Overview")
-        st.table(df_steps)
-
-    # Check if all steps are completed
-    ogp_after_assembly1_steps_completed = all(flag == 'green' for flag in ogp_after_assembly1_flags.values())
-    Ogp_After_Assembly1_Checklist_Flag = 'green' if ogp_after_assembly1_steps_completed else 'red'
-    Ogp_After_Assembly1_Flag_Icon = '\u2705' if Ogp_After_Assembly1_Checklist_Flag == 'green' else '\u274C'
-
-    # Display checklist header with final status
-    st.header(f"OGP After Assembly 1 Check List: {Ogp_After_Assembly1_Flag_Icon}")
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-######################################################################################################################################
-def Assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    ogp_after_assembly1_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly1_flags.values()))
-    Ogp_After_Assembly1_Checklist_Flag = 'green' if ogp_after_assembly1_steps_completed else 'red'
-
-    if Ogp_After_Assembly1_Checklist_Flag=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Gantry' or read_user_group(username)=='All') and Ogp_After_Assembly1_Checklist_Flag=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        for step, flag in assembly2_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show radio buttons for selection
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_assembly2[step]}'
-            )
-            assembly2_flags[step] = status_options[selected_label]
-            click_counts_assembly2[step] += 1
-
-        # Create a DataFrame for displaying the table
-        table_data = [
-            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
-            for step, flag in assembly2_flags.items()
-        ]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Assembly 2 Steps Overview")
-        st.table(df_steps)
-
-    # Check if all steps are completed
-    assembly2_steps_completed = all(flag == 'green' for flag in assembly2_flags.values())
-    Assembly2_Checklist_Flag = 'green' if assembly2_steps_completed else 'red'
-    Assembly2_Flag_Icon = '\u2705' if Assembly2_Checklist_Flag == 'green' else '\u274C'
-
-    # Display checklist header with final status
-    st.header(f"Assembly 2 Check List: {Assembly2_Flag_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###############################################################################################################################
-def OGP_after_assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    assembly2_steps_completed = (all(flag == 'green' for flag in assembly2_flags.values()))
-    Assembly2_Checklist_Flag = 'green' if assembly2_steps_completed else 'red'
-
-    if Assembly2_Checklist_Flag=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Assembly2_Checklist_Flag=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        for step, flag in ogp_after_assembly2_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show radio buttons for selection
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_ogp_after_assembly2[step]}'
-            )
-            ogp_after_assembly2_flags[step] = status_options[selected_label]
-            click_counts_ogp_after_assembly2[step] += 1
-
-        # Create a DataFrame for displaying the table
-        table_data = [
-            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
-            for step, flag in ogp_after_assembly2_flags.items()
-        ]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### OGP After Assembly 2 Steps Overview")
-        st.table(df_steps)
-
-    # Check if all steps are completed
-    ogp_after_assembly2_steps_completed = all(flag == 'green' for flag in ogp_after_assembly2_flags.values())
-    Ogp_After_Assembly2_Flag = 'green' if ogp_after_assembly2_steps_completed else 'red'
-    Ogp_After_Assembly2_Flag_Icon = '\u2705' if Ogp_After_Assembly2_Flag == 'green' else '\u274C'
-
-    # Display checklist header with final status
-    st.header(f"OGP After Assembly 2 Check List: {Ogp_After_Assembly2_Flag_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###########################################################################################################################
-def Electrical_before_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    ogp_after_assembly2_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-    Ogp_After_Assembly2_Flags = 'green' if ogp_after_assembly2_steps_completed else 'red'
-
-    if Ogp_After_Assembly2_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Electrical' or read_user_group(username)=='All') and Ogp_After_Assembly2_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        for step, flag in electrical_before_backside_bonding_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show radio buttons for selection
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_electrical_before_backside_bonding[step]}'
-            )
-            electrical_before_backside_bonding_flags[step] = status_options[selected_label]
-            click_counts_electrical_before_backside_bonding[step] += 1
-
-        # Create a DataFrame for displaying the table
-        table_data = [
-            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
-            for step, flag in electrical_before_backside_bonding_flags.items()
-        ]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Electrical Before Backside Bonding Steps Overview")
-        st.table(df_steps)
-
-    # Check if all steps are completed
-    electrical_before_backside_bonding_steps_completed = all(flag == 'green' for flag in electrical_before_backside_bonding_flags.values())
-    Electrical_Before_Backside_Bonding_Flags = 'green' if electrical_before_backside_bonding_steps_completed else 'red'
-    Electrical_Before_Backside_Bonding_Flags_Icon = '\u2705' if Electrical_Before_Backside_Bonding_Flags == 'green' else '\u274C'
-
-    # Display checklist header with final status
-    st.header(f"Electrical Before Backside Bonding Check List: {Electrical_Before_Backside_Bonding_Flags_Icon}")
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-########################################################################################################
-def Backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    electrical_before_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-    Electrical_Before_Backside_Bonding_Flags = 'green' if electrical_before_backside_bonding_steps_completed else 'red'
-
-    if Electrical_Before_Backside_Bonding_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Bonding' or read_user_group(username)=='All') and Electrical_Before_Backside_Bonding_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        for step, flag in Backside_bonding_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show radio buttons for selection
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_Backside_bonding[step]}'
-            )
-            Backside_bonding_flags[step] = status_options[selected_label]
-            click_counts_Backside_bonding[step] += 1
-
-        # Create a DataFrame for displaying the table
-        table_data = [
-            [step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
-            for step, flag in Backside_bonding_flags.items()
-        ]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Backside Bonding Steps Overview")
-        st.table(df_steps)
-
-    # Check if all steps are completed
-    Backside_bonding_steps_completed = all(flag == 'green' for flag in Backside_bonding_flags.values())
-    Backside_Bonding_Flags = 'green' if Backside_bonding_steps_completed else 'red'
-    Backside_Bonding_Flags_Icon = '\u2705' if Backside_Bonding_Flags == 'green' else '\u274C'
-
-    # Display checklist header with final status
-    st.header(f"Backside Bonding Checklist: {Backside_Bonding_Flags_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-######################################################################################################
-def Ogp_after_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    Backside_bonding_steps_completed = (all(flag == 'green' for flag in Backside_bonding_flags.values()))
-    Backside_Bonding_Flags = 'green' if Backside_bonding_steps_completed else 'red'
-
-    if Backside_Bonding_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Backside_Bonding_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in ogp_after_backside_bonding_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_ogp_after_backside_bonding[step]}'
-            )
-            ogp_after_backside_bonding_flags[step] = status_options[selected_label]
-            click_counts_ogp_after_backside_bonding[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in ogp_after_backside_bonding_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Ogp After Backside Bonding Steps Overview")
-        st.table(df_steps)
-
-    ogp_after_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values()))
-    Ogp_After_Backside_Bonding_Flags = 'green' if ogp_after_backside_bonding_steps_completed else 'red'
-
-    Ogp_After_Backside_Bonding_Flags_Icon = '\u2705' if Ogp_After_Backside_Bonding_Flags == 'green' else '\u274C'
-    st.header(f"Ogp After Backside Bonding: {Ogp_After_Backside_Bonding_Flags_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###########################################################################################################################
-def Backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    ogp_after_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values()))
-    Ogp_After_Backside_Bonding_Flags = 'green' if ogp_after_backside_bonding_steps_completed else 'red'
-
-    if Ogp_After_Backside_Bonding_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Encapsolation' or read_user_group(username)=='All') and Ogp_After_Backside_Bonding_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in Backside_encapsolation_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_Backside_encapsolation[step]}'
-            )
-            Backside_encapsolation_flags[step] = status_options[selected_label]
-            click_counts_Backside_encapsolation[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in Backside_encapsolation_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Backside Encapsolation Steps Overview")
-        st.table(df_steps)
-
-    Backside_encapsolation_steps_completed = (all(flag == 'green' for flag in Backside_encapsolation_flags.values()))
-    Backside_Encapsolation_Flags = 'green' if Backside_encapsolation_steps_completed else 'red'
-
-    Backside_Encapsolation_Flags_Icon = '\u2705' if Backside_Encapsolation_Flags == 'green' else '\u274C'
-    st.header(f"Backside Encapsolation: {Backside_Encapsolation_Flags_Icon}")
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###########################################################################################################################
-def Ogp_after_backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    Backside_encapsolation_steps_completed = (all(flag == 'green' for flag in Backside_encapsolation_flags.values()))
-    Backside_Encapsolation_Flags = 'green' if Backside_encapsolation_steps_completed else 'red'
-
-    if Backside_Encapsolation_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Backside_Encapsolation_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in ogp_after_backside_encapsolation_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_ogp_after_backside_encapsolation[step]}'
-            )
-            ogp_after_backside_encapsolation_flags[step] = status_options[selected_label]
-            click_counts_ogp_after_backside_encapsolation[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in ogp_after_backside_encapsolation_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Ogp After Backside Encapsolation Steps Overview")
-        st.table(df_steps)
-
-    ogp_after_backside_encapsolation_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_encapsolation_flags.values()))
-    Ogp_After_Backside_Encapsolation_Flags = 'green' if ogp_after_backside_encapsolation_steps_completed else 'red'
-
-    Ogp_After_Backside_Encapsolation_Flags_Icon = '\u2705' if Ogp_After_Backside_Encapsolation_Flags == 'green' else '\u274C'
-    st.header(f"Ogp after backside encapsolation: {Ogp_After_Backside_Encapsolation_Flags_Icon}")
-  
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###########################################################################################################################
-def Pull_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    ogp_after_backside_encapsolation_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_encapsolation_flags.values()))
-    Ogp_After_Backside_Encapsolation_Flags = 'green' if ogp_after_backside_encapsolation_steps_completed else 'red'
-
-    if Ogp_After_Backside_Encapsolation_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Bonding' or read_user_group(username)=='All') and Ogp_After_Backside_Encapsolation_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in Pull_test_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_Pull_test[step]}'
-            )
-            Pull_test_flags[step] = status_options[selected_label]
-            click_counts_Pull_test[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in Pull_test_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Pull Test Steps Overview")
-        st.table(df_steps)
-
-    Pull_test_steps_completed = (all(flag == 'green' for flag in Pull_test_flags.values()))
-    Pull_Test_Flags = 'green' if Pull_test_steps_completed else 'red'
-
-    Pull_Test_Flags_Icon = '\u2705' if Pull_Test_Flags == 'green' else '\u274C'
-    st.header(f"Pull Test: {Pull_Test_Flags_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###########################################################################################################################
-def Frontside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    Pull_test_steps_completed = (all(flag == 'green' for flag in Pull_test_flags.values()))
-    Pull_Test_Flags = 'green' if Pull_test_steps_completed else 'red'
-
-    if Pull_Test_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Bonding' or read_user_group(username)=='All') and Pull_Test_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in Frontside_bonding_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_Frontside_bonding[step]}'
-            )
-            Frontside_bonding_flags[step] = status_options[selected_label]
-            click_counts_Frontside_bonding[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in Frontside_bonding_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Frontside Bonding Steps Overview")
-        st.table(df_steps)
-
-    Frontside_bonding_steps_completed = (all(flag == 'green' for flag in Frontside_bonding_flags.values()))
-    Frontside_Bonding_Flags = 'green' if Frontside_bonding_steps_completed else 'red'
-
-    Frontside_Bonding_Flags_Icon = '\u2705' if Frontside_Bonding_Flags == 'green' else '\u274C'
-    st.header(f"Frontside Bonding: {Frontside_Bonding_Flags_Icon}")
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-###########################################################################################################################
-def OGP_after_frontside_bounding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    Frontside_bonding_steps_completed = (all(flag == 'green' for flag in Frontside_bonding_flags.values()))
-    Frontside_Bonding_Flags = 'green' if Frontside_bonding_steps_completed else 'red'
-
-    if Frontside_Bonding_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Frontside_Bonding_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in OGP_after_frontside_bounding_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_OGP_after_frontside_bounding[step]}'
-            )
-            OGP_after_frontside_bounding_flags[step] = status_options[selected_label]
-            click_counts_OGP_after_frontside_bounding[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in OGP_after_frontside_bounding_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### OGP After Frontside Bounding Steps Overview")
-        st.table(df_steps)
-
-    OGP_after_frontside_bounding_steps_completed = (all(flag == 'green' for flag in OGP_after_frontside_bounding_flags.values()))
-    OGP_After_Frontside_Bounding_Flags = 'green' if OGP_after_frontside_bounding_steps_completed else 'red'
-
-    OGP_After_Frontside_Bounding_Flags_Icon = '\u2705' if OGP_After_Frontside_Bounding_Flags == 'green' else '\u274C'
-    st.header(f"OGP After Frontside Bounding: {OGP_After_Frontside_Bounding_Flags_Icon}")
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-############################################################################################################################
-def Module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    OGP_after_frontside_bounding_steps_completed = (all(flag == 'green' for flag in OGP_after_frontside_bounding_flags.values()))
-    OGP_After_Frontside_Bounding_Flags = 'green' if OGP_after_frontside_bounding_steps_completed else 'red'
-
-    if OGP_After_Frontside_Bounding_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Encapsolation' or read_user_group(username)=='All') and OGP_After_Frontside_Bounding_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in Module_encapsolation_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_Module_encapsolation[step]}'
-            )
-            Module_encapsolation_flags[step] = status_options[selected_label]
-            click_counts_Module_encapsolation[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in Module_encapsolation_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Module Encapsulation Steps Overview")
-        st.table(df_steps)
-
-    Module_encapsolation_steps_completed = (all(flag == 'green' for flag in Module_encapsolation_flags.values()))
-    Module_Encapsolation_Flags = 'green' if Module_encapsolation_steps_completed else 'red'
-
-    Module_Encapsolation_Flags_Icon = '\u2705' if Module_Encapsolation_Flags == 'green' else '\u274C'
-    st.header(f"Module Encapsulation: {Module_Encapsolation_Flags_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-############################################################################################################################
-def OGP_after_module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    Module_encapsolation_steps_completed = (all(flag == 'green' for flag in Module_encapsolation_flags.values()))
-    Module_Encapsolation_Flags = 'green' if Module_encapsolation_steps_completed else 'red'
-
-    if Module_Encapsolation_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Module_Encapsolation_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in OGP_after_module_encapsolation_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_OGP_after_module_encapsolation[step]}'
-            )
-            OGP_after_module_encapsolation_flags[step] = status_options[selected_label]
-            click_counts_OGP_after_module_encapsolation[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in OGP_after_module_encapsolation_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### OGP After Module Encapsulation Steps Overview")
-        st.table(df_steps)
-
-    OGP_after_module_encapsolation_steps_completed = (all(flag == 'green' for flag in OGP_after_module_encapsolation_flags.values()))
-    OGP_After_Module_Encapsolation_Flags = 'green' if OGP_after_module_encapsolation_steps_completed else 'red'
-
-    OGP_After_Module_Encapsolation_Flags_Icon = '\u2705' if OGP_After_Module_Encapsolation_Flags == 'green' else '\u274C'
-    st.header(f"OGP After Module Encapsulation: {OGP_After_Module_Encapsolation_Flags_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
-############################################################################################################################
-def Final_electrical_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-    OGP_after_module_encapsolation_steps_completed = (all(flag == 'green' for flag in OGP_after_module_encapsolation_flags.values()))
-    OGP_After_Module_Encapsolation_Flags = 'green' if OGP_after_module_encapsolation_steps_completed else 'red'
-
-    if OGP_After_Module_Encapsolation_Flags=='red':
-        st.write("Please finish the previous step first")
-
-    if (read_user_group(username)=='Electrical' or read_user_group(username)=='All') and OGP_After_Module_Encapsolation_Flags=='green':
-        status_options = {
-            '\u2705 Green': 'green',
-            '\u26A0\uFE0F Yellow': 'yellow',
-            '\u274C Red': 'red'
-        }
-
-        # Display each step with options for the status
-        for step, flag in Final_electrical_test_flags.items():
-            selected_label = st.radio(
-                f"{step} Flag:",
-                list(status_options.keys()),  # Show all options as radio buttons
-                index=list(status_options.values()).index(flag),
-                key=f'{step}_radio',
-                help=f'Click count: {click_counts_Final_electrical_test[step]}'
-            )
-            Final_electrical_test_flags[step] = status_options[selected_label]
-            click_counts_Final_electrical_test[step] += 1
-
-        # Prepare data for the table
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
-                      for step, flag in Final_electrical_test_flags.items()]
-
-        # Create a DataFrame to display the table
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
-
-        st.write("### Final Electrical Test Steps Overview")
-        st.table(df_steps)
-
-    Final_electrical_test_steps_completed = (all(flag == 'green' for flag in Final_electrical_test_flags.values()))
-    Final_Electrical_Test_Flags = 'green' if Final_electrical_test_steps_completed else 'red'
-
-    Final_Electrical_Test_Flags_Icon = '\u2705' if Final_Electrical_Test_Flags == 'green' else '\u274C'
-    st.header(f"Final Electrical Test: {Final_Electrical_Test_Flags_Icon}")
-
-    if st.button("Save Flags to File"):
-        all_checklists_flags = {
-                'OGP before assembly': ogp_before_assembly_flags,
-                'Assembly1':assembly1_flags,
-                'OGP after assembly1':ogp_after_assembly1_flags,
-                'Assembly2':assembly2_flags,
-                'OGP after assembly2':ogp_after_assembly2_flags,
-                'Electrical before backside bonding':electrical_before_backside_bonding_flags,
-                'Backside bonding':Backside_bonding_flags,
-                'OGP after backside bonding':ogp_after_backside_bonding_flags,
-                'Backside encapsolation':Backside_encapsolation_flags,
-                'OGP after backside encapsolation':ogp_after_backside_encapsolation_flags,
-                'Pull test':Pull_test_flags,
-                'Frontside bonding':Frontside_bonding_flags,
-                'OGP after frontside bonding':OGP_after_frontside_bounding_flags,
-                'Module encapsolation':Module_encapsolation_flags,
-                'OGP after module encapsolation':OGP_after_module_encapsolation_flags,
-                'Final electrical test':Final_electrical_test_flags
-            }
-        details = {
-            'Module Number': module_number,
-            'Sensor ID': sensor_id,
-            'Hexboard Number': hexboard_number,
-            'Baseplate Number': baseplate_number,
-            'Remeasurement Number': remeasurement_number,
-        }
-                   
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
-        find_unfinished_modules()
 ############################################################################################################################
 def Apply_Double_Sided_Tape(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
     if(read_user_group(username) == 'OGP' or read_user_group(username) == 'All'):
@@ -1725,9 +326,9 @@ def First_Electrical_Test(username,module_number,sensor_id,hexboard_number,basep
                 list(status_options.keys()),  # Show all options as radio buttons
                 index=list(status_options.values()).index(flag),
                 key=f'{step}_radio',
-                help=f'Click count: {click_counts_assembly1[step]}'
+                help=f'Click count: {click_counts_First_electrical_test[step]}'
             )
-            assembly1_flags[step] = status_options[selected_label]
+            First_electrical_test_flags[step] = status_options[selected_label]
             click_counts_First_electrical_test[step] += 1
 
         table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in First_electrical_test_flags.items()]
@@ -2242,7 +843,10 @@ def find_unfinished_modules():
             unfinished_modules.append(group_data)
 
     # Concatenate the unfinished modules into a single DataFrame
-    unfinished_df = pd.concat(unfinished_modules)
+    if unfinished_modules:  # Check if the list is not empty
+        unfinished_df = pd.concat(unfinished_modules, ignore_index=True)
+    else:
+        unfinished_df = pd.DataFrame() 
 
     # Save the unfinished modules to a new CSV file
     unfinished_df.to_csv("IHEP_MAC_Bookkeeping/unfinished_module.csv", index=False)
@@ -2310,139 +914,91 @@ def show_unfinished_modules(username):
 
             if all([module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number]):
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                option1=st.selectbox("Select an option", ("Overview","OGP before assembly","Assembly1","OGP after assembly1","Assembly2","OGP after assembly2","Electrical before backside bonding","Backside bonding","OGP after backside bonding","Backside encapsolation","OGP after backside encapsolation","Pull test","Frontside bonding","OGP after frontside bonding","Module encapsolation","OGP after module encapsolation","Final electrical test"),key="option1")
+                option1=st.selectbox("Select an option", ("Overview", "Apply double-sided tape", "1st Electrical test" , "Gantry assembly",   "OGP of gantry assembly", "Ready for bonding", "Bonding completed",  "OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"),key="option1")
             if option1=='Overview':
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
-                Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
-                Ogp_Before_Assembly_Icon = '\u2705' if Ogp_Before_Assembly_Flag == 'green' else '\u274C'
-                st.header(f"OGP Before Assembly: {Ogp_Before_Assembly_Icon}")
+                
+                apply_double_sided_tape_completed = all(flag == 'green' for flag in Apply_double_sided_tape_flags.values())
+                Apply_Double_Sided_Tape_Flag = 'green' if apply_double_sided_tape_completed else 'red'
+                Apply_double_sided_tape_Icon = '\u2705' if Apply_Double_Sided_Tape_Flag == 'green' else '\u274C'
 
+                first_electrical_test_completed = all(flag == 'green' for flag in First_electrical_test_flags.values())
+                First_Electrical_Test_Flag = 'green' if first_electrical_test_completed else 'red'
+                First_Electrical_Test_Icon = '\u2705' if First_Electrical_Test_Flag == 'green' else '\u274C'
 
-                assembly1_steps_completed = all(flag == 'green' for flag in assembly1_flags.values())
-                Assembly1_Checklist_Flag = 'green' if assembly1_steps_completed else 'red'
-                Assembly1_Flag_Icon = '\u2705' if Assembly1_Checklist_Flag == 'green' else '\u274C'
-                st.header(f"Assembly1: {Assembly1_Flag_Icon}")
+                gantry_assembly_completed = all(flag == 'green' for flag in Gantry_assembly_flags.values())
+                Gantry_Assembly_Flag = 'green' if gantry_assembly_completed else 'red'
+                Gantry_Assembly_Icon = '\u2705' if Gantry_Assembly_Flag == 'green' else '\u274C'
 
-                ogp_after_assembly1_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly1_flags.values()))
-                Ogp_After_Assembly1_Checklist_Flag = 'green' if ogp_after_assembly1_steps_completed else 'red'
-                Ogp_After_Assembly1_Checklist_Flag_Icon = '\u2705' if Ogp_After_Assembly1_Checklist_Flag == 'green' else '\u274C'
-                st.header(f"Ogp After Assembly1: {Ogp_After_Assembly1_Checklist_Flag_Icon}")
+                ogp_gantry_assembly_completed = all(flag == 'green' for flag in OGP_gantry_assembly_flags.values())
+                OGP_Gantry_Assembly_Flag = 'green' if ogp_gantry_assembly_completed else 'red'
+                OGP_Gantry_Assembly_Icon = '\u2705' if OGP_Gantry_Assembly_Flag == 'green' else '\u274C'
 
-                assembly2_steps_completed = (all(flag == 'green' for flag in assembly2_flags.values()))
-                Assembly2_Checklist_Flag = 'green' if assembly2_steps_completed else 'red'
-                Assembly2_Checklist_Flag_Icon = '\u2705' if Assembly2_Checklist_Flag == 'green' else '\u274C'
-                st.header(f"Assembly2: {Assembly2_Checklist_Flag_Icon}")
+                ready_for_bonding_completed = all(flag == 'green' for flag in Ready_for_bonding_flags.values())
+                Ready_for_Bonding_Flag = 'green' if ready_for_bonding_completed else 'red'
+                Ready_for_Bonding_Icon = '\u2705' if Ready_for_Bonding_Flag == 'green' else '\u274C'
 
-                ogp_after_assembly2_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-                Ogp_After_Assembly2_Flags = 'green' if ogp_after_assembly2_steps_completed else 'red'
-                Ogp_After_Assembly2_Flags_Icon = '\u2705' if Ogp_After_Assembly2_Flags == 'green' else '\u274C'
-                st.header(f"Ogp After Assembly2: {Ogp_After_Assembly2_Flags_Icon}")
+                bonding_completed = all(flag == 'green' for flag in Bonding_completed_flags.values())
+                Bonding_Completed_Flag = 'green' if bonding_completed else 'red'
+                Bonding_Completed_Icon = '\u2705' if Bonding_Completed_Flag == 'green' else '\u274C'
 
-                electrical_before_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_assembly2_flags.values()))
-                Electrical_Before_Backside_Bonding_Flags = 'green' if electrical_before_backside_bonding_steps_completed else 'red'
-                Electrical_Before_Backside_Bonding_Flags_Icon = '\u2705' if Electrical_Before_Backside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Electrical test Before Backside Bonding: {Electrical_Before_Backside_Bonding_Flags_Icon}")
+                ogp_bonding_completed = all(flag == 'green' for flag in OGP_bonding_flags.values())
+                OGP_Bonding_Flag = 'green' if ogp_bonding_completed else 'red'
+                OGP_Bonding_Icon = '\u2705' if OGP_Bonding_Flag == 'green' else '\u274C'
 
-                Backside_bonding_steps_completed = (all(flag == 'green' for flag in Backside_bonding_flags.values()))
-                Backside_Bonding_Flags = 'green' if Backside_bonding_steps_completed else 'red'
-                Backside_Bonding_Flags_Icon = '\u2705' if Backside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Backside_Bonding: {Backside_Bonding_Flags_Icon}")
+                encapsulation_completed = all(flag == 'green' for flag in Encapsulation_flags.values())
+                Encapsulation_Flag = 'green' if encapsulation_completed else 'red'
+                Encapsulation_Icon = '\u2705' if Encapsulation_Flag == 'green' else '\u274C'
 
-                ogp_after_backside_bonding_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values()))
-                Ogp_After_Backside_Bonding_Flags = 'green' if ogp_after_backside_bonding_steps_completed else 'red'
-                Ogp_After_Backside_Bonding_Flags_Icon = '\u2705' if Ogp_After_Backside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Ogp After Backside Bonding: {Ogp_After_Backside_Bonding_Flags_Icon}")
+                ready_for_second_electrical_test_completed = all(flag == 'green' for flag in Ready_for_second_electrical_test_flags.values())
+                Ready_for_Second_Electrical_Test_Flag = 'green' if ready_for_second_electrical_test_completed else 'red'
+                Ready_for_Second_Electrical_Test_Icon = '\u2705' if Ready_for_Second_Electrical_Test_Flag == 'green' else '\u274C'
 
-                Backside_encapsolation_steps_completed = (all(flag == 'green' for flag in Backside_encapsolation_flags.values()))
-                Backside_Encapsolation_Flags = 'green' if Backside_encapsolation_steps_completed else 'red'
-                Backside_Encapsolation_Flags_Icon = '\u2705' if Backside_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"Backside Encapsolation: {Backside_Encapsolation_Flags_Icon}")
+                second_electrical_test_completed = all(flag == 'green' for flag in Second_electrical_test_flags.values())
+                Second_Electrical_Test_Flag = 'green' if second_electrical_test_completed else 'red'
+                Second_Electrical_Test_Icon = '\u2705' if Second_Electrical_Test_Flag == 'green' else '\u274C'
 
-                ogp_after_backside_encapsolation_steps_completed = (all(flag == 'green' for flag in ogp_after_backside_encapsolation_flags.values()))
-                Ogp_After_Backside_Encapsolation_Flags = 'green' if ogp_after_backside_encapsolation_steps_completed else 'red'
-                Ogp_After_Backside_Encapsolation_Flags_Icon = '\u2705' if Ogp_After_Backside_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"Ogp after backside encapsolation: {Ogp_After_Backside_Encapsolation_Flags_Icon}")
-
-                Pull_test_steps_completed = (all(flag == 'green' for flag in Pull_test_flags.values()))
-                Pull_Test_Flags = 'green' if Pull_test_steps_completed else 'red'
-                Pull_Test_Flags_Icon = '\u2705' if Pull_Test_Flags == 'green' else '\u274C'
-                st.header(f"Pull Test: {Pull_Test_Flags_Icon}")
-
-                Frontside_bonding_steps_completed = (all(flag == 'green' for flag in Frontside_bonding_flags.values()))
-                Frontside_Bonding_Flags = 'green' if Frontside_bonding_steps_completed else 'red'
-                Frontside_Bonding_Flags_Icon = '\u2705' if Frontside_Bonding_Flags == 'green' else '\u274C'
-                st.header(f"Frontside Bonding: {Frontside_Bonding_Flags_Icon}")
-
-                OGP_after_frontside_bounding_steps_completed = (all(flag == 'green' for flag in OGP_after_frontside_bounding_flags.values()))
-                OGP_After_Frontside_Bounding_Flags = 'green' if OGP_after_frontside_bounding_steps_completed else 'red'
-                OGP_After_Frontside_Bounding_Flags_Icon = '\u2705' if OGP_After_Frontside_Bounding_Flags == 'green' else '\u274C'
-                st.header(f"OGP After Frontside Bounding: {OGP_After_Frontside_Bounding_Flags_Icon}")
-
-                Module_encapsolation_steps_completed = (all(flag == 'green' for flag in Module_encapsolation_flags.values()))
-                Module_Encapsolation_Flags = 'green' if Module_encapsolation_steps_completed else 'red'
-                Module_Encapsolation_Flags_Icon = '\u2705' if Module_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"Module Encapsolation: {Module_Encapsolation_Flags_Icon}")
-
-                OGP_after_module_encapsolation_steps_completed = (all(flag == 'green' for flag in OGP_after_module_encapsolation_flags.values()))
-                OGP_After_Module_Encapsolation_Flags = 'green' if OGP_after_module_encapsolation_steps_completed else 'red'
-                OGP_After_Module_Encapsolation_Flags_Icon = '\u2705' if OGP_After_Module_Encapsolation_Flags == 'green' else '\u274C'
-                st.header(f"OGP After Module Encapsolation: {OGP_After_Module_Encapsolation_Flags_Icon}")
-
-                Final_electrical_test_steps_completed = (all(flag == 'green' for flag in Final_electrical_test_flags.values()))
-                Final_Electrical_Test_Flags = 'green' if Final_electrical_test_steps_completed else 'red'
-                Final_Electrical_Test_Flags_Icon = '\u2705' if Final_Electrical_Test_Flags == 'green' else '\u274C'
-                st.header(f"Final Electrical Test: {Final_Electrical_Test_Flags_Icon}")
-
-
-            if option1=="OGP before assembly":
+            if option1 == "Apply double-sided tape":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_before_assembly(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=="Assembly1":
+                Apply_Double_Sided_Tape(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "1st Electrical test":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after assembly1':
+                First_Electrical_Test(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "Gantry assembly":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_assembly1(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Assembly2':
+                Gantry_Assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "OGP of gantry assembly":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after assembly2':
+                OGP_Gantry_Assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "Ready for bonding":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_assembly2(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Electrical before backside bonding':
+                Ready_for_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "Bonding completed":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Electrical_before_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Backside bonding':
+                Bonding_Completed(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "OGP of bonding":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after backside bonding':
+                OGP_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "Encapsulation":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Ogp_after_backside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Backside encapsolation':
+                Encapsulation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "Ready for the 2nd Electrical test":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after backside encapsolation':
+                Ready_for_Second_Electrical_Test(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+
+            if option1 == "2nd Electrical test":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Ogp_after_backside_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Pull test':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Pull_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Frontside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Frontside_bonding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after frontside bonding':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_frontside_bounding(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Module encapsolation':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='OGP after module encapsolation':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_after_module_encapsolation(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
-            if option1=='Final electrical test':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Final_electrical_test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment)
+                Second_Electrical_Test(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+            
+
 ###################################################################################################################################################################
 def plot_selected_module():
     module_number = st.text_input("Enter Module Number")
@@ -2645,6 +1201,9 @@ def main():
 
         show_image = False
         username = st.session_state.username  # Retrieve username
+        st.sidebar.write("### Select an Option")
+
+
         option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
         
         if option == "Home":
@@ -2665,6 +1224,7 @@ def main():
             start_date = pd.to_datetime(start_date)
             end_date = pd.to_datetime(end_date)
             plot = plot_modules(start_date, end_date)
+
             st.markdown(plot, unsafe_allow_html=True)
         
         st.sidebar.button("Logout", on_click=lambda: st.session_state.update(authenticated=False))  # Logout Button
