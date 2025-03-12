@@ -10,6 +10,32 @@ import base64
 
 # Initialize flag status as global variables
 
+STEPS = [
+    "Overview", "Apply double-sided tape", "1st Electrical test", "Gantry assembly",
+    "OGP of gantry assembly", "Ready for bonding", "Bonding completed",
+    "OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"
+]
+
+
+
+# Function to handle navigation
+def navigate(step_change):
+    new_index = st.session_state.step_index + step_change
+    if 0 <= new_index < len(STEPS):  # Ensure index is within bounds
+        st.session_state.step_index = new_index
+        st.rerun()
+
+def show_navigation_buttons():
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("⬅️ Previous Step", key="prev_step") and st.session_state.step_index > 0:
+            navigate(-1)
+
+    with col2:
+        if st.button("➡️ Next Step", key="next_step") and st.session_state.step_index < len(STEPS) - 1:
+            navigate(1)
+
 Apply_double_sided_tape_flags = {
     'Apply double-sided tape': 'red',
 }
@@ -125,7 +151,15 @@ def Module_Assembly_Check_List(username):
         # Checkbox to submit the details
     if st.checkbox("Display status"):
         if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
-            option1=st.selectbox("Select a step", ("Overview", "Apply double-sided tape", "1st Electrical test" , "Gantry assembly",   "OGP of gantry assembly", "Ready for bonding", "Bonding completed",  "OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"),key="option1")
+            #steps = [
+            #"Overview", "Apply double-sided tape", "1st Electrical test", "Gantry assembly",
+            #"OGP of gantry assembly", "Ready for bonding", "Bonding completed",
+            #"OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"]
+            #if "step_index" not in st.session_state:
+            #    st.session_state.step_index = 0
+            option1 = st.selectbox("Select a step", STEPS, index=st.session_state.step_index, key="option1")
+            st.session_state.step_index = STEPS.index(option1)
+            #option1=st.selectbox("Select a step", ("Overview", "Apply double-sided tape", "1st Electrical test" , "Gantry assembly",   "OGP of gantry assembly", "Ready for bonding", "Bonding completed",  "OGP of bonding", "Encapsulation", "Ready for the 2nd Electrical test", "2nd Electrical test"),key="option1")
             if option1=='Overview':
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
 
@@ -202,6 +236,11 @@ def Module_Assembly_Check_List(username):
 
                 # Display as a table
                 st.table(checklist_df)
+                col1, col2 = st.columns(2)
+
+                with col2:
+                     if st.button("➡️ Next Step") and st.session_state.step_index < len(STEPS) - 1:
+                        navigate(1)
 
             if option1 == "Apply double-sided tape":
                 initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
@@ -248,6 +287,9 @@ def Module_Assembly_Check_List(username):
 
 ############################################################################################################################
 def Apply_Double_Sided_Tape(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    
+    show_navigation_buttons()
+
     if(read_user_group(username) == 'OGP' or read_user_group(username) == 'All'):
         status_options = {
             '\u2705 Green': 'green',
@@ -306,7 +348,7 @@ def Apply_Double_Sided_Tape(username, module_number, sensor_id, hexboard_number,
         find_unfinished_modules()
 ############################################################################################################################
 def First_Electrical_Test(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
-
+    show_navigation_buttons()
     apply_double_sided_tape_completed = all(flag == 'green' for flag in Apply_double_sided_tape_flags.values())
     Apply_Double_Sided_Tape_Flag = 'green' if apply_double_sided_tape_completed else 'red'
 
@@ -367,6 +409,7 @@ def First_Electrical_Test(username,module_number,sensor_id,hexboard_number,basep
         find_unfinished_modules()
 ############################################################################################################################
 def Gantry_Assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     first_electrical_test_completed = all(flag == 'green' for flag in First_electrical_test_flags.values())
     First_Electrical_Test_Flag = 'green' if first_electrical_test_completed else 'red'
 
@@ -424,6 +467,7 @@ def Gantry_Assembly(username, module_number, sensor_id, hexboard_number, basepla
         find_unfinished_modules()
 ############################################################################################################################
 def OGP_Gantry_Assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     gantry_assembly_completed = all(flag == 'green' for flag in Gantry_assembly_flags.values())
     Gantry_Assembly_Flag = 'green' if gantry_assembly_completed else 'red'
 
@@ -482,6 +526,7 @@ def OGP_Gantry_Assembly(username, module_number, sensor_id, hexboard_number, bas
 ############################################################################################################################
 
 def Ready_for_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     ogp_gantry_assembly_completed = all(flag == 'green' for flag in OGP_gantry_assembly_flags.values())
     OGP_Gantry_Assembly_Flag = 'green' if ogp_gantry_assembly_completed else 'red'
 
@@ -539,6 +584,7 @@ def Ready_for_Bonding(username, module_number, sensor_id, hexboard_number, basep
         find_unfinished_modules()
 ############################################################################################################################
 def Bonding_Completed(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     ready_for_bonding_completed = all(flag == 'green' for flag in Ready_for_bonding_flags.values())
     Ready_for_Bonding_Flag = 'green' if ready_for_bonding_completed else 'red'
 
@@ -597,6 +643,7 @@ def Bonding_Completed(username, module_number, sensor_id, hexboard_number, basep
 
 ############################################################################################################################
 def OGP_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     bonding_completed = all(flag == 'green' for flag in Bonding_completed_flags.values())
     Bonding_Completed_Flag = 'green' if bonding_completed else 'red'
 
@@ -655,6 +702,7 @@ def OGP_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_n
 
 ############################################################################################################################
 def Encapsulation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     ogp_bonding_completed = all(flag == 'green' for flag in OGP_bonding_flags.values())
     OGP_Bonding_Flag = 'green' if ogp_bonding_completed else 'red'
 
@@ -713,6 +761,7 @@ def Encapsulation(username, module_number, sensor_id, hexboard_number, baseplate
 
 ############################################################################################################################
 def Ready_for_Second_Electrical_Test(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     encapsulation_completed = all(flag == 'green' for flag in Encapsulation_flags.values())
     Encapsulation_Flag = 'green' if encapsulation_completed else 'red'
 
@@ -771,6 +820,7 @@ def Ready_for_Second_Electrical_Test(username, module_number, sensor_id, hexboar
 
 ############################################################################################################################
 def Second_Electrical_Test(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+    show_navigation_buttons()
     ready_for_second_electrical_test_completed = all(flag == 'green' for flag in Ready_for_second_electrical_test_flags.values())
     Ready_for_Second_Electrical_Test_Flag = 'green' if ready_for_second_electrical_test_completed else 'red'
 
