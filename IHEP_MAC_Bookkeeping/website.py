@@ -7,14 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-
-# Initialize flag status as global variables
-
-STEPS = [
-    "Overview","OGP before assembly","Assembly1","OGP after assembly1","Assembly2","OGP after assembly2","Electrical before backside bonding","Backside bonding","OGP after backside bonding","Backside encapsolation","OGP after backside encapsolation","Pull test","Frontside bonding","OGP after frontside bonding","Module encapsolation","OGP after module encapsolation","Final electrical test"
-]
-
-
+import numpy as np
 
 # Function to handle navigation
 def navigate(step_change):
@@ -33,6 +26,13 @@ def show_navigation_buttons():
     with col2:
         if st.button("➡️ Next Step", key="next_step") and st.session_state.step_index < len(STEPS) - 1:
             navigate(1)
+
+# Initialize flag status as global variables
+
+STEPS = [
+    "Overview","OGP before assembly","Assembly1","OGP after assembly1","Assembly2","OGP after assembly2","Electrical before backside bonding","Backside bonding","OGP after backside bonding","Backside encapsolation","OGP after backside encapsolation","Pull test","Frontside bonding","OGP after frontside bonding","Module encapsolation","OGP after module encapsolation","Final electrical test"
+]
+
 
 ogp_before_assembly_flags = {
     'Visual inspection for damage and thickness for sensor': 'red',
@@ -140,7 +140,7 @@ def authenticate_user(username, password):
         return False
 #################################################################################################
 
-def initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number,remeasurement_number):
+def initialize_session_state2(module_number, sensor_id, hexboard_number, baseplate_number,remeasurement_number):
     if os.path.exists("IHEP_MAC_Bookkeeping/output.csv"):
         existing_flags_df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
 
@@ -178,6 +178,66 @@ def initialize_session_state(module_number, sensor_id, hexboard_number, baseplat
                 for step_ in flags:
                     flags[step_] = 'red'
 #################################################################################################
+def initialize_session_state(module_number=None, sensor_id=None, hexboard_number=None, baseplate_number=None, remeasurement_number=None):
+    if os.path.exists("IHEP_MAC_Bookkeeping/output.csv"):
+        existing_flags_df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number': str})
+
+        # Check if this is the first time input (all parameters are provided)
+        if all([module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number]):
+            existing_flags = existing_flags_df[
+                (existing_flags_df['Module Number'] == module_number) &
+                (existing_flags_df['Sensor ID'] == sensor_id) &
+                (existing_flags_df['Hexboard Number'] == hexboard_number) &
+                (existing_flags_df['Baseplate Number'] == baseplate_number) &
+                (existing_flags_df['Remeasurement Number'] == remeasurement_number)
+            ]
+        else:
+            # If not all parameters are provided, search using any non-None parameter
+            conditions = []
+            if module_number:
+                conditions.append(existing_flags_df['Module Number'] == module_number)
+            if sensor_id:
+                conditions.append(existing_flags_df['Sensor ID'] == sensor_id)
+            if hexboard_number:
+                conditions.append(existing_flags_df['Hexboard Number'] == hexboard_number)
+            if baseplate_number:
+                conditions.append(existing_flags_df['Baseplate Number'] == baseplate_number)
+            if remeasurement_number:
+                conditions.append(existing_flags_df['Remeasurement Number'] == remeasurement_number)
+
+            if conditions:
+                existing_flags = existing_flags_df[np.logical_and.reduce(conditions)]
+            else:
+                existing_flags = pd.DataFrame()  # Empty DataFrame if no conditions
+
+        if not existing_flags.empty:
+            for index, row in existing_flags.iterrows():
+                step_ = row['Step']
+                flag_ = row['Flag']
+                # Update the flags if found in existing data
+                for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
+                              assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
+                              Backside_bonding_flags, ogp_after_backside_bonding_flags,
+                              Backside_encapsolation_flags, ogp_after_backside_encapsolation_flags,
+                              Pull_test_flags, Frontside_bonding_flags, OGP_after_frontside_bounding_flags,
+                              Module_encapsolation_flags, OGP_after_module_encapsolation_flags,
+                              Final_electrical_test_flags]:
+                    if step_ in flags:
+                        flags[step_] = flag_
+        else:
+            # Set default values for all flags if not found in existing data
+            for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
+                          assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
+                          Backside_bonding_flags, ogp_after_backside_bonding_flags,
+                          Backside_encapsolation_flags, ogp_after_backside_encapsolation_flags,
+                          Pull_test_flags, Frontside_bonding_flags, OGP_after_frontside_bounding_flags,
+                          Module_encapsolation_flags, OGP_after_module_encapsolation_flags,
+                          Final_electrical_test_flags]:
+                for step_ in flags:
+                    flags[step_] = 'red'
+#################################################################################################
+
+
 
 def Module_Assembly_Check_List(username):
     st.title("Welcome to the HGCal module assembly checklist")
@@ -190,7 +250,8 @@ def Module_Assembly_Check_List(username):
     usergroup=read_user_group(username)
         # Checkbox to submit the details
     if st.checkbox("Display status"):
-        if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
+        #if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
+        if module_number or sensor_id or hexboard_number or baseplate_number or remeasurement_number:
             if "step_index" not in st.session_state:
                 st.session_state.step_index = 0
             option1 = st.selectbox("Select a step", STEPS, index=st.session_state.step_index, key="option1")
@@ -1553,6 +1614,9 @@ def find_unfinished_modules():
     outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
     if not os.path.exists(outputfile_path):
         print(f"File '{outputfile_path}' not found. Creating an empty CSV.")
+        columns = ["Username", "UserGroup", "DateAndTime", "Module Number", 
+               "Sensor ID", "Hexboard Number", "Baseplate Number", 
+               "Remeasurement Number", "Checklist Name", "Step", "Flag", "Comment"]
         pd.DataFrame(columns=columns).to_csv(outputfile_path, index=False)
     
     df = pd.read_csv(outputfile_path)
@@ -1821,7 +1885,7 @@ def plot_selected_module():
             return image_tag
 ###################################################################################################################################################################
 
-def plot_modules(start_date=None, end_date=None):
+def plot_modules():
     # Read the IHEP_MAC_Bookkeeping/output.csv file
     outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
     if not os.path.exists(outputfile_path) or os.stat(outputfile_path).st_size == 0:
@@ -1835,6 +1899,14 @@ def plot_modules(start_date=None, end_date=None):
 
     # Convert 'DateAndTime' to datetime
     df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
+
+    min_date = df["DateAndTime"].min()
+    max_date = df["DateAndTime"].max()
+    start_date = st.date_input("Select Start Date", min_value=min_date, max_value=max_date, value=min_date)
+    end_date = st.date_input("Select End Date", min_value=min_date, max_value=max_date, value=max_date)
+    # Convert selected dates to datetime
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
 
     if start_date:
         df = df[df["DateAndTime"] >= start_date]
@@ -1874,10 +1946,68 @@ def plot_modules(start_date=None, end_date=None):
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
+
+
+
+
     image_tag = f'<img src="data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}" />'
     plt.close()
 
     return image_tag
+
+#############################################################################################################################################################
+def plot_steps():
+    # Read the IHEP_MAC_Bookkeeping/output.csv file
+    outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
+
+    if not os.path.exists(outputfile_path) or os.stat(outputfile_path).st_size == 0:
+        st.error(f"File '{outputfile_path}' is missing or empty. No data available.")
+        st.stop()  # Stop execution
+    
+    # Date selection for filtering
+    df = pd.read_csv(outputfile_path)
+    if df.empty:
+        st.warning("The data file is empty. No data available to display.")
+        st.stop()
+
+
+    # Convert 'DateAndTime' to datetime
+    df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
+
+     # Get unique steps for selection
+    unique_steps = df["Step"].unique()
+    
+    # Step selection
+    selected_step = st.selectbox("Select a Step:", unique_steps)
+
+    # Filter data for the selected step and only 'green' flagged rows
+    filtered_df = df[(df["Step"] == selected_step) & (df["Flag"] == "green")]
+
+    mode = st.radio("Select mode:", ["Numbers per day", "Accumulated numbers"])
+
+    # Count finished modules per day
+    finished_per_day = filtered_df.groupby(filtered_df["DateAndTime"].dt.date).size()
+
+    if mode == "Accumulated numbers":
+        finished_per_day = finished_per_day.cumsum()  # Convert to cumulative sum
+
+    # Plot the number of finished modules over time
+    plt.figure(figsize=(12, 6))
+    plt.bar(finished_per_day.index, finished_per_day.values, color="lightgreen")
+    plt.title(f"Number of Finished Modules Over Time ({selected_step}) - {mode}")
+    plt.xlabel("Date")
+    plt.ylabel("Number of Finished Modules")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+    # Convert plot to an image for embedding
+    buffer = BytesIO()
+    plt.savefig(buffer, format="png", bbox_inches="tight")
+    buffer.seek(0)
+    image_tag = f'<img src="data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}" />'
+    plt.close()
+
+    return image_tag    
 #############################################################################################################################################################
 def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, comment):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -2006,27 +2136,14 @@ def main():
         if option == "Unfinished Modules":
             show_unfinished_modules(username)
         if option== "Module Status Summary":
-            outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
-            if not os.path.exists(outputfile_path) or os.stat(outputfile_path).st_size == 0:
-                st.error(f"File '{outputfile_path}' is missing or empty. No data available.")
-                st.stop()  # Stop execution
-            # Date selection for filtering
-            df = pd.read_csv(outputfile_path)
-            if df.empty:
-                st.warning("The data file is empty. No data available to display.")
-                st.stop()
-            df["DateAndTime"] = pd.to_datetime(df["DateAndTime"])
-            min_date = df["DateAndTime"].min()
-            max_date = df["DateAndTime"].max()
-            start_date = st.date_input("Select Start Date", min_value=min_date, max_value=max_date, value=min_date)
-            end_date = st.date_input("Select End Date", min_value=min_date, max_value=max_date, value=max_date)
-            # Convert selected dates to datetime
-            start_date = pd.to_datetime(start_date)
-            end_date = pd.to_datetime(end_date)
-            plot = plot_modules(start_date, end_date)
-
-            st.markdown(plot, unsafe_allow_html=True)
-        
+            plot_choice = st.sidebar.radio("Select Plot Type:", ["Modules Summary", "Steps Over Time"])
+            if plot_choice == "Steps Over Time":
+                plot = plot_steps() 
+                st.markdown(plot, unsafe_allow_html=True)
+            else:
+                plot = plot_modules() 
+                st.markdown(plot, unsafe_allow_html=True)
+            
         st.sidebar.button("Logout", on_click=lambda: st.session_state.update(authenticated=False))  # Logout Button
 
     if show_image:
