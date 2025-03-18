@@ -140,44 +140,6 @@ def authenticate_user(username, password):
         return False
 #################################################################################################
 
-def initialize_session_state2(module_number, sensor_id, hexboard_number, baseplate_number,remeasurement_number):
-    if os.path.exists("IHEP_MAC_Bookkeeping/output.csv"):
-        existing_flags_df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
-
-        existing_flags = existing_flags_df[
-            (existing_flags_df['Module Number'] == module_number) &
-            (existing_flags_df['Sensor ID'] == sensor_id) &
-            (existing_flags_df['Hexboard Number'] == hexboard_number) &
-            (existing_flags_df['Baseplate Number'] == baseplate_number)&
-            (existing_flags_df['Remeasurement Number'] == remeasurement_number)
-        ]
-
-        if not existing_flags.empty:
-            for index, row in existing_flags.iterrows():
-                step_ = row['Step']
-                flag_ = row['Flag']
-                # Update the flags if found in existing data
-                for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
-    assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
-    Backside_bonding_flags, ogp_after_backside_bonding_flags,
-    Backside_encapsolation_flags, ogp_after_backside_encapsolation_flags,
-    Pull_test_flags, Frontside_bonding_flags, OGP_after_frontside_bounding_flags,
-    Module_encapsolation_flags, OGP_after_module_encapsolation_flags,
-    Final_electrical_test_flags]:
-                    if step_ in flags:
-                        flags[step_] = flag_
-        else:
-            # Set default values for all flags if not found in existing data
-            for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
-    assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
-    Backside_bonding_flags, ogp_after_backside_bonding_flags,
-    Backside_encapsolation_flags, ogp_after_backside_encapsolation_flags,
-    Pull_test_flags, Frontside_bonding_flags, OGP_after_frontside_bounding_flags,
-    Module_encapsolation_flags, OGP_after_module_encapsolation_flags,
-    Final_electrical_test_flags]:
-                for step_ in flags:
-                    flags[step_] = 'red'
-#################################################################################################
 def initialize_session_state(module_number=None, sensor_id=None, hexboard_number=None, baseplate_number=None, remeasurement_number=None):
     if os.path.exists("IHEP_MAC_Bookkeeping/output.csv"):
         existing_flags_df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number': str})
@@ -211,6 +173,7 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                 existing_flags = pd.DataFrame()  # Empty DataFrame if no conditions
 
         if not existing_flags.empty:
+            st.success("✅ Existing module data retrieved from CSV!")
             for index, row in existing_flags.iterrows():
                 step_ = row['Step']
                 flag_ = row['Flag']
@@ -226,6 +189,7 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                         flags[step_] = flag_
         else:
             # Set default values for all flags if not found in existing data
+            st.warning("⚠️ No existing data found. Initializing module with default values (red flags).")
             for flags in [ogp_before_assembly_flags, assembly1_flags, ogp_after_assembly1_flags,
                           assembly2_flags, ogp_after_assembly2_flags, electrical_before_backside_bonding_flags,
                           Backside_bonding_flags, ogp_after_backside_bonding_flags,
