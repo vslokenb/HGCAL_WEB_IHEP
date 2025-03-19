@@ -151,12 +151,18 @@ def authenticate_user(username, password):
         return False
 #################################################################################################
 
-def initialize_session_state(module_number=None, sensor_id=None, hexboard_number=None, baseplate_number=None, remeasurement_number=None):
-    if os.path.exists("IHEP_MAC_Bookkeeping/output.csv"):
-        existing_flags_df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number': str})
 
-        # Check if this is the first time input (all parameters are provided)
-        if all([module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number]):
+def initialize_session_state(module_number=None, sensor_id=None, hexboard_number=None, baseplate_number=None, remeasurement_number=None, verbose=False):
+    file_path = "IHEP_MAC_Bookkeeping/output.csv"
+    
+    if os.path.exists(file_path):
+        existing_flags_df = pd.read_csv(file_path, dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number': str})
+
+        # Check if all parameters are provided
+        all_params_provided = all([module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number])
+
+        # Match existing records
+        if all_params_provided:
             existing_flags = existing_flags_df[
                 (existing_flags_df['Module Number'] == module_number) &
                 (existing_flags_df['Sensor ID'] == sensor_id) &
@@ -165,7 +171,7 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                 (existing_flags_df['Remeasurement Number'] == remeasurement_number)
             ]
         else:
-            # If not all parameters are provided, search using any non-None parameter
+            # Search using provided parameters
             conditions = []
             if module_number:
                 conditions.append(existing_flags_df['Module Number'] == module_number)
@@ -181,54 +187,111 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
             if conditions:
                 existing_flags = existing_flags_df[np.logical_and.reduce(conditions)]
             else:
-                existing_flags = pd.DataFrame()  # Empty DataFrame if no conditions
+                existing_flags = pd.DataFrame()  # Empty DataFrame if no conditions provided
 
         if not existing_flags.empty:
-            st.success("\u2705 Existing module data retrieved from CSV!")
+            if verbose:
+                st.success("\u2705 Existing module data retrieved from CSV!")
+
+            # Extract unique matched values
+            highlighted_df = existing_flags[['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number']].drop_duplicates()
+            #st.table(highlighted_df.style.set_properties(**{'background-color': '#FFFF99'}))
+
+            # Display all matched entries in a table
+            if verbose:
+                st.write("### Matched Entries Found:")
+                st.table(highlighted_df.style.set_properties(**{'background-color': '#FFFF99'}))  # Highlight in yellow
+
+            # If multiple matches exist, notify the user
+            if len(highlighted_df) > 1:
+                if verbose:
+                    st.warning("\u26A0\uFE0F Multiple matches found! Using the first one by default.")
+
+            # Select the first matching row
+            selected_row = highlighted_df.iloc[0]
+
+            # Assign matched values back to parameters
+            module_number = selected_row['Module Number']
+            sensor_id = selected_row['Sensor ID']
+            hexboard_number = selected_row['Hexboard Number']
+            baseplate_number = selected_row['Baseplate Number']
+            remeasurement_number = selected_row['Remeasurement Number']
+
+            if verbose:
+                st.info(f"\u2139 Using the first matching entry:\n"
+                        f"**Module Number:** {module_number}\n"
+                        f"**Sensor ID:** {sensor_id}\n"
+                        f"**Hexboard Number:** {hexboard_number}\n"
+                        f"**Baseplate Number:** {baseplate_number}\n"
+                        f"**Remeasurement Number:** {remeasurement_number}")
+
+            # Filter flags based on selected match
+            existing_flags = existing_flags_df[
+                (existing_flags_df['Module Number'] == module_number) &
+                (existing_flags_df['Sensor ID'] == sensor_id) &
+                (existing_flags_df['Hexboard Number'] == hexboard_number) &
+                (existing_flags_df['Baseplate Number'] == baseplate_number) &
+                (existing_flags_df['Remeasurement Number'] == remeasurement_number)
+            ]
+
+            # Update flags
             for index, row in existing_flags.iterrows():
                 step_ = row['Step']
                 flag_ = row['Flag']
-                # Update the flags if found in existing data
                 for flags in [ogp_before_assembly_flags, 
-                    hexaboard_electronic_test_untaped_flags,
-                    apply_double_sided_tap_beneath_hexaboard_flags,
-                    hexaboard_electronic_test_taped_flags,
-                    assemble_sensor_flags,
-                    ogp_after_assemble_sensor_flags,
-                    assemble_hexaboard_flags,
-                    ogp_after_assemble_hexaboard_flags,
-                    live_module_electronic_test_assembled_flags,
-                    bonding_flags,
-                    ogp_after_backside_bonding_flags,
-                    live_module_electronic_test_fully_bonded_flags,
-                    module_encapsolation_flags,
-                    ogp_after_module_encapsolation_flags,
-                    live_module_electronic_test_fully_encapsulated_flags
-                    ]:
+                              hexaboard_electronic_test_untaped_flags,
+                              apply_double_sided_tap_beneath_hexaboard_flags,
+                              hexaboard_electronic_test_taped_flags,
+                              assemble_sensor_flags,
+                              ogp_after_assemble_sensor_flags,
+                              assemble_hexaboard_flags,
+                              ogp_after_assemble_hexaboard_flags,
+                              live_module_electronic_test_assembled_flags,
+                              bonding_flags,
+                              ogp_after_backside_bonding_flags,
+                              live_module_electronic_test_fully_bonded_flags,
+                              module_encapsolation_flags,
+                              ogp_after_module_encapsolation_flags,
+                              live_module_electronic_test_fully_encapsulated_flags]:
                     if step_ in flags:
                         flags[step_] = flag_
+
+            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number
+
         else:
-            # Set default values for all flags if not found in existing data
-            st.warning("\u26A0\uFE0F No existing data found. Initializing module with default values (red flags).")
+            if not all_params_provided:
+                st.error("\u26A0\uFE0F Incomplete input provided. Please enter all required module details before proceeding.")
+                return False, None, None, None, None, None  # Incomplete input and no matching data found
+            
+            if verbose:
+                st.warning("\u26A0\uFE0F No existing data found. Initializing module with default values (red flags).")
+
+            # Initialize all flags to 'red'
             for flags in [ogp_before_assembly_flags, 
-                    hexaboard_electronic_test_untaped_flags,
-                    apply_double_sided_tap_beneath_hexaboard_flags,
-                    hexaboard_electronic_test_taped_flags,
-                    assemble_sensor_flags,
-                    ogp_after_assemble_sensor_flags,
-                    assemble_hexaboard_flags,
-                    ogp_after_assemble_hexaboard_flags,
-                    live_module_electronic_test_assembled_flags,
-                    bonding_flags,
-                    ogp_after_backside_bonding_flags,
-                    live_module_electronic_test_fully_bonded_flags,
-                    module_encapsolation_flags,
-                    ogp_after_module_encapsolation_flags,
-                    live_module_electronic_test_fully_encapsulated_flags]:
+                          hexaboard_electronic_test_untaped_flags,
+                          apply_double_sided_tap_beneath_hexaboard_flags,
+                          hexaboard_electronic_test_taped_flags,
+                          assemble_sensor_flags,
+                          ogp_after_assemble_sensor_flags,
+                          assemble_hexaboard_flags,
+                          ogp_after_assemble_hexaboard_flags,
+                          live_module_electronic_test_assembled_flags,
+                          bonding_flags,
+                          ogp_after_backside_bonding_flags,
+                          live_module_electronic_test_fully_bonded_flags,
+                          module_encapsolation_flags,
+                          ogp_after_module_encapsolation_flags,
+                          live_module_electronic_test_fully_encapsulated_flags]:
                 for step_ in flags:
                     flags[step_] = 'red'
-#################################################################################################
 
+            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number  # Default initialization completed
+
+    else:
+        st.error("\u26A0\uFE0F CSV file not found! Ensure the file exists before proceeding.")
+        return False, None, None, None, None, None  # No CSV file means no data retrieval possible
+
+#################################################################################################
 
 
 def Module_Assembly_Check_List(username):
@@ -241,15 +304,22 @@ def Module_Assembly_Check_List(username):
     comment = st.text_input("Comment*(Optional)")
     usergroup=read_user_group(username)
         # Checkbox to submit the details
+
+    success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, verbose=True)
+
     if st.checkbox("Display status"):
-        #if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
+
+        if not success:
+            st.error("Cannot proceed further due to incomplete input or missing data.")
+            st.stop()  # Prevents the app from executing further steps
+
         if module_number or sensor_id or hexboard_number or baseplate_number or remeasurement_number:
             if "step_index" not in st.session_state:
                 st.session_state.step_index = 0
             option1 = st.selectbox("Select a step", STEPS, index=st.session_state.step_index, key="option1")
             st.session_state.step_index = STEPS.index(option1)
             if option1=='Overview':
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, verbose=False)
                 ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
                 Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
                 Ogp_Before_Assembly_Icon = '\u2705' if Ogp_Before_Assembly_Flag == 'green' else '\u274C'
@@ -445,7 +515,6 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
             # Update flag and click count based on selected option
             ogp_before_assembly_flags[step] = status_options[selected_label]
             click_counts_ogp_before_assembly[step] += 1
-
         table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in ogp_before_assembly_flags.items()]
         df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
 
