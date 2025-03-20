@@ -591,7 +591,7 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
     if Ogp_Before_Assembly_Flag=='red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username)=='Gantry' or read_user_group(username)=='All') and Ogp_Before_Assembly_Flag=='green':
+    if (read_user_group(username)=='OGP' or read_user_group(username)=='All') and Ogp_Before_Assembly_Flag=='green':
         status_options = {
             '\u2705 Green': 'green',
             '\u26A0\uFE0F Yellow': 'yellow',
@@ -684,7 +684,7 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in apply_double_sided_tap_beneath_hexaboard_flags.items():
@@ -771,7 +771,7 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in hexaboard_electronic_test_taped_flags.items():
@@ -949,7 +949,7 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in ogp_after_assemble_sensor_flags.items():
@@ -1126,7 +1126,7 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in ogp_after_assemble_hexaboard_flags.items():
@@ -1214,7 +1214,7 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['Electrical', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in live_module_electronic_test_assembled_flags.items():
@@ -1303,7 +1303,7 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['Bonding', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in bonding_flags.items():
@@ -1392,7 +1392,7 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
     
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in ogp_after_backside_bonding_flags.items():
@@ -1479,7 +1479,7 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['Electrical', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in live_module_electronic_test_fully_bonded_flags.items():
@@ -1566,7 +1566,7 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['Encapsolation', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in module_encapsolation_flags.items():
@@ -1654,7 +1654,7 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in ogp_after_module_encapsolation_flags.items():
@@ -1744,7 +1744,7 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['Gantry', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['Electrical', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in live_module_electronic_test_fully_encapsulated_flags.items():
