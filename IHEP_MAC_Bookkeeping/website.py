@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 import numpy as np
+from mail_notification import send_email_notification
 
 # Function to handle navigation
 def navigate(step_change):
@@ -195,7 +196,6 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
 
             # Extract unique matched values
             highlighted_df = existing_flags[['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number']].drop_duplicates()
-            #st.table(highlighted_df.style.set_properties(**{'background-color': '#FFFF99'}))
 
             # Display all matched entries in a table
             if verbose:
@@ -303,7 +303,6 @@ def Module_Assembly_Check_List(username):
     remeasurement_number=st.text_input("Enter Remeasurement Number(0 for the first measurement)")
     comment = st.text_input("Comment*(Optional)")
     usergroup=read_user_group(username)
-        # Checkbox to submit the details
 
     success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, verbose=True)
 
@@ -394,10 +393,10 @@ def Module_Assembly_Check_List(username):
                         "Hexaboard Electronic Test - Untaped",
                         "Apply Double-sided Tap Beneath Hexaboard",
                         "Hexaboard Electronic Test - Taped",
-                        "Assemble Sensor ",
+                        "Assemble Sensor",
                         "OGP After Assemble Sensor",
                         "Assemble Hexaboard",
-                        "OGP After Assemble Hexaboard ",
+                        "OGP After Assemble Hexaboard",
                         "Live Module Electronic Test: Assembled",
                         "Bonding",
                         "OGP After Bonding",
@@ -557,6 +556,32 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
                    
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
+
+            # Construct email content with detailed info
+        subject = "MAC Production Status Change Notification: OGP Before Assembly Check"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: OGP Before Assembly Check has changed.
+
+            Status: {'\u2705 Green' if Ogp_Before_Assembly_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 #####################################################################################################################################
 def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
     show_navigation_buttons()
@@ -624,6 +649,31 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
                    
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
+
+        subject = " MAC Production Status Change Notification: Hexaboard Electronic Test - Untaped"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: Hexaboard Electronic Test - Untaped has changed.
+
+            Status: {'\u2705 Green' if Hexaboard_Electronic_Test_Untaped_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 ######################################################################################################################################
 
 def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
@@ -685,6 +735,31 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
         }
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
+
+        subject = "MAC Production Status Change Notification: Apply Double-sided Tap Beneath Hexaboard"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: Apply Double-sided Tap Beneath Hexaboard has changed.
+
+            Status: {'\u2705 Green' if Apply_Double_Sided_Tap_Beneath_Hexaboard_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 ######################################################################################################################################
 
@@ -749,6 +824,30 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
                            "IHEP_MAC_Bookkeeping/output.csv", username, usergroup, comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: Hexaboard Electronic Test - Taped"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: Hexaboard Electronic Test - Taped has changed.
+
+            Status: {'\u2705 Green' if Hexaboard_Electronic_Test_Taped_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 ######################################################################################################################################
 
@@ -814,6 +913,31 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
                                                   'Baseplate Number': baseplate_number, 'Remeasurement Number': remeasurement_number},
                            "IHEP_MAC_Bookkeeping/output.csv", username, usergroup, comment)
         find_unfinished_modules()
+
+        subject = "MAC Production Status Change Notification: Assemble Sensor"
+        message = f"""Dear Gantry Team,
+
+            Please be informed that the status of the step: Assemble Sensor has changed.
+
+            Status: {'\u2705 Green' if Assemble_Sensor_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Gantry",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 ######################################################################################################################################
 
 
@@ -878,6 +1002,31 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: OGP After Assemble Sensor"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: OGP After Assemble Sensor has changed.
+
+            Status: {'\u2705 Green' if OGP_After_Assemble_Sensor_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
+
 ######################################################################################################################################
 
 def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
@@ -940,6 +1089,31 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
                    
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
+
+        subject = "MAC Production Status Change Notification: Assemble Hexaboard"
+        message = f"""Dear Gantry Team,
+
+            Please be informed that the status of the step: Assemble Hexaboard has changed.
+
+            Status: {'\u2705 Green' if Assemble_Hexaboard_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Gantry",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 ######################################################################################################################################
 
@@ -1005,6 +1179,31 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: OGP After Assemble Hexaboard"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: OGP After Assemble Hexaboard has changed.
+
+            Status: {'\u2705 Green' if OGP_After_Assemble_Hexaboard_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
+
 ######################################################################################################################################
 
 def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
@@ -1067,6 +1266,31 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
                    
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
+
+        subject = "MAC Production Status Change Notification: Live Module Electronic Test: Assembled"
+        message = f"""Dear Electrical Test Team,
+
+            Please be informed that the status of the step: Live Module Electronic Test: Assembled has changed.
+
+            Status: {'\u2705 Green' if Live_Module_Electronic_Test_Assembled_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Electrical",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 
 ######################################################################################################################################
@@ -1132,6 +1356,32 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+
+        subject = "MAC Production Status Change Notification: Bonding"
+        message = f"""Dear Bonding Team,
+
+            Please be informed that the status of the step: Bonding has changed.
+
+            Status: {'\u2705 Green' if Bonding_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Bonding",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
+
 ######################################################################################################################################
 
 def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
@@ -1195,6 +1445,31 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: OGP After Bonding"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: OGP After Bonding has changed.
+
+            Status: {'\u2705 Green' if Ogp_After_Backside_Bonding_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
+
 ######################################################################################################################################
 def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
     show_navigation_buttons()
@@ -1257,6 +1532,30 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: Live Module Electronic Test - Fully Bonded"
+        message = f"""Dear Electrical Test Team,
+
+            Please be informed that the status of the step: Live Module Electronic Test - Fully Bonded has changed.
+
+            Status: {'\u2705 Green' if Live_Module_Electronic_Test_Fully_Bonded_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Electrical",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 ######################################################################################################################################
 def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
@@ -1319,6 +1618,31 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
                    
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
+
+        subject = "MAC Production Status Change Notification: Encapsolation"
+        message = f"""Dear Encapsolation Team,
+
+            Please be informed that the status of the step: Encapsolation has changed.
+
+            Status: {'\u2705 Green' if Encapsolation_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Encapsolation",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 
 ######################################################################################################################################
@@ -1383,6 +1707,30 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: OGP After Encapsolation"
+        message = f"""Dear OGP Team,
+
+            Please be informed that the status of the step: OGP After Encapsolation has changed.
+
+            Status: {'\u2705 Green' if OGP_After_Encapsolation_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 ######################################################################################################################################
 def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
@@ -1449,6 +1797,30 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
         save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
+        subject = "MAC Production Status Change Notification: Live Module Electronic Test - Fully Encapsulated"
+        message = f"""Dear Electrical Test Team,
+
+            Please be informed that the status of the step: Live Module Electronic Test - Fully Encapsulated has changed.
+
+            Status: {'\u2705 Green' if Live_Module_Electronic_Test_Fully_Encapsulated_Flag == 'green' else '\u274C Red'}
+            Changed by: {username}
+            Module Number: {module_number}
+            Sensor ID: {sensor_id}
+            Hexboard Number: {hexboard_number}
+            Baseplate Number: {baseplate_number}
+            Remeasurement Number: {remeasurement_number}
+            Comment: {comment}
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+        send_email_notification(
+            group_name="Electrical",
+            subject=subject,
+            message=message,
+            sender_email="wangzirui7@gmail.com",
+            sender_password="knugxntupqwgltcd"
+        )
 
 ######################################################################################################################################
 
