@@ -563,7 +563,7 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
 
             Please be informed that the status of the step: OGP Before Assembly Check has changed.
 
-            Status: {'\u2705 Green' if Ogp_Before_Assembly_Flag == 'green' else '\u274C Red'}
+            Status: {Ogp_Before_Assembly_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -655,7 +655,7 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
 
             Please be informed that the status of the step: Hexaboard Electronic Test - Untaped has changed.
 
-            Status: {'\u2705 Green' if Hexaboard_Electronic_Test_Untaped_Flag == 'green' else '\u274C Red'}
+            Status: {Hexaboard_Electronic_Test_Untaped_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -741,7 +741,7 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
 
             Please be informed that the status of the step: Apply Double-sided Tap Beneath Hexaboard has changed.
 
-            Status: {'\u2705 Green' if Apply_Double_Sided_Tap_Beneath_Hexaboard_Flag == 'green' else '\u274C Red'}
+            Status: {Apply_Double_Sided_Tap_Beneath_Hexaboard_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -829,7 +829,7 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
 
             Please be informed that the status of the step: Hexaboard Electronic Test - Taped has changed.
 
-            Status: {'\u2705 Green' if Hexaboard_Electronic_Test_Taped_Flag == 'green' else '\u274C Red'}
+            Status: {Hexaboard_Electronic_Test_Taped_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -919,7 +919,7 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
 
             Please be informed that the status of the step: Assemble Sensor has changed.
 
-            Status: {'\u2705 Green' if Assemble_Sensor_Flag == 'green' else '\u274C Red'}
+            Status: {Assemble_Sensor_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1007,7 +1007,7 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
 
             Please be informed that the status of the step: OGP After Assemble Sensor has changed.
 
-            Status: {'\u2705 Green' if OGP_After_Assemble_Sensor_Flag == 'green' else '\u274C Red'}
+            Status: {OGP_After_Assemble_Sensor_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1095,7 +1095,7 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
 
             Please be informed that the status of the step: Assemble Hexaboard has changed.
 
-            Status: {'\u2705 Green' if Assemble_Hexaboard_Flag == 'green' else '\u274C Red'}
+            Status: {Assemble_Hexaboard_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1184,7 +1184,7 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
 
             Please be informed that the status of the step: OGP After Assemble Hexaboard has changed.
 
-            Status: {'\u2705 Green' if OGP_After_Assemble_Hexaboard_Flag == 'green' else '\u274C Red'}
+            Status: {OGP_After_Assemble_Hexaboard_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1272,7 +1272,7 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
 
             Please be informed that the status of the step: Live Module Electronic Test: Assembled has changed.
 
-            Status: {'\u2705 Green' if Live_Module_Electronic_Test_Assembled_Flag == 'green' else '\u274C Red'}
+            Status: {Live_Module_Electronic_Test_Assembled_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1362,7 +1362,7 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
 
             Please be informed that the status of the step: Bonding has changed.
 
-            Status: {'\u2705 Green' if Bonding_Flag == 'green' else '\u274C Red'}
+            Status: {Bonding_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1450,7 +1450,7 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
 
             Please be informed that the status of the step: OGP After Bonding has changed.
 
-            Status: {'\u2705 Green' if Ogp_After_Backside_Bonding_Flag == 'green' else '\u274C Red'}
+            Status: {Ogp_After_Backside_Bonding_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1537,7 +1537,7 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
 
             Please be informed that the status of the step: Live Module Electronic Test - Fully Bonded has changed.
 
-            Status: {'\u2705 Green' if Live_Module_Electronic_Test_Fully_Bonded_Flag == 'green' else '\u274C Red'}
+            Status: {Live_Module_Electronic_Test_Fully_Bonded_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1624,7 +1624,7 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
 
             Please be informed that the status of the step: Encapsolation has changed.
 
-            Status: {'\u2705 Green' if Encapsolation_Flag == 'green' else '\u274C Red'}
+            Status: {Encapsolation_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1712,7 +1712,7 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
 
             Please be informed that the status of the step: OGP After Encapsolation has changed.
 
-            Status: {'\u2705 Green' if OGP_After_Encapsolation_Flag == 'green' else '\u274C Red'}
+            Status: {OGP_After_Encapsolation_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
@@ -1802,7 +1802,7 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
 
             Please be informed that the status of the step: Live Module Electronic Test - Fully Encapsulated has changed.
 
-            Status: {'\u2705 Green' if Live_Module_Electronic_Test_Fully_Encapsulated_Flag == 'green' else '\u274C Red'}
+            Status: {Live_Module_Electronic_Test_Fully_Encapsulated_Icon}
             Changed by: {username}
             Module Number: {module_number}
             Sensor ID: {sensor_id}
