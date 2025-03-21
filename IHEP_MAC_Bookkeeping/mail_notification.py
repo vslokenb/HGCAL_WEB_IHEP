@@ -25,9 +25,9 @@ def send_email_notification(group_name, subject, message, sender_email, sender_p
     msg.attach(MIMEText(message, "plain"))
 
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)  
+        server = smtplib.SMTP("cernmx.cern.ch", 25)  
         server.starttls()  # Secure the connection
-        server.login(sender_email, sender_password)
+        #server.login(sender_email, sender_password)
         server.sendmail(sender_email, recipient_emails, msg.as_string())
         server.quit()
 

@@ -579,8 +579,8 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 #####################################################################################################################################
 def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
@@ -671,8 +671,8 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 ######################################################################################################################################
 
@@ -757,8 +757,8 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -845,8 +845,8 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -935,8 +935,8 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
             group_name="Gantry",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 ######################################################################################################################################
 
@@ -1023,8 +1023,8 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1111,8 +1111,8 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
             group_name="Gantry",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1200,8 +1200,8 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1288,8 +1288,8 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
             group_name="Electrical",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 
@@ -1378,8 +1378,8 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
             group_name="Bonding",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1466,8 +1466,8 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1553,8 +1553,8 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
             group_name="Electrical",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1640,8 +1640,8 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
             group_name="Encapsolation",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 
@@ -1728,8 +1728,8 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
             group_name="OGP",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
@@ -1818,8 +1818,8 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
             group_name="Electrical",
             subject=subject,
             message=message,
-            sender_email="wangzirui7@gmail.com",
-            sender_password="knugxntupqwgltcd"
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
         )
 
 ######################################################################################################################################
