@@ -136,13 +136,13 @@ click_counts_live_module_electronic_test_fully_encapsulated = {step: 0 for step 
 
 ###############################################################################################
 def read_user_group(username):
-    user_info = pd.read_csv("IHEP_MAC_Bookkeeping/user_info.csv")
+    user_info = pd.read_csv("user/user_info.csv")
     user_group = user_info.loc[user_info['username'] == username, 'group'].values
     return user_group[0] if len(user_group) > 0 else None
 ##################################################################################################
 
 def authenticate_user(username, password):
-    user_info = pd.read_csv("IHEP_MAC_Bookkeeping/user_info.csv")   
+    user_info = pd.read_csv("user/user_info.csv")   
     user_info['password'] = user_info['password'].astype(str) 
     #print(user_info['username'])
     #print(user_info['password'])
@@ -154,7 +154,7 @@ def authenticate_user(username, password):
 
 
 def initialize_session_state(module_number=None, sensor_id=None, hexboard_number=None, baseplate_number=None, remeasurement_number=None, verbose=False):
-    file_path = "IHEP_MAC_Bookkeeping/output.csv"
+    file_path = "data/output.csv"
     
     if os.path.exists(file_path):
         existing_flags_df = pd.read_csv(file_path, dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number': str})
@@ -554,7 +554,7 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
             # Construct email content with detailed info
@@ -647,7 +647,7 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = " MAC Production Status Change Notification: Hexaboard Electronic Test - Untaped"
@@ -733,7 +733,7 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
             'Baseplate Number': baseplate_number,
             'Remeasurement Number': remeasurement_number,
         }
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Apply Double-sided Tap Beneath Hexaboard"
@@ -821,7 +821,7 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
     
         save_flags_to_file(all_checklists_flags, {'Module Number': module_number, 'Sensor ID': sensor_id, 'Hexboard Number': hexboard_number,
                                                   'Baseplate Number': baseplate_number, 'Remeasurement Number': remeasurement_number},
-                           "IHEP_MAC_Bookkeeping/output.csv", username, usergroup, comment)
+                           "data/output.csv", username, usergroup, comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Hexaboard Electronic Test - Taped"
@@ -911,7 +911,7 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
     
         save_flags_to_file(all_checklists_flags, {'Module Number': module_number, 'Sensor ID': sensor_id, 'Hexboard Number': hexboard_number,
                                                   'Baseplate Number': baseplate_number, 'Remeasurement Number': remeasurement_number},
-                           "IHEP_MAC_Bookkeeping/output.csv", username, usergroup, comment)
+                           "data/output.csv", username, usergroup, comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Assemble Sensor"
@@ -999,7 +999,7 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Assemble Sensor"
@@ -1087,7 +1087,7 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Assemble Hexaboard"
@@ -1176,7 +1176,7 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Assemble Hexaboard"
@@ -1264,7 +1264,7 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Live Module Electronic Test: Assembled"
@@ -1353,7 +1353,7 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
 
@@ -1442,7 +1442,7 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Bonding"
@@ -1529,7 +1529,7 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Live Module Electronic Test - Fully Bonded"
@@ -1616,7 +1616,7 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Encapsolation"
@@ -1704,7 +1704,7 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Encapsolation"
@@ -1794,7 +1794,7 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
             'Remeasurement Number': remeasurement_number,
         }
                    
-        save_flags_to_file(all_checklists_flags, details,"IHEP_MAC_Bookkeeping/output.csv",username,usergroup,comment)
+        save_flags_to_file(all_checklists_flags, details,"data/output.csv",username,usergroup,comment)
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Live Module Electronic Test - Fully Encapsulated"
@@ -1826,8 +1826,8 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
 
 
 def find_unfinished_modules():
-    # Read the IHEP_MAC_Bookkeeping/output.csv file
-    outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
+    # Read the data/output.csv file
+    outputfile_path = "data/output.csv"
     if not os.path.exists(outputfile_path):
         print(f"File '{outputfile_path}' not found. Creating an empty CSV.")
         columns = ["Username", "UserGroup", "DateAndTime", "Module Number", 
@@ -1853,12 +1853,12 @@ def find_unfinished_modules():
         unfinished_df = pd.DataFrame() 
 
     # Save the unfinished modules to a new CSV file
-    unfinished_df.to_csv("IHEP_MAC_Bookkeeping/unfinished_module.csv", index=False)
+    unfinished_df.to_csv("data/unfinished_module.csv", index=False)
 
 ############################################################################################################################
 def show_unfinished_modules(username):
     try:
-        unfinished_df = pd.read_csv("IHEP_MAC_Bookkeeping/unfinished_module.csv")
+        unfinished_df = pd.read_csv("data/unfinished_module.csv")
         if unfinished_df.empty:
             st.header("Congratulations, no unfinished module found.")
         else:
@@ -1906,8 +1906,8 @@ def plot_selected_module():
     remeasurement_number=st.text_input("Enter Remeasurement Number(0 for the first measurement)")
     if st.checkbox("Submit"):
         if module_number and sensor_id and hexboard_number and baseplate_number and remeasurement_number:
-    # Read the IHEP_MAC_Bookkeeping/output.csv file
-            df = pd.read_csv("IHEP_MAC_Bookkeeping/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
+    # Read the data/output.csv file
+            df = pd.read_csv("data/output.csv", dtype={'Module Number': str, 'Sensor ID': str, 'Hexboard Number': str, 'Baseplate Number': str, 'Remeasurement Number':str})
 
     # Filter data for the selected module
             module_filter = (
@@ -1940,8 +1940,8 @@ def plot_selected_module():
 ###################################################################################################################################################################
 
 def plot_modules():
-    # Read the IHEP_MAC_Bookkeeping/output.csv file
-    outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
+    # Read the data/output.csv file
+    outputfile_path = "data/output.csv"
     if not os.path.exists(outputfile_path) or os.stat(outputfile_path).st_size == 0:
         st.error(f"File '{outputfile_path}' is missing or empty. No data available.")
         st.stop()  # Stop execution
@@ -2011,8 +2011,8 @@ def plot_modules():
 
 #############################################################################################################################################################
 def plot_steps():
-    # Read the IHEP_MAC_Bookkeeping/output.csv file
-    outputfile_path = "IHEP_MAC_Bookkeeping/output.csv"
+    # Read the data/output.csv file
+    outputfile_path = "data/output.csv"
 
     if not os.path.exists(outputfile_path) or os.stat(outputfile_path).st_size == 0:
         st.error(f"File '{outputfile_path}' is missing or empty. No data available.")

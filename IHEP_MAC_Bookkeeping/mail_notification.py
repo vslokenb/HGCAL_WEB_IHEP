@@ -7,7 +7,7 @@ def send_email_notification(group_name, subject, message, sender_email, sender_p
     from email.mime.multipart import MIMEMultipart
 
     # Read the CSV file
-    file_path = "IHEP_MAC_Bookkeeping/mail_notification.csv"
+    file_path = "user/mail_notification.csv"
     df = pd.read_csv(file_path)
 
     # Filter emails for the specified group
