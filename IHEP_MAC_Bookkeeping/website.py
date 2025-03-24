@@ -826,7 +826,7 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Hexaboard Electronic Test - Taped"
-        message = f"""Dear OGP Team,
+        message = f"""Dear OGP and Gantry Teams,
 
             Please be informed that the status of the step: Hexaboard Electronic Test - Taped has changed.
 
@@ -844,6 +844,13 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
 
         send_email_notification(
             group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="Gantry",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -916,7 +923,7 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Assemble Sensor"
-        message = f"""Dear Gantry Team,
+        message = f"""Dear OGP and Gantry Teams,
 
             Please be informed that the status of the step: Assemble Sensor has changed.
 
@@ -934,6 +941,13 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
 
         send_email_notification(
             group_name="Gantry",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="OGP",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1004,7 +1018,7 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Assemble Sensor"
-        message = f"""Dear OGP Team,
+        message = f"""Dear OGP and Gantry Teams,
 
             Please be informed that the status of the step: OGP After Assemble Sensor has changed.
 
@@ -1022,6 +1036,13 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
 
         send_email_notification(
             group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="Gantry",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1092,7 +1113,7 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Assemble Hexaboard"
-        message = f"""Dear Gantry Team,
+        message = f"""Dear Gantry and OGP Teams,
 
             Please be informed that the status of the step: Assemble Hexaboard has changed.
 
@@ -1110,6 +1131,13 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
 
         send_email_notification(
             group_name="Gantry",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="OGP",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1181,7 +1209,7 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Assemble Hexaboard"
-        message = f"""Dear OGP Team,
+        message = f"""Dear Electrical Test and OGP Teams,
 
             Please be informed that the status of the step: OGP After Assemble Hexaboard has changed.
 
@@ -1199,6 +1227,13 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
 
         send_email_notification(
             group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="Electrical",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1269,7 +1304,7 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Live Module Electronic Test: Assembled"
-        message = f"""Dear Electrical Test Team,
+        message = f"""Dear Bonding and Electrical Test Teams,
 
             Please be informed that the status of the step: Live Module Electronic Test: Assembled has changed.
 
@@ -1287,6 +1322,13 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
 
         send_email_notification(
             group_name="Electrical",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="Bonding",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1359,7 +1401,7 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
 
 
         subject = "MAC Production Status Change Notification: Bonding"
-        message = f"""Dear Bonding Team,
+        message = f"""Dear Bonding and OGP Teams,
 
             Please be informed that the status of the step: Bonding has changed.
 
@@ -1377,6 +1419,13 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
 
         send_email_notification(
             group_name="Bonding",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        send_email_notification(
+            group_name="OGP",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1447,7 +1496,7 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Bonding"
-        message = f"""Dear OGP Team,
+        message = f"""Dear OGP and Electrical Test Teams,
 
             Please be informed that the status of the step: OGP After Bonding has changed.
 
@@ -1465,6 +1514,14 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
 
         send_email_notification(
             group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+
+        send_email_notification(
+            group_name="Electrical",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
@@ -1534,7 +1591,7 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Live Module Electronic Test - Fully Bonded"
-        message = f"""Dear Electrical Test Team,
+        message = f"""Dear Electrical Test and Encapsolation Teams,
 
             Please be informed that the status of the step: Live Module Electronic Test - Fully Bonded has changed.
 
@@ -1557,6 +1614,15 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
             sender_email="hgcalcn@cern.ch",
             sender_password="dummyPW"
         )
+
+        send_email_notification(
+            group_name="Encapsolation",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+        
 
 ######################################################################################################################################
 def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
@@ -1621,7 +1687,7 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: Encapsolation"
-        message = f"""Dear Encapsolation Team,
+        message = f"""Dear Encapsolation and OGP Teams,
 
             Please be informed that the status of the step: Encapsolation has changed.
 
@@ -1645,6 +1711,13 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
             sender_password="dummyPW"
         )
 
+        send_email_notification(
+            group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
 
 ######################################################################################################################################
 def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
@@ -1709,7 +1782,7 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
         find_unfinished_modules()
 
         subject = "MAC Production Status Change Notification: OGP After Encapsolation"
-        message = f"""Dear OGP Team,
+        message = f"""Dear OGP and Electrical Test Teams,
 
             Please be informed that the status of the step: OGP After Encapsolation has changed.
 
@@ -1727,6 +1800,14 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
 
         send_email_notification(
             group_name="OGP",
+            subject=subject,
+            message=message,
+            sender_email="hgcalcn@cern.ch",
+            sender_password="dummyPW"
+        )
+
+        send_email_notification(
+            group_name="Electrical",
             subject=subject,
             message=message,
             sender_email="hgcalcn@cern.ch",
