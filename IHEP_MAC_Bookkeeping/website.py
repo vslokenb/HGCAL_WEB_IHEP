@@ -152,6 +152,11 @@ def authenticate_user(username, password):
         return False
 #################################################################################################
 
+def update_password(username, new_password):
+    user_info = pd.read_csv("user/user_info.csv")
+    user_info.loc[user_info['username'] == username, 'password'] = new_password
+    user_info.to_csv("user/user_info.csv", index=False)
+#################################################################################################
 
 def initialize_session_state(module_number=None, sensor_id=None, hexboard_number=None, baseplate_number=None, remeasurement_number=None, verbose=False):
     file_path = "data/output.csv"
@@ -2230,6 +2235,8 @@ def main():
     st.set_page_config(layout="wide", page_title="HGCAL IHEP MAC", page_icon="IHEP_MAC_Bookkeeping/hex_ver_1.png")
 
 
+
+
     show_image = True
     logged_in = False
 
@@ -2256,14 +2263,18 @@ def main():
                 st.sidebar.success("Login successful!")
                 logged_in = True
                 show_image = False
+
+
             else:
                 st.sidebar.error("Invalid username or password")
 
     if st.session_state.authenticated:
 
+    
         show_image = False
         username = st.session_state.username  # Retrieve username
         st.sidebar.write("### Select an Option")
+
 
 
         option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
@@ -2283,7 +2294,29 @@ def main():
                 plot = plot_modules() 
                 st.markdown(plot, unsafe_allow_html=True)
             
+
+       # --- Password Change Section ---
+        st.sidebar.write("---")
+
         st.sidebar.button("Logout", on_click=lambda: st.session_state.update(authenticated=False))  # Logout Button
+        change_password_button = st.sidebar.checkbox("Change Password")
+
+        if change_password_button:
+            old_password = st.sidebar.text_input("Old Password", type="password")
+            new_password = st.sidebar.text_input("New Password", type="password")
+            confirm_password = st.sidebar.text_input("Confirm New Password", type="password")
+
+            if st.sidebar.button("Confirm Password Change"):
+                # Authenticate with the old password
+                if authenticate_user(username, old_password):
+                    if new_password == confirm_password:
+                        update_password(username, new_password)
+                        st.sidebar.success("Password changed successfully!")
+                    else:
+                        st.sidebar.error("New passwords do not match.")
+                else:
+                    st.sidebar.error("Incorrect old password.")
+
 
     if show_image:
         st.title("Welcome to the HGCal IHEP MAC Bookkeeping Site")
