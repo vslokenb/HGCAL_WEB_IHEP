@@ -298,6 +298,10 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
 
 def Module_Assembly_Check_List(username):
     st.title("Welcome to the HGCal module assembly checklist")
+
+    if st.checkbox("Show list of Unfinished Modules"):
+        show_unfinished_modules(username)
+
     module_number = st.text_input("Enter Module Number")
     sensor_id = st.text_input("Enter Sensor ID")
     hexboard_number = st.text_input("Enter Hexboard Number")
@@ -491,8 +495,7 @@ def Module_Assembly_Check_List(username):
                 success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
                 Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
-    if st.checkbox("Show list of Unfinished Modules"):
-        show_unfinished_modules(username)
+
 
 ############################################################################################################################
 def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
