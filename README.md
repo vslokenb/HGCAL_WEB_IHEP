@@ -36,6 +36,13 @@ Follow the instructions below to set up and run the webpage locally.
    ```
 ## Streamlit Cloud Deployment
 
-This webpage has also been deployed to Streamlit Cloud. You can visit the following link to access the live webpage:
+This webpage has been deployed to Streamlit Cloud. You can visit the following link to access the live webpage:
 
-[HGCAL IHEP MAC Webpage](https://hgcalwebihep-tgpbgf9zcivmoknet5wva5.streamlit.app/)
+[HGCAL IHEP MAC Webpage on Streamlit Cloud](https://hgcalwebihep-tgpbgf9zcivmoknet5wva5.streamlit.app/)
+
+## CERN Webserver Deployment
+
+For the official production, the system is deployed on the CERN Webserver using the Platform-as-a-Service (PAAS) solution, managed through OKD (OpenShift Kubernetes Distribution).
+[HGCAL IHEP MAC CERN Webpage](https://hgcal-hgcal-ihep-website.app.cern.ch/)
+The CERN deployment runs as a containerized application, utilizing the Docker image available at:
+[Docker Hub Repository](https://hub.docker.com/repository/docker/ziruiality/hgcal_web_ihep/general)
