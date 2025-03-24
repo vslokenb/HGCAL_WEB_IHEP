@@ -195,7 +195,7 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                 st.success("\u2705 Existing module data retrieved from CSV!")
 
             # Extract unique matched values
-            highlighted_df = existing_flags[['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number']].drop_duplicates()
+            highlighted_df = existing_flags[['Username', 'Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number']].drop_duplicates()
 
             # Display all matched entries in a table
             if verbose:
@@ -216,6 +216,7 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
             hexboard_number = selected_row['Hexboard Number']
             baseplate_number = selected_row['Baseplate Number']
             remeasurement_number = selected_row['Remeasurement Number']
+            username = selected_row['Username']
 
             if verbose:
                 st.info(f"\u2139 Using the first matching entry:\n"
@@ -223,7 +224,8 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                         f"**Sensor ID:** {sensor_id}\n"
                         f"**Hexboard Number:** {hexboard_number}\n"
                         f"**Baseplate Number:** {baseplate_number}\n"
-                        f"**Remeasurement Number:** {remeasurement_number}")
+                        f"**Remeasurement Number:** {remeasurement_number}\n"
+                        f"**Last status change was made by:** {username}")
 
             # Filter flags based on selected match
             existing_flags = existing_flags_df[
@@ -256,12 +258,12 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                     if step_ in flags:
                         flags[step_] = flag_
 
-            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number
+            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, username
 
         else:
             if not all_params_provided:
                 st.error("\u26A0\uFE0F Incomplete input provided. Please enter all required module details before proceeding.")
-                return False, None, None, None, None, None  # Incomplete input and no matching data found
+                return False, None, None, None, None, None, None  # Incomplete input and no matching data found
             
             if verbose:
                 st.warning("\u26A0\uFE0F No existing data found. Initializing module with default values (red flags).")
@@ -285,11 +287,11 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                 for step_ in flags:
                     flags[step_] = 'red'
 
-            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number  # Default initialization completed
+            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, username  # Default initialization completed
 
     else:
         st.error("\u26A0\uFE0F CSV file not found! Ensure the file exists before proceeding.")
-        return False, None, None, None, None, None  # No CSV file means no data retrieval possible
+        return False, None, None, None, None, None, None  # No CSV file means no data retrieval possible
 
 #################################################################################################
 
@@ -304,7 +306,7 @@ def Module_Assembly_Check_List(username):
     comment = st.text_input("Comment*(Optional)")
     usergroup=read_user_group(username)
 
-    success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, verbose=True)
+    success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, verbose=True)
 
     if st.checkbox("Display status"):
 
@@ -424,77 +426,76 @@ def Module_Assembly_Check_List(username):
                     ]
                 })
 
-
-
-
                 # Display as a table
                 st.table(checklist_df)
+                st.write(f"Last status change was made by: {last_user}")
 
 
             if option1 == "OGP Before Assembly":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Hexaboard Electronic Test - Untaped":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Hexaboard_Electronic_Test_Untaped(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user =initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Hexaboard_Electronic_Test_Untaped(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment , last_user)
 
             elif option1 == "Apply Double-sided Tap Beneath Hexaboard":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Hexaboard Electronic Test - Taped":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Assemble Sensor":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "OGP After Assemble Sensor":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Assemble Hexaboard":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "OGP After Assemble Hexaboard":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Live Module Electronic Test: Assembled":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Bonding":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "OGP After Backside Bonding":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Live Module Electronic Test - Fully Bonded":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Encapsolation":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user)
+                Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "OGP After Encapsolation":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
             elif option1 == "Live Module Electronic Test - Fully Encapsulated":
-                initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
-                Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment)
+                success, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, last_user = initialize_session_state(module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number)
+                Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user)
 
-
+    if st.checkbox("Show list of Unfinished Modules"):
+        show_unfinished_modules(username)
 
 ############################################################################################################################
-def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     if(read_user_group(username) == 'OGP' or read_user_group(username) == 'All'):
         status_options = {
@@ -514,8 +515,8 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
             # Update flag and click count based on selected option
             ogp_before_assembly_flags[step] = status_options[selected_label]
             click_counts_ogp_before_assembly[step] += 1
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in ogp_before_assembly_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] for step, flag in ogp_before_assembly_flags.items()]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         # Display step-wise table
         st.write("### OGP Before Assembly Steps Overview")
@@ -583,7 +584,7 @@ def OGP_before_assembly(username, module_number, sensor_id, hexboard_number, bas
             sender_password="dummyPW"
         )
 #####################################################################################################################################
-def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment):
+def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_number,baseplate_number,remeasurement_number,usergroup,comment, last_user):
     show_navigation_buttons()
     ogp_before_assembly_completed = all(flag == 'green' for flag in ogp_before_assembly_flags.values())
     Ogp_Before_Assembly_Flag = 'green' if ogp_before_assembly_completed else 'red'
@@ -609,8 +610,8 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
             hexaboard_electronic_test_untaped_flags[step] = status_options[selected_label]
             click_counts_hexaboard_electronic_test_untaped[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] for step, flag in hexaboard_electronic_test_untaped_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] for step, flag in hexaboard_electronic_test_untaped_flags.items()]
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Hexaboard Electronic Test - Untaped Steps Overview")
         st.table(df_steps)
@@ -676,7 +677,7 @@ def Hexaboard_Electronic_Test_Untaped(username,module_number,sensor_id,hexboard_
         )
 ######################################################################################################################################
 
-def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in hexaboard_electronic_test_untaped_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -693,9 +694,9 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
             apply_double_sided_tap_beneath_hexaboard_flags[step] = status_options[selected_label]
             click_counts_apply_double_sided_tap_beneath_hexaboard[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user]
                       for step, flag in apply_double_sided_tap_beneath_hexaboard_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Apply Double-sided Tap Beneath Hexaboard Steps Overview")
         st.table(df_steps)
@@ -763,7 +764,7 @@ def Apply_Double_Sided_Tap_Beneath_Hexaboard(username, module_number, sensor_id,
 
 ######################################################################################################################################
 
-def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in apply_double_sided_tap_beneath_hexaboard_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -780,9 +781,9 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
             hexaboard_electronic_test_taped_flags[step] = status_options[selected_label]
             click_counts_hexaboard_electronic_test_taped[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username]
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user]
                       for step, flag in hexaboard_electronic_test_taped_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Hexaboard Electronic Test - Taped Steps Overview")
         st.table(df_steps)
@@ -851,7 +852,7 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
 
 ######################################################################################################################################
 
-def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in hexaboard_electronic_test_taped_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -870,9 +871,9 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
             assemble_sensor_flags[step] = status_options[selected_label]
             click_counts_assemble_sensor[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in assemble_sensor_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Assemble Sensor Steps Overview")
         st.table(df_steps)
@@ -941,7 +942,7 @@ def Assemble_Sensor(username, module_number, sensor_id, hexboard_number, basepla
 ######################################################################################################################################
 
 
-def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in assemble_sensor_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -960,9 +961,9 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
             ogp_after_assemble_sensor_flags[step] = status_options[selected_label]
             click_counts_ogp_after_assemble_sensor[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in ogp_after_assemble_sensor_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### OGP After Assemble Sensor Steps Overview")
         st.table(df_steps)
@@ -1029,7 +1030,7 @@ def OGP_After_Assemble_Sensor(username, module_number, sensor_id, hexboard_numbe
 
 ######################################################################################################################################
 
-def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in ogp_after_assemble_sensor_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1048,9 +1049,9 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
             assemble_hexaboard_flags[step] = status_options[selected_label]
             click_counts_assemble_hexaboard[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in assemble_hexaboard_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Assemble Hexaboard Steps Overview")
         st.table(df_steps)
@@ -1118,7 +1119,7 @@ def Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, base
 ######################################################################################################################################
 
 
-def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in assemble_hexaboard_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1137,9 +1138,9 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
             ogp_after_assemble_hexaboard_flags[step] = status_options[selected_label]
             click_counts_ogp_after_assemble_hexaboard[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in ogp_after_assemble_hexaboard_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### OGP After Assemble Hexaboard Steps Overview")
         st.table(df_steps)
@@ -1206,7 +1207,7 @@ def OGP_After_Assemble_Hexaboard(username, module_number, sensor_id, hexboard_nu
 
 ######################################################################################################################################
 
-def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in ogp_after_assemble_hexaboard_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1225,9 +1226,9 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
             live_module_electronic_test_assembled_flags[step] = status_options[selected_label]
             click_counts_live_module_electronic_test_assembled[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in live_module_electronic_test_assembled_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Live Module Electronic Test: Assembled Steps Overview")
         st.table(df_steps)
@@ -1295,7 +1296,7 @@ def Live_Module_Electronic_Test_Assembled(username, module_number, sensor_id, he
 
 ######################################################################################################################################
 
-def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in live_module_electronic_test_assembled_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1314,9 +1315,9 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
             bonding_flags[step] = status_options[selected_label]
             click_counts_bonding[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in bonding_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Bonding Steps Overview")
         st.table(df_steps)
@@ -1384,7 +1385,7 @@ def Bonding(username, module_number, sensor_id, hexboard_number, baseplate_numbe
 
 ######################################################################################################################################
 
-def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in bonding_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1403,9 +1404,9 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
             ogp_after_backside_bonding_flags[step] = status_options[selected_label]
             click_counts_ogp_after_backside_bonding[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in ogp_after_backside_bonding_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### OGP After Bonding Steps Overview")
         st.table(df_steps)
@@ -1471,7 +1472,7 @@ def OGP_After_Backside_Bonding(username, module_number, sensor_id, hexboard_numb
         )
 
 ######################################################################################################################################
-def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in ogp_after_backside_bonding_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1490,9 +1491,9 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
             live_module_electronic_test_fully_bonded_flags[step] = status_options[selected_label]
             click_counts_live_module_electronic_test_fully_bonded[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in live_module_electronic_test_fully_bonded_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Live Module Electronic Test - Fully Bonded Steps Overview")
         st.table(df_steps)
@@ -1558,7 +1559,7 @@ def Live_Module_Electronic_Test_Fully_Bonded(username, module_number, sensor_id,
         )
 
 ######################################################################################################################################
-def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in live_module_electronic_test_fully_bonded_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1577,9 +1578,9 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
             module_encapsolation_flags[step] = status_options[selected_label]
             click_counts_module_encapsolation[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in module_encapsolation_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Encapsolation Steps Overview")
         st.table(df_steps)
@@ -1646,7 +1647,7 @@ def Module_Encapsolation(username, module_number, sensor_id, hexboard_number, ba
 
 
 ######################################################################################################################################
-def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     show_navigation_buttons()
     previous_step_completed = all(flag == 'green' for flag in module_encapsolation_flags.values())
     previous_step_flag = 'green' if previous_step_completed else 'red'
@@ -1665,9 +1666,9 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
             ogp_after_module_encapsolation_flags[step] = status_options[selected_label]
             click_counts_ogp_after_module_encapsolation[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in ogp_after_module_encapsolation_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### OGP After Encapsolation Steps Overview")
         st.table(df_steps)
@@ -1733,7 +1734,7 @@ def OGP_After_Module_Encapsolation(username, module_number, sensor_id, hexboard_
         )
 
 ######################################################################################################################################
-def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment):
+def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, usergroup, comment, last_user):
     col1, col2 = st.columns(2)    
     with col1:
         if st.button("\u2B05\uFE0FPrevious Step", key="prev_step") and st.session_state.step_index > 0:
@@ -1755,9 +1756,9 @@ def Live_Module_Electronic_Test_Fully_Encapsulated(username, module_number, sens
             live_module_electronic_test_fully_encapsulated_flags[step] = status_options[selected_label]
             click_counts_live_module_electronic_test_fully_encapsulated[step] += 1
 
-        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', username] 
+        table_data = [[step, '\u2705' if flag == 'green' else '\u26A0\uFE0F' if flag == 'yellow' else '\u274C', last_user] 
                       for step, flag in live_module_electronic_test_fully_encapsulated_flags.items()]
-        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "User"])
+        df_steps = pd.DataFrame(table_data, columns=["Step", "Status", "Status Changed by"])
 
         st.write("### Live Module Electronic Test - Fully Encapsulated Steps Overview")
         st.table(df_steps)
@@ -1888,14 +1889,14 @@ def show_unfinished_modules(username):
             if module_info:
                 unfinished_table = pd.DataFrame(module_info)
                 st.write(unfinished_table)
-                st.write("Please finish those modules in the Module Assembly Check List.")
+                st.warning("\u26A0\uFE0F Please finish those modules in the Module Assembly Check List.")
             else:
-                st.write("No unfinished modules with red flags found.")
+                st.info("No unfinished modules with red flags found.")
          
     except pd.errors.EmptyDataError:
         st.header("Congratulations, no unfinished module found.")
     except FileNotFoundError:
-        st.header("unfinished_module.csv was not found. Please check the file path.")            
+        st.error("unfinished_module.csv was not found. Please check the file path.")            
 
 ###################################################################################################################################################################
 def plot_selected_module():
