@@ -771,7 +771,7 @@ def Hexaboard_Electronic_Test_Taped(username, module_number, sensor_id, hexboard
     if previous_step_flag == 'red':
         st.write("Please finish the previous step first")
 
-    if (read_user_group(username) in ['OGP', 'All']) and previous_step_flag == 'green':
+    if (read_user_group(username) in ['Electrical', 'All']) and previous_step_flag == 'green':
         status_options = {'\u2705 Green': 'green', '\u26A0\uFE0F Yellow': 'yellow', '\u274C Red': 'red'}
 
         for step, flag in hexaboard_electronic_test_taped_flags.items():
