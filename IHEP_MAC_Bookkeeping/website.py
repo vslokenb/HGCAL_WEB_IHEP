@@ -58,6 +58,7 @@ ogp_before_assembly_flags = {
 
 hexaboard_electronic_test_untaped_flags={
     "Hexaboard electronic test: Untaped":"red",
+    "Pedestal run: Untaped":"red",
 }
 
 apply_double_sided_tap_beneath_hexaboard_flags={
@@ -66,6 +67,7 @@ apply_double_sided_tap_beneath_hexaboard_flags={
 
 hexaboard_electronic_test_taped_flags={
     "Hexaboard electronic test: Taped":"red",
+    "Pedestal run: Taped":"red",
 }
 
 # Flag for the OGP Check List title
@@ -87,8 +89,8 @@ ogp_after_assemble_hexaboard_flags = {
 }
 
 live_module_electronic_test_assembled_flags={
-    'Delay scan (assembled)':'red',
-    'Pedestal run':'red',
+    'Hexaboard electronic test: Assembled':'red',
+    'Pedestal run: Assembled':'red',
 }
 
 bonding_flags={
@@ -101,8 +103,8 @@ ogp_after_backside_bonding_flags={
 }
 
 live_module_electronic_test_fully_bonded_flags={
-    'Delay scan (fully bonded)':'red',
-    'Pedestal run (fully bonded)':'red',
+    'Live module electronic test: Fully Bonded':'red',
+    'Standard test procedure: Fully Bonded':'red',
 }
 module_encapsolation_flags={
     'Encapsolation of the module and curing':'red',
@@ -113,9 +115,8 @@ ogp_after_module_encapsolation_flags={
 }
 
 live_module_electronic_test_fully_encapsulated_flags={
-    "Electrical test of the final module":'red',
-    'IV Curves':'red',
-    'Single module test stand':'red'
+    'Live module electronic test: Fully Encapsulated (Final Test)':'red',
+    'Standard test procedure: Fully Encapsulated':'red',
 }
 click_counts_ogp_before_assembly = {step: 0 for step in ogp_before_assembly_flags}
 click_counts_hexaboard_electronic_test_untaped = {step: 0 for step in hexaboard_electronic_test_untaped_flags}
@@ -292,7 +293,7 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
                 for step_ in flags:
                     flags[step_] = 'red'
 
-            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, username  # Default initialization completed
+            return True, module_number, sensor_id, hexboard_number, baseplate_number, remeasurement_number, None  # Default initialization completed
 
     else:
         st.error("\u26A0\uFE0F CSV file not found! Ensure the file exists before proceeding.")
@@ -1971,7 +1972,7 @@ def show_unfinished_modules(username):
                     'Hexboard Number': group_name[2],
                     'Baseplate Number': group_name[3],
                     'Remeasurement Number': group_name[4],
-                    'First Red Flag Step': first_red_flag_step,
+                    'Next Step': first_red_flag_step,
                     'Comment':comment
                 })
 
