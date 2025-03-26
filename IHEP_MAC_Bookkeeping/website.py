@@ -1973,13 +1973,14 @@ def show_unfinished_modules(username):
                     'Sensor ID': group_name[1],
                     'Hexboard Number': group_name[2],
                     'Baseplate Number': group_name[3],
-                    'Remeasurement Number': group_name[4],
                     'Next Step': first_red_flag_step,
+                    'Remeasurement Number': group_name[4],
                     'Comment':comment
                 })
 
             if module_info:
                 unfinished_table = pd.DataFrame(module_info)
+                unfinished_table.index = range(1, len(unfinished_table) + 1)
                 st.write(unfinished_table)
                 st.warning("\u26A0\uFE0F Please finish those modules in the Module Assembly Check List.")
             else:
@@ -2009,16 +2010,19 @@ def show_finished_modules(username):
 
         for group_name, group_data in grouped:
             if all(group_data['Flag'] == 'green'):  # Check if all steps have green flags
+                comment = group_data.iloc[0]['Comment'] if not group_data.empty else None
                 finished_modules.append({
                     'Module Number': group_name[0],
                     'Sensor ID': group_name[1],
                     'Hexboard Number': group_name[2],
                     'Baseplate Number': group_name[3],
-                    'Remeasurement Number': group_name[4]
+                    'Remeasurement Number': group_name[4],
+                    'Comment':comment
                 })
 
         if finished_modules:
             finished_table = pd.DataFrame(finished_modules)
+            finished_table.index = range(1, len(finished_table) + 1)
             st.write(finished_table)
             st.success("Those modules have all steps finished.")
         else:
