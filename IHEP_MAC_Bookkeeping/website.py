@@ -307,6 +307,8 @@ def Module_Assembly_Check_List(username):
 
     if st.checkbox("Show list of Unfinished Modules"):
         show_unfinished_modules(username)
+    if st.checkbox("Show list of Finished Modules"):
+        show_finished_modules(username)
 
     module_number = st.text_input("Enter Module Number")
     sensor_id = st.text_input("Enter Sensor ID")
@@ -1988,6 +1990,46 @@ def show_unfinished_modules(username):
     except FileNotFoundError:
         st.error("unfinished_module.csv was not found. Please check the file path.")            
 
+
+
+###################################################################################################################################################################
+
+
+def show_finished_modules(username):
+    try:
+        finished_df = pd.read_csv("data/output.csv")
+        
+        if finished_df.empty:
+            st.header("No finished module found.")
+            return
+        
+        # Group by module-related fields and check if all steps have 'green' flags
+        grouped = finished_df.groupby(['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number'])
+        finished_modules = []
+
+        for group_name, group_data in grouped:
+            if all(group_data['Flag'] == 'green'):  # Check if all steps have green flags
+                finished_modules.append({
+                    'Module Number': group_name[0],
+                    'Sensor ID': group_name[1],
+                    'Hexboard Number': group_name[2],
+                    'Baseplate Number': group_name[3],
+                    'Remeasurement Number': group_name[4]
+                })
+
+        if finished_modules:
+            finished_table = pd.DataFrame(finished_modules)
+            st.write(finished_table)
+            st.success("Those modules have all steps finished.")
+        else:
+            st.info("No finished module found.")
+
+    except pd.errors.EmptyDataError:
+        st.header("No finished modules found.")
+    except FileNotFoundError:
+        st.error("output.csv was not found. Please check the file path.")
+
+
 ###################################################################################################################################################################
 def plot_selected_module():
     module_number = st.text_input("Enter Module Number")
@@ -2128,7 +2170,7 @@ def plot_steps():
     # Filter data for the selected step and only 'green' flagged rows
     filtered_df = df[(df["Step"] == selected_step) & (df["Flag"] == "green")]
 
-    mode = st.radio("Select mode:", ["Numbers per day", "Accumulated numbers"])
+    mode = st.radio("Select mode:", ["Accumulated numbers", "Numbers per day"])
 
     # Count finished modules per day
     finished_per_day = filtered_df.groupby(filtered_df["DateAndTime"].dt.date).size()
@@ -2278,7 +2320,7 @@ def main():
 
 
 
-        option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
+        option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
         
         if option == "Home":
             home_page()
@@ -2286,6 +2328,8 @@ def main():
             Module_Assembly_Check_List(username)
         if option == "Unfinished Modules":
             show_unfinished_modules(username)
+        if option == "Finished Modules":
+            show_finished_modules(username)    
         if option== "Module Status Summary":
             plot_choice = st.sidebar.radio("Select Plot Type:", ["Modules Summary", "Steps Over Time"])
             if plot_choice == "Steps Over Time":
