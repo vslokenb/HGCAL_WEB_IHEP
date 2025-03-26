@@ -17,6 +17,8 @@ COPY data/ /app/data/
 
 RUN chmod -R 777 /app/data
 RUN chmod -R 777 /app/user
+RUN chmod -R 777 /app/IHEP_MAC_Bookkeeping
+
 
 # Expose the default Streamlit port
 EXPOSE 8501
