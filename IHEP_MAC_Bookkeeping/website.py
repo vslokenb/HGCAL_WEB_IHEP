@@ -1956,7 +1956,7 @@ def show_unfinished_modules(username):
             st.header("Congratulations, no unfinished module found.")
         else:
             # Filter the unfinished modules with red flags
-            unfinished_red_flags = unfinished_df[unfinished_df['Flag'] == 'red']
+            unfinished_red_flags = unfinished_df[unfinished_df['Flag'].isin(['red', 'yellow'])]
 
             # Group by the criteria and get the first step with red flag for each unfinished module
             grouped_unfinished = unfinished_red_flags.groupby(['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number'])
@@ -1964,7 +1964,7 @@ def show_unfinished_modules(username):
             usergroup=read_user_group(username)
             for group_name, group_data in grouped_unfinished:
                 # Find the first step with a red flag for each module
-                red_flag_data = group_data[group_data['Flag'] == 'red']
+                red_flag_data = group_data[group_data['Flag'].isin(['red', 'yellow'])]
                 first_red_flag_step = red_flag_data.iloc[0]['Step'] if not red_flag_data.empty else None
                 comment = group_data.iloc[0]['Comment'] if not group_data.empty else None
                 # Extract relevant information for display
