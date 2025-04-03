@@ -10,6 +10,8 @@ import base64
 import numpy as np
 from mail_notification import send_email_notification
 
+PACKAGED_CSV = "data/packaged_modules.csv"
+
 # Function to handle navigation
 def navigate(step_change):
     new_index = st.session_state.step_index + step_change
@@ -1996,45 +1998,172 @@ def show_unfinished_modules(username):
 ###################################################################################################################################################################
 
 
+
+def load_packaged_modules():
+    """Load packaged modules from CSV if exists, otherwise return an empty set."""
+    if os.path.exists(PACKAGED_CSV):
+        try:
+            df = pd.read_csv(PACKAGED_CSV)
+            return set(df["Module Number"].tolist())
+        except pd.errors.EmptyDataError:
+            return set()
+    return set()
+
+def save_packaged_modules(packaged_modules):
+    """Save packaged modules to CSV."""
+    df = pd.DataFrame({"Module Number": list(packaged_modules)})
+    df.to_csv(PACKAGED_CSV, index=False)
+
 def show_finished_modules(username):
     try:
         finished_df = pd.read_csv("data/output.csv")
-        
+
         if finished_df.empty:
             st.header("No finished module found.")
             return
+
+
+        # Load already packaged modules
+        packaged_modules = load_packaged_modules()
         
+        # Display packaged modules
+        packaged_df = pd.DataFrame({"Module Number": list(packaged_modules)})
+        packaged_df.index = range(1, len(packaged_df) + 1)
+        if not packaged_df.empty:
+            st.write("## Packaged Modules")
+            st.write(packaged_df)
+            st.success("Those modules are already packaged.")
+
         # Group by module-related fields and check if all steps have 'green' flags
         grouped = finished_df.groupby(['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number'])
         finished_modules = []
 
         for group_name, group_data in grouped:
+            module_number = group_name[0]
+            if module_number in packaged_modules:
+                continue  # Skip already packaged modules
+            
             if all(group_data['Flag'] == 'green'):  # Check if all steps have green flags
                 comment = group_data.iloc[0]['Comment'] if not group_data.empty else None
                 finished_modules.append({
-                    'Module Number': group_name[0],
+                    'Module Number': module_number,
                     'Sensor ID': group_name[1],
                     'Hexboard Number': group_name[2],
                     'Baseplate Number': group_name[3],
                     'Remeasurement Number': group_name[4],
-                    'Comment':comment
+                    'Comment': comment
                 })
 
-        if finished_modules:
-            finished_table = pd.DataFrame(finished_modules)
-            finished_table.index = range(1, len(finished_table) + 1)
-            st.write(finished_table)
-            st.success("Those modules have all steps finished.")
-        else:
-            st.info("No finished module found.")
+        if not finished_modules:
+            st.info("No finished modules found.")
+            return
+
+        # Convert to DataFrame
+        finished_table = pd.DataFrame(finished_modules)
+        finished_table.index = range(1, len(finished_table) + 1)
+
+        # Display finished modules
+        st.write("## Finished Modules (Ready for Packaging)")
+        st.write(finished_table)
+        st.success("Those modules have all steps finished. Ready for packaging. Please switch to 'Packaging Modules' tab when there are more than 20 modules finished" )
 
     except pd.errors.EmptyDataError:
         st.header("No finished modules found.")
     except FileNotFoundError:
         st.error("output.csv was not found. Please check the file path.")
 
+###################################################################################################################################################################
+def packaging_modules(username):
+    try:
+        finished_df = pd.read_csv("data/output.csv")
+
+        if finished_df.empty:
+            st.header("No finished module found.")
+            return
+
+
+        # Load already packaged modules
+        packaged_modules = load_packaged_modules()
+        
+        # Display packaged modules
+        packaged_df = pd.DataFrame({"Module Number": list(packaged_modules)})
+        packaged_df.index = range(1, len(packaged_df) + 1)
+        if not packaged_df.empty:
+            st.write("## Packaged Modules")
+            st.write(packaged_df)
+            st.success("Those modules are already packaged.")
+
+        # Group by module-related fields and check if all steps have 'green' flags
+        grouped = finished_df.groupby(['Module Number', 'Sensor ID', 'Hexboard Number', 'Baseplate Number', 'Remeasurement Number'])
+        finished_modules = []
+
+        for group_name, group_data in grouped:
+            module_number = group_name[0]
+            if module_number in packaged_modules:
+                continue  # Skip already packaged modules
+            
+            if all(group_data['Flag'] == 'green'):  # Check if all steps have green flags
+                comment = group_data.iloc[0]['Comment'] if not group_data.empty else None
+                finished_modules.append({
+                    'Module Number': module_number,
+                    'Sensor ID': group_name[1],
+                    'Hexboard Number': group_name[2],
+                    'Baseplate Number': group_name[3],
+                    'Remeasurement Number': group_name[4],
+                    'Comment': comment
+                })
+
+        if not finished_modules:
+            st.info("No finished modules found.")
+            return
+
+        # Convert to DataFrame
+        finished_table = pd.DataFrame(finished_modules)
+        finished_table.index = range(1, len(finished_table) + 1)
+
+        # Display finished modules
+        st.write("## Finished Modules (Ready for Packaging)")
+        st.write(finished_table)
+        st.info("Those modules have all steps finished. When there are more than 20 finished modules, please click the button below to notify the packaging team")
+
+
+        subject = "MAC Production Status Change Notification: 20 modules are ready for packaging"
+        message = f"""Dear Packaging Teams,
+
+            Please be informed that there are 20 modules ready for packaging. Please proceed on the website system.
+
+            Best regards,  
+            IHEP MAC Checklist Website"""
+
+
+        if len(finished_modules) >= 20:
+            if st.button("Notify Packaging Team"):
+                send_email_notification(
+                    group_name="Packaging",
+                    subject=subject,
+                    message=message,
+                    sender_email="hgcalcn@cern.ch",
+                    sender_password="dummyPW"
+                )
+            #Checkbox selection
+            selected_modules = st.multiselect("Select modules for packaging:", finished_table["Module Number"].tolist())
+
+            # Packaging button
+            if st.button("Packaging"):
+                if selected_modules:
+                    packaged_modules.update(selected_modules)  # Add new selections
+                    save_packaged_modules(packaged_modules)
+                    st.success(f"Packaged {len(selected_modules)} modules successfully!")
+
+
+
+    except pd.errors.EmptyDataError:
+        st.header("No finished modules found.")
+    except FileNotFoundError:
+        st.error("output.csv was not found. Please check the file path.")
 
 ###################################################################################################################################################################
+
 def plot_selected_module():
     module_number = st.text_input("Enter Module Number")
     sensor_id = st.text_input("Enter Sensor ID")
@@ -2324,7 +2453,7 @@ def main():
 
 
 
-        option = st.sidebar.selectbox("Select an option", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
+        option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
         
         if option == "Home":
             home_page()
@@ -2333,7 +2462,9 @@ def main():
         if option == "Unfinished Modules":
             show_unfinished_modules(username)
         if option == "Finished Modules":
-            show_finished_modules(username)    
+            show_finished_modules(username)
+        if option == "Packaging Modules":
+            packaging_modules(username)    
         if option== "Module Status Summary":
             plot_choice = st.sidebar.radio("Select Plot Type:", ["Modules Summary", "Steps Over Time"])
             if plot_choice == "Steps Over Time":
