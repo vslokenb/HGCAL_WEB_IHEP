@@ -2539,7 +2539,7 @@ def main():
                     module_names_array,v_info,i_info,adc_stdd,adc_mean =asyncio.run(fetch_module_info(selected_date))
                     #root_file_create(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean)
                     with multiprocessing.get_context("spawn").Pool(1) as pool:
-                        root_result = pool.apply_async(create_summary_root_file, args=(module_names_array,v_info,i_info,adc_stdd,adc_mean))
+                        root_result = pool.apply_async(create_summary_root_file, args=(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean))
                         root_result.wait() 
                         plot1,plot2,plot3 =root_result.get()
                     #plot1 = plot_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
