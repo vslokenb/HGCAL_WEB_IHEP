@@ -14,7 +14,7 @@ import asyncpg
 import asyncio
 from inventory import *
 from summary_maker import *
-import multiprocessing
+
 
 PACKAGED_CSV = "data/packaged_modules.csv"
 
@@ -2372,12 +2372,10 @@ def plot_steps():
     plt.close()
 
     return image_tag    
-#############################################################################################################################################################
-def create_summary_root_file(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean):
-    root_file_create(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean)
-    plot1 = plot_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
-    plot2 = mean_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
-    plot3 = std_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
+########################################################################################
+
+def plot_summary(selected_date): #,module_names_array,v_info,i_info,adc_stdd,adc_mean):
+    plot1,plot2,plot3=asyncio.run(plot_workflow(selected_date))
     return plot1,plot2,plot3               
 
 def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, comment):
@@ -2536,12 +2534,8 @@ def main():
                 st.title("Electrical QC summary")
                 if st.button("🔁 Regenerate plot with newest module info"):
 
-                    module_names_array,v_info,i_info,adc_stdd,adc_mean =asyncio.run(fetch_module_info(selected_date))
-                    #root_file_create(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean)
-                    with multiprocessing.get_context("spawn").Pool(1) as pool:
-                        root_result = pool.apply_async(create_summary_root_file, args=(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean))
-                        root_result.wait() 
-                        plot1,plot2,plot3 =root_result.get()
+                    
+                    plot1,plot2,plot3 =plot_summary(selected_date)
                     #plot1 = plot_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
                     #plot2 = mean_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
                     #plot3 = std_summary('/home/daq2-admin/HGCAL_WEB_IHEP/data/summary_since_'+selected_date+'.root',module_names_array,selected_date)
@@ -2551,11 +2545,11 @@ def main():
                         st.caption("IV Summary")
 
                     with col2:
-                        st.pyplot(plot2)
+                        st.pyplot(plot3)
                         st.caption("Mean ADC Summary")
 
                     with col3:
-                        st.pyplot(plot3)
+                        st.pyplot(plot2)
                         st.caption("ADC noise Summary")
        # --- Password Change Section ---
         st.sidebar.write("---")
