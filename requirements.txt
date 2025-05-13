@@ -1,3 +1,7 @@
+asyncio
+asyncpg
+uproot
+pyyaml
 altair==5.5.0
 attrs==25.1.0
 blinker==1.9.0
@@ -18,7 +22,7 @@ kiwisolver==1.4.7
 MarkupSafe==3.0.2
 matplotlib==3.9.4
 narwhals==1.29.0
-numpy==2.0.2
+numpy
 packaging==24.2
 pandas==2.2.3
 pillow==11.1.0

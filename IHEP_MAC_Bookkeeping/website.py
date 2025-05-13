@@ -1,4 +1,5 @@
 import streamlit as st
+import yaml
 import csv
 import pandas as pd
 import os
@@ -9,6 +10,10 @@ from io import BytesIO
 import base64
 import numpy as np
 from mail_notification import send_email_notification
+import asyncpg
+import asyncio
+from inventory import *
+from summary_maker import *
 
 PACKAGED_CSV = "data/packaged_modules.csv"
 
@@ -1997,6 +2002,44 @@ def show_unfinished_modules(username):
 
 ###################################################################################################################################################################
 
+def show_inventory(assemb_date: str):
+    st.header("Completed modules and current inventory")
+    info=asyncio.run(inventory_tracker(assemb_date))
+    df = pd.DataFrame(info)
+    df.index=range(1, len(info) + 1)
+    st.write(df)
+def list_all_module():
+    info=asyncio.run(list_complete_module())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of assembled modules")
+    st.write(df)
+def list_completed_modules():
+    info=asyncio.run(status_complete())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of finished modules")
+    st.write(df)
+def list_wb_back_modules():
+    info=asyncio.run(status_wb_back())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of modules at stage: wb back")
+    st.write(df)
+
+def list_wb_front_modules():
+    info=asyncio.run(status_wb_front())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of modules at stage: wb front")
+    st.write(df)
+
+def list_encap_back_modules():
+    info=asyncio.run(status_encap_back())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of modules at stage: encap back")
+    st.write(df)
 
 
 def load_packaged_modules():
@@ -2014,7 +2057,7 @@ def save_packaged_modules(packaged_modules):
     df = pd.DataFrame({"Module Number": list(packaged_modules)})
     df.to_csv(PACKAGED_CSV, index=False)
 
-def show_finished_modules(username):
+def show_finished_modules(username): 
     try:
         finished_df = pd.read_csv("data/output.csv")
 
@@ -2059,8 +2102,8 @@ def show_finished_modules(username):
             return
 
         # Convert to DataFrame
-        finished_table = pd.DataFrame(finished_modules)
-        finished_table.index = range(1, len(finished_table) + 1)
+        finished_table = pd.DataFrame(finished_modules)#finished_modules)
+        finished_table.index = range(1, len(finished_modules)+1)#len(finished_table) + 1)
 
         # Display finished modules
         st.write("## Finished Modules (Ready for Packaging)")
@@ -2403,12 +2446,12 @@ def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, 
         st.success(f"Flags saved to {filename}")
 ################################################################################################################################################
 def home_page():
-    st.title("CMS HGCal IHEP MAC: Module Assembly and Status Bookkeeping System")
+    st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
     st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
     # Add content for the home page
 ##############################################################################################################################################
 def main():
-    st.set_page_config(layout="wide", page_title="HGCAL IHEP MAC", page_icon="IHEP_MAC_Bookkeeping/hex_ver_1.png")
+    st.set_page_config(layout="wide", page_title="HGCAL IHEP/TTU MAC", page_icon="IHEP_MAC_Bookkeeping/hex_ver_1.png")
 
 
 
@@ -2461,20 +2504,46 @@ def main():
             Module_Assembly_Check_List(username)
         if option == "Unfinished Modules":
             show_unfinished_modules(username)
+            list_wb_back_modules()
+            list_encap_back_modules()
+            list_wb_front_modules()
         if option == "Finished Modules":
-            show_finished_modules(username)
+            #show_finished_modules(username)
+            show_inventory('2025-03-04')
+            list_completed_modules()
         if option == "Packaging Modules":
             packaging_modules(username)    
         if option== "Module Status Summary":
-            plot_choice = st.sidebar.radio("Select Plot Type:", ["Modules Summary", "Steps Over Time"])
+            list_all_module()
+            plot_choice = st.sidebar.radio("Select Plot Type:", ["Modules Summary", "Steps Over Time","Electrical QC Summary"])
             if plot_choice == "Steps Over Time":
                 plot = plot_steps() 
                 st.markdown(plot, unsafe_allow_html=True)
-            else:
+            elif plot_choice == "Modules Summary":
                 plot = plot_modules() 
                 st.markdown(plot, unsafe_allow_html=True)
-            
+            elif plot_choice == "Electrical QC Summary":
+                selected_date = st.date_input("Select modules assembled since: ", value='2025-03-04')
+                st.title("Electrical QC summary")
+                if st.button("🔁 Regenerate plot with newest module info"):
 
+                    module_names_array,v_info,i_info,adc_stdd,adc_mean =asyncio.run(fetch_module_info(selected_date))
+                    root_file_create(selected_date,module_names_array,v_info,i_info,adc_stdd,adc_mean)
+                    plot1 = plot_summary('summary_since_'+args.date+'.root',module_names_array,args.date)
+                    plot2 = mean_summary('summary_since_'+selected_date+'.root',module_names_array,selected_date)
+                    plot3 = std_summary('summary_since_'+selected_date+'.root',module_names_array,selected_date)
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.pyplot(plot1)
+                        st.caption("IV Summary")
+
+                    with col2:
+                        st.pyplot(plot2)
+                        st.caption("Mean ADC Summary")
+
+                    with col3:
+                        st.pyplot(plot3)
+                        st.caption("ADC noise Summary")
        # --- Password Change Section ---
         st.sidebar.write("---")
 
@@ -2499,7 +2568,7 @@ def main():
 
 
     if show_image:
-        st.title("Welcome to the HGCal IHEP MAC Bookkeeping Site")
+        st.title("Welcome to the HGCal IHEP/TTU MAC Bookkeeping Site")
 
         st.image("IHEP_MAC_Bookkeeping/CMS_detector.jpeg", use_container_width=True)
         #st.write("Welcome to the CMS HGCal IHEP MAC Bookkeeping System")
