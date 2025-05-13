@@ -2523,7 +2523,8 @@ def main():
                 plot = plot_modules() 
                 st.markdown(plot, unsafe_allow_html=True)
             elif plot_choice == "Electrical QC Summary":
-                selected_date = st.date_input("Select modules assembled since: ", value='2025-03-04').strftime('%Y-%m-%d')
+                selected_date0 = st.date_input("Select modules assembled since: ", value=date(2025, 3, 4))
+                selected_date = selected_date0.strftime('%Y-%m-%d')
                 st.title("Electrical QC summary")
                 if st.button("🔁 Regenerate plot with newest module info"):
 
