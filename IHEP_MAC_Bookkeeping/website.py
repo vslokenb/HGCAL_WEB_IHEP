@@ -2537,7 +2537,7 @@ def main():
                     with multiprocessing.get_context("spawn").Pool(1) as pool:
                         root_result = pool.apply_async(create_summary_root_file, args=(module_names_array,v_info,i_info,adc_stdd,adc_mean))
                         root_result.wait() 
-                    plot1 = plot_summary('summary_since_'+args.date+'.root',module_names_array,args.date)
+                    plot1 = plot_summary('summary_since_'+selected_date+'.root',module_names_array,selected_date)
                     plot2 = mean_summary('summary_since_'+selected_date+'.root',module_names_array,selected_date)
                     plot3 = std_summary('summary_since_'+selected_date+'.root',module_names_array,selected_date)
                     col1, col2, col3 = st.columns(3)
