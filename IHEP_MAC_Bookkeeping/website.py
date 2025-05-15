@@ -309,7 +309,32 @@ def initialize_session_state(module_number=None, sensor_id=None, hexboard_number
 
 #################################################################################################
 
+def show_module_info_viewer():
+    st.title("Module Info Viewer")
+    module_names = asyncio.run(list_module_names())
+    selected_module = st.selectbox("Select a module", module_names)
+    if selected_module:
+        with st.spinner(f"Loading data for module {selected_module}..."):
+            module_df = asyncio.run(get_full_info(selected_module))
 
+        if not module_df.empty:
+            st.subheader(f"Information for `{selected_module}`")
+            st.dataframe(module_df)
+        else:
+            st.warning("No data found for this module.")
+def show_proto_info_viewer():
+    st.title("Protomodule Info Viewer")
+    protomodule_names = asyncio.run(list_proto_names())
+    selected_protomodule = st.selectbox("Select a module", protomodule_names)
+    if selected_protomodule:
+        with st.spinner(f"Loading data for protomodule {selected_protomodule}..."):
+            pmodule_df = asyncio.run(get_proto_info(selected_protomodule))
+
+        if not pmodule_df.empty:
+            st.subheader(f"Information for `{selected_protomodule}`")
+            st.dataframe(pmodule_df)
+        else:
+            st.warning("No data found for this protomodule.")
 def Module_Assembly_Check_List(username):
     st.title("Welcome to the HGCal module assembly checklist")
 
@@ -2004,11 +2029,19 @@ def show_unfinished_modules(username):
 ###################################################################################################################################################################
 
 def show_inventory(assemb_date: str):
-    st.header("Completed modules and current inventory")
+    st.header("Live inventory")
     info=asyncio.run(inventory_tracker(assemb_date))
+    baseplate_stat = asyncio.run(baseplate_stats())
+    hxb_stat = asyncio.run(hxb_stats())
     df = pd.DataFrame(info)
     df.index=range(1, len(info) + 1)
     st.write(df)
+    with st.expander("Baseplate Usage Summary"):
+        st.metric("CuW Used", f"{baseplate_stat['CuW used']} / {baseplate_stat['CuW total']}")
+        st.metric("Ti Used", f"{baseplate_stat['Ti used']} / {baseplate_stat['Ti total']}")
+    with st.expander("Hexaboard Usage Summary"):
+        st.metric("V3B Used", f"{hxb_stat['v3b used']} / {hxb_stat['v3b total']}")
+        st.metric("V3C Used", f"{hxb_stat['v3c used']} / {hxb_stat['v3c total']}")
 def list_all_module():
     info=asyncio.run(list_complete_module())
     df=pd.DataFrame(info)
@@ -2016,10 +2049,17 @@ def list_all_module():
     st.write("Table of assembled modules")
     st.write(df)
 def list_completed_modules():
+    st.header("Completed modules")
     info=asyncio.run(status_complete())
     df=pd.DataFrame(info)
     df.index+=1
     st.write("Table of finished modules")
+    st.write(df)
+def list_new_assemble_modules():
+    info=asyncio.run(status_no_wb())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of modules at stage: not yet wirebonded")
     st.write(df)
 def list_wb_back_modules():
     info=asyncio.run(status_wb_back())
@@ -2040,6 +2080,13 @@ def list_encap_back_modules():
     df=pd.DataFrame(info)
     df.index+=1
     st.write("Table of modules at stage: encap back")
+    st.write(df)
+
+def list_protomodules():
+    info=asyncio.run(status_proto())
+    df=pd.DataFrame(info)
+    df.index+=1
+    st.write("Table of modules at stage: protomodule")
     st.write(df)
 
 
@@ -2498,28 +2545,47 @@ def main():
     
         show_image = False
         username = st.session_state.username  # Retrieve username
-        st.sidebar.write("### Select an Option")
+        with st.sidebar:
+            st.markdown("### ")
+
+        # Top row: two logos side-by-side
+            top1, top2 = st.columns(2)
+            with top1:
+                st.image("IHEP_MAC_Bookkeeping/CMS.png", width=200)
+            with top2:
+                st.image("IHEP_MAC_Bookkeeping/ttu.png", width=200)
+
+        # Bottom row: centered third logo
+            bottom_spacer1, bottom_center, bottom_spacer2 = st.columns([1, 2, 1])
+            with bottom_center:
+                st.image("IHEP_MAC_Bookkeeping/ihep.png", width=200)
+
+            st.markdown("---")
+            st.sidebar.write("### Select an Option")
 
 
 
-        option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
+            option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
         
         if option == "Home":
             home_page()
         if option == "Module Assembly Check List":
+            show_module_info_viewer()
+            show_proto_info_viewer()
             Module_Assembly_Check_List(username)
         if option == "Unfinished Modules":
             show_unfinished_modules(username)
+            list_protomodules()
+            list_new_assemble_modules()
             list_wb_back_modules()
             list_encap_back_modules()
             list_wb_front_modules()
         if option == "Finished Modules":
-            #show_finished_modules(username)
-            show_inventory('2025-03-04')
             list_completed_modules()
         if option == "Packaging Modules":
             packaging_modules(username)    
         if option== "Module Status Summary":
+            show_inventory('2025-03-04')
             list_all_module()
             plot_choice = st.sidebar.radio("Select Plot Type:", ["Modules Summary", "Steps Over Time","Electrical QC Summary"])
             if plot_choice == "Steps Over Time":

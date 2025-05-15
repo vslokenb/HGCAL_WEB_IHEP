@@ -115,4 +115,3 @@ async def plot_workflow(ass_date_start):
     mean=plot_adc_mean(module_names_array, adc_mean, ass_date_start)
     
     return iv,noise,mean
-
