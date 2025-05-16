@@ -28,6 +28,7 @@ def whats_the_weather():
         print(f"\nProcessing {label} (prefix: {prefix})")
         for file_path in files:
             df = pd.read_csv(file_path)
+            print(f"     ✅ Columns: {df.columns.tolist()} | Rows: {len(df)}")
             time=df["Time"].to_numpy()
         humidity=df["Humidity"].to_numpy()
         temperature=df["Temperature"].to_numpy()
