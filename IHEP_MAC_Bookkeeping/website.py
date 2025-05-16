@@ -2629,7 +2629,7 @@ def main():
             if plot_choice=='Temp/Pressure/Humidity':
                 st.write("Weather information from lab")
                 for i in weatherstation:
-                st.pyplot(i)
+                    st.pyplot(i)
             if plot_choice=='Particle Count':
                 st.write("WIP")
             if refresh_weather:
