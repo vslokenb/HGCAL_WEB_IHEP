@@ -2663,7 +2663,7 @@ def main():
             st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             st.write(f"Loaded {len(weatherstation)} plots.")
             for i in weatherstation:
-                plotcontainer.pyplot(i)
+                plot_container.pyplot(i)
             if refresh_weather:
                 weatherstation=whats_the_weather()
                 for i in weatherstation:
