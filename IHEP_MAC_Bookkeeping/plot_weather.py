@@ -24,7 +24,7 @@ def whats_the_weather():
                 break
     required_columns = {"Time", "Humidity", "Temperature", "Pressure"}       
     for prefix, files in grouped_files.items():
-
+        dfs=[]
         for file_path in files:
             try:
                 df = pd.read_csv(file_path)
