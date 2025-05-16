@@ -2502,7 +2502,56 @@ def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, 
 def home_page():
     st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
     st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
+    
+    metadata=scrollbar_weather()
+    banner_parts = []
+    for room in metadata:
+        part = (
+            f"<b>{room['label']}</b>: "
+            f"🌡️ {room['temp']}°C, "
+            f"💧 {room['humidity']}% RH, "
+            f"⬇️ {room['pressure']} hPa, "
+            f"🕒 {room['time']}"
+        )
+        banner_parts.append(part)
+    info=asyncio.run(inventory_tracker('2025-03-04'))
+    df = pd.DataFrame(info)
+    module_count = df.loc[0, "module count"]
+    protomodule_count = df.loc[0, "protomodule count"]
+    hexaboard_usage = df.loc[0, "hexaboard usage"]
+    baseplate_usage = df.loc[0, "baseplate usage"]
+    sensor_usage = df.loc[0, "sensor usage"]
+    inventory_summary = (
+        f"<b>Inventory</b>: Assembled modules: {module_count}, "
+        f"Assembled protomodules: {protomodule_count}, "
+        f"Hexaboards: {hexaboard_usage}, "
+        f"Used baseplates: {baseplate_usage}, "
+        f"Used sensors: {sensor_usage}"
+    )
 
+    banner_text = " &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ".join(banner_parts + [inventory_summary])
+    st.markdown(f"""
+    <div style="
+        background-color: #000000;
+        color: #00aaff;
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+        border-bottom: 3px solid #00aaff;
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: 1px;
+    ">
+        <marquee behavior="scroll" direction="left" scrollamount="5">
+        {banner_text}
+        </marquee>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Add content for the home page
 ##############################################################################################################################################
 def main():
@@ -2623,6 +2672,7 @@ def main():
             st.title("APD Lab Weatherstation information")
             plot_choice = st.sidebar.radio("Select Plot Type:", ["Temp/Pressure/Humidity", "Particle Count"])
             refresh_weather = st.sidebar.button("🔄 Refresh Data")
+            auto_refresh = st.sidebar.checkbox(f"Auto-refresh every hour", value=False)
             weatherstation=whats_the_weather()
             st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             #st.write(f"Loaded {len(weatherstation)} plots.")
@@ -2630,11 +2680,18 @@ def main():
                 st.write("Weather information from lab")
                 for i in weatherstation:
                     st.pyplot(i)
+            if auto_refresh:
+                st.info(f"Auto-refreshing in 1 hour...")
+                datetime.time.sleep(3600)
+                st.experimental_rerun()
             if plot_choice=='Particle Count':
                 st.write("WIP")
             if refresh_weather:
                 weatherstation=whats_the_weather()
                 #pc=particle_count()
+            #if auto_refresh:
+
+
 
        # --- Password Change Section ---
         st.sidebar.write("---")
