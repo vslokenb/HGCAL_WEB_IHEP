@@ -15,7 +15,7 @@ def whats_the_weather():
     grouped_files = defaultdict(list)
     output_figs=[]
     all_files = glob.glob(os.path.join(directory, "*.csv"))
-    print(all_files)
+    #print(all_files)
     for filepath in all_files:
         filename = os.path.basename(filepath)
         for prefix in prefixes:
@@ -24,59 +24,67 @@ def whats_the_weather():
                 break
     required_columns = {"Time", "Humidity", "Temperature", "Pressure"}       
     for prefix, files in grouped_files.items():
+
+        for file_path in files:
+            try:
+                df = pd.read_csv(file_path)
+                df.columns = df.columns.str.strip()
+                dfs.append(df)
+            except Exception as e:
+                print(f"❌ Failed reading {file_path}: {e}")
+                continue
+        df = pd.concat(dfs, ignore_index=True)
         label = prefixes.get(prefix, prefix)  # fallback to prefix if label missing
         print(f"\nProcessing {label} (prefix: {prefix})")
-        for file_path in files:
-            df = pd.read_csv(file_path)
             #print(f"     ✅ Columns: {df.columns.tolist()} | Rows: {len(df)}")
-            try:
-                time=df["Time"].to_numpy()
-                humidity=df["Humidity"].to_numpy()
-                temperature=df["Temperature"].to_numpy()
-                pressure=df["Pressure"].to_numpy()
-                fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-                mask = (humidity >= 5) & (humidity <= 60)
-                axs[0].plot(time[mask], humidity[mask],'go')
-                #axs[0].set_ylim(0,100)
-                axs[0].set_xlabel("Time")
-                axs[0].set_ylabel("Humidity %%")
-                axs[0].set_title(label)
-                #plt.xticks(rotation=45)
-                mask = (temperature >= 0) & (temperature <= 40)
-                axs[1].plot(time[mask], temperature[mask],'ro')
-                #axs[1].set_ylim(5,40)
-                axs[1].set_xlabel("Time")
-                axs[1].set_ylabel("Temperature C")
-                axs[1].set_title(label)
-                #plt.xticks(rotation=45)
-                mask = (pressure >= 890) & (pressure <= 910)
-                axs[2].plot(time[mask], pressure[mask],'bo')
-                #axs[2].set_ylim(875,925)
-                axs[2].set_xlabel("Time")
-                axs[2].set_ylabel("Pressure [unit]")
-                axs[2].set_title(label)
-                axs[0].xaxis.set_major_locator(MaxNLocator(integer=True, prune='both', nbins=7))
-                axs[1].xaxis.set_major_locator(MaxNLocator(integer=True, prune='both', nbins=7))
-                axs[2].xaxis.set_major_locator(MaxNLocator(integer=True, prune='both', nbins=7))
-                ticks = axs[0].get_xticklabels()
-                for tick in ticks:
-                    tick.set_horizontalalignment('right')
-                # Set horizontal alignment of x-tick labels to 'center'
-                ticks = axs[1].get_xticklabels()
-                for tick in ticks:
-                    tick.set_horizontalalignment('right')
-                ticks = axs[2].get_xticklabels()
-                for tick in ticks:
-                    tick.set_horizontalalignment('right')
+        try:
+            time=df["Time"].to_numpy()
+            humidity=df["Humidity"].to_numpy()
+            temperature=df["Temperature"].to_numpy()
+            pressure=df["Pressure"].to_numpy()
+            fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+            mask = (humidity >= 5) & (humidity <= 60)
+            axs[0].plot(time[mask], humidity[mask],'go')
+            #axs[0].set_ylim(0,100)
+            axs[0].set_xlabel("Time")
+            axs[0].set_ylabel("Humidity %%")
+            axs[0].set_title(label)
+            #plt.xticks(rotation=45)
+            mask = (temperature >= 0) & (temperature <= 40)
+            axs[1].plot(time[mask], temperature[mask],'ro')
+            #axs[1].set_ylim(5,40)
+            axs[1].set_xlabel("Time")
+            axs[1].set_ylabel("Temperature C")
+            axs[1].set_title(label)
+            #plt.xticks(rotation=45)
+            mask = (pressure >= 890) & (pressure <= 910)
+            axs[2].plot(time[mask], pressure[mask],'bo')
+            #axs[2].set_ylim(875,925)
+            axs[2].set_xlabel("Time")
+            axs[2].set_ylabel("Pressure [unit]")
+            axs[2].set_title(label)
+            axs[0].xaxis.set_major_locator(MaxNLocator(integer=True, prune='both', nbins=7))
+            axs[1].xaxis.set_major_locator(MaxNLocator(integer=True, prune='both', nbins=7))
+            axs[2].xaxis.set_major_locator(MaxNLocator(integer=True, prune='both', nbins=7))
+            ticks = axs[0].get_xticklabels()
+            for tick in ticks:
+                tick.set_horizontalalignment('right')
+            # Set horizontal alignment of x-tick labels to 'center'
+            ticks = axs[1].get_xticklabels()
+            for tick in ticks:
+                tick.set_horizontalalignment('right')
+            ticks = axs[2].get_xticklabels()
+            for tick in ticks:
+                tick.set_horizontalalignment('right')
 
-                plt.tight_layout()
-                #plt.xticks(rotation=45)
-                for ax in axs:
-                    ax.tick_params(axis='x', rotation=30)
-                plt.subplots_adjust(bottom=0.2)
-                output_figs.append(fig)
-            except:
-                print(f"✅ Columns: {df.columns.tolist()} | Rows: {len(df)}")
+            plt.tight_layout()
+            #plt.xticks(rotation=45)
+            for ax in axs:
+                ax.tick_params(axis='x', rotation=30)
+            plt.subplots_adjust(bottom=0.2)
+            output_figs.append(fig)
+        except:
+            print(f"✅ Columns: {df.columns.tolist()} | Rows: {len(df)}")
         print(len(output_figs))
     return output_figs
     
