@@ -2657,16 +2657,17 @@ def main():
 
         show_weather = st.sidebar.checkbox("Tell me the weather!", value=False)
         if show_weather:
+            plot_container = st.empty()
             refresh_weather = st.sidebar.button("🔄 Refresh Weather Data")
             weatherstation=whats_the_weather()
             st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             st.write(f"Loaded {len(weatherstation)} plots.")
             for i in weatherstation:
-                st.pyplot(i)
+                plotcontainer.pyplot(i)
             if refresh_weather:
                 weatherstation=whats_the_weather()
                 for i in weatherstation:
-                    st.pyplot(i)
+                    plot_container.pyplot(i)
 
  
         if not login_button and not logged_in and not show_weather:
