@@ -2567,7 +2567,7 @@ def main():
 
 
 
-            option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary"), key="option_select")  # Unique key for option select
+            option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary", "Weather Report"), key="option_select")  # Unique key for option select
         
         if option == "Home":
             home_page()
@@ -2619,6 +2619,23 @@ def main():
                     with col3:
                         st.pyplot(plot2)
                         st.caption("ADC noise Summary")
+        if option=="Weather Report":
+            st.title("APD Lab Weatherstation information")
+            plot_choice = st.sidebar.radio("Select Plot Type:", ["Temp/Pressure/Humidity", "Particle Count"])
+            refresh_weather = st.sidebar.button("🔄 Refresh Data")
+            weatherstation=whats_the_weather()
+            st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            #st.write(f"Loaded {len(weatherstation)} plots.")
+            if plot_choice=='Temp/Pressure/Humidity':
+                st.write("Weather information from lab")
+                for i in weatherstation:
+                st.pyplot(i)
+            if plot_choice=='Particle Count':
+                st.write("WIP")
+            if refresh_weather:
+                weatherstation=whats_the_weather()
+                #pc=particle_count()
+
        # --- Password Change Section ---
         st.sidebar.write("---")
 
@@ -2655,22 +2672,9 @@ def main():
         with col3:
             st.image("IHEP_MAC_Bookkeeping/CMS.png",  width=150)
 
-        show_weather = st.sidebar.checkbox("Tell me the weather!", value=False)
-        if show_weather:
-            #plot_container = st.empty()
-            refresh_weather = st.sidebar.button("🔄 Refresh Weather Data")
-            weatherstation=whats_the_weather()
-            st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            st.write(f"Loaded {len(weatherstation)} plots.")
-            for i in weatherstation:
-                st.pyplot(i)
-            if refresh_weather:
-                weatherstation=whats_the_weather()
-                for i in weatherstation:
-                    st.pyplot(i)
 
  
-        if not login_button and not logged_in and not show_weather:
+        if not login_button and not logged_in:
             st.error("Please log in")
 
 
