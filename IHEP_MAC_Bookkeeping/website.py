@@ -14,6 +14,7 @@ import asyncpg
 import asyncio
 from inventory import *
 from summary_maker import *
+from plot_weather import *
 
 
 PACKAGED_CSV = "data/packaged_modules.csv"
@@ -2501,6 +2502,7 @@ def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, 
 def home_page():
     st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
     st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
+
     # Add content for the home page
 ##############################################################################################################################################
 def main():
@@ -2646,6 +2648,8 @@ def main():
         st.image("IHEP_MAC_Bookkeeping/CMS_detector.jpeg", use_container_width=True)
         #st.write("Welcome to the CMS HGCal IHEP MAC Bookkeeping System")
         col1, col2, col3 = st.columns([3, 2, 1])  # Equal width for both columns
+        with col1:
+            st.image("IHEP_MAC_Bookkeeping/APDLABLOGO.jpg", width=150)
         with col2:
             st.image("IHEP_MAC_Bookkeeping/ihep.png",  width=300)
         with col3:
