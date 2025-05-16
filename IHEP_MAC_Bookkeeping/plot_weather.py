@@ -25,6 +25,7 @@ def whats_the_weather():
     for prefix, files in grouped_files.items():
         label = prefixes.get(prefix, prefix)  # fallback to prefix if label missing
         print(f"\nProcessing {label} (prefix: {prefix})")
+        print(f"\nProcessing {label} (prefix: {prefix})")
         for file_path in files:
             df = pd.read_csv(file_path)
             time=df["Time"].to_numpy()
