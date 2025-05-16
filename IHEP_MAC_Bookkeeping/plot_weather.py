@@ -11,7 +11,7 @@ from collections import defaultdict
 #naming_dict={"10.191.12.6-output.csv": "Pi A", "10.191.12.130-output.csv": "Pi B", "10.191.12.4-output.csv": "Pi C", "10.191.12.129-output.csv": "Pi D", "10.191.12.132-output.csv": "Pi E" ,"10.191.12.3-output.csv": "Pi F"}
 def whats_the_weather():
     directory = "/home/daq2-admin/APD-WeatherStation/data_folder/"
-    prefixes = {"p129.118.107.205": "Room D", "p129.118.107.234": "Room B", "p129.118.107.204": "Room C", "p129.118.107.233": "Room A", "p129.118.107.235": "Chase area", "p129.118.107.232": "Lobby"}
+    prefixes = {"p129.118.107.232": "Lobby","p129.118.107.233": "Room A", "p129.118.107.234": "Room B", "p129.118.107.204": "Room C", "p129.118.107.205": "Room D", "p129.118.107.235": "Chase area"}
     grouped_files = defaultdict(list)
     output_figs=[]
     all_files = glob.glob(os.path.join(directory, "*.csv"))
