@@ -2659,7 +2659,7 @@ def main():
         if show_weather:
             refresh_weather = st.sidebar.button("🔄 Refresh Weather Data")
             weatherstation=whats_the_weather()
-            #st.caption(f"Last updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             st.write(f"Loaded {len(weatherstation)} plots.")
             for i in weatherstation:
                 st.pyplot(i)
