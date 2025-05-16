@@ -1,2 +1,3 @@
 username,password,group,email
-vslokenb@cern.ch,ttuapdlab,All,vslokenb@cern.ch
+vslokenb,ttuapdlab,All,vslokenb@cern.ch
+apdlab,ttuapdlab,All,vslokenb@cern.ch
