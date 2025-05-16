@@ -72,6 +72,7 @@ def whats_the_weather():
             ax.tick_params(axis='x', rotation=30)
         plt.subplots_adjust(bottom=0.2)
         output_figs.append(fig)
+        print(len(output_figs))
     return output_figs
     
     #plt.savefig(label+"weather_report.png")

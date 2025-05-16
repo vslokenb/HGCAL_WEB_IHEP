@@ -2655,8 +2655,24 @@ def main():
         with col3:
             st.image("IHEP_MAC_Bookkeeping/CMS.png",  width=150)
 
-        if not login_button and not logged_in:
+        show_weather = st.sidebar.checkbox("Tell me the weather!", value=False)
+        if show_weather:
+            refresh_weather = st.sidebar.button("🔄 Refresh Weather Data")
+            weatherstation=whats_the_weather()
+            #st.caption(f"Last updated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            st.write(f"Loaded {len(weatherstation)} plots.")
+            for i in weatherstation:
+                st.pyplot(i)
+            if refresh_weather:
+                weatherstation=whats_the_weather()
+                for i in weatherstation:
+                    st.pyplot(i)
+
+ 
+        if not login_button and not logged_in and not show_weather:
             st.error("Please log in")
+
+
 if __name__ == "__main__":
     main()
 
