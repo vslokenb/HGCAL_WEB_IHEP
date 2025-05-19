@@ -15,6 +15,8 @@ import asyncio
 from inventory import *
 from summary_maker import *
 from plot_weather import *
+from streamlit_extras.st_autorefresh import st_autorefresh
+
 
 
 PACKAGED_CSV = "data/packaged_modules.csv"
@@ -2734,6 +2736,7 @@ def main():
         if not login_button and not logged_in:
             st.error("Please log in")
 
+st_autorefresh(interval=60 * 60 * 1000, limit=None, key="banner_refresh")
 
 if __name__ == "__main__":
     main()
