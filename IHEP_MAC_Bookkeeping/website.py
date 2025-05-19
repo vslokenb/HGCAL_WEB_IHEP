@@ -2556,7 +2556,7 @@ def home_page():
 ##############################################################################################################################################
 def main():
     st.set_page_config(layout="wide", page_title="HGCAL IHEP/TTU MAC", page_icon="IHEP_MAC_Bookkeeping/hex_ver_1.png")
-
+    st_autorefresh(interval=60 * 60 * 1000, limit=None, key="banner_refresh")
 
 
 
@@ -2734,7 +2734,7 @@ def main():
         if not login_button and not logged_in:
             st.error("Please log in")
 
-st_autorefresh(interval=60 * 60 * 1000, limit=None, key="banner_refresh")
+
 
 if __name__ == "__main__":
     main()
