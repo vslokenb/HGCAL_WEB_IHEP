@@ -14,9 +14,7 @@ import asyncpg
 import asyncio
 from inventory import *
 from summary_maker import *
-from plot_weather import *
-from streamlit_extras.st_autorefresh import st_autorefresh
-
+import st_autorefresh
 
 
 PACKAGED_CSV = "data/packaged_modules.csv"
