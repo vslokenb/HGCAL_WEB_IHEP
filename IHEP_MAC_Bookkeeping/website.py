@@ -14,7 +14,7 @@ import asyncpg
 import asyncio
 from inventory import *
 from summary_maker import *
-import st_autorefresh
+from st_autorefresh import st_autorefresh
 
 
 PACKAGED_CSV = "data/packaged_modules.csv"
