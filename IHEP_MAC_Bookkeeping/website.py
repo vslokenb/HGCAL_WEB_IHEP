@@ -14,6 +14,7 @@ import asyncpg
 import asyncio
 from inventory import *
 from summary_maker import *
+from plot_weather import *
 from streamlit_autorefresh import st_autorefresh
 
 
