@@ -2501,7 +2501,7 @@ def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, 
 ################################################################################################################################################
 def home_page():
     st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
-    st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
+    
     
     metadata=scrollbar_weather()
     banner_parts = []
@@ -2551,7 +2551,7 @@ def home_page():
         </marquee>
     </div>
     """, unsafe_allow_html=True)
-    
+    st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
     # Add content for the home page
 ##############################################################################################################################################
 def main():
