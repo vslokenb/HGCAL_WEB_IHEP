@@ -324,7 +324,7 @@ def show_module_info_viewer():
         if not module_df.empty:
             st.subheader(f"Information for `{selected_module}`")
             st.dataframe(module_df)
-            st.subheader("IV grading:", grade)
+            st.subheader(f"IV grading: {grade[selected_module]}")
         else:
             st.warning("No data found for this module.")
 def show_proto_info_viewer():
