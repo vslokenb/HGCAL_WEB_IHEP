@@ -16,6 +16,7 @@ from inventory import *
 from summary_maker import *
 from plot_weather import *
 from streamlit_autorefresh import st_autorefresh
+from autograder import *
 
 
 PACKAGED_CSV = "data/packaged_modules.csv"
