@@ -30,7 +30,7 @@ async def fetch_iv_grade(ass_date_start,cut1,cut2,name=[]):
     i_ratio = {}
     if name!=[]:
         module_names_array=[]
-        modules_names_array.append(name)
+        module_names_array.append(name)
     for i in module_names_array:
         print(i)
         voltage_target1 = 600  # for example
