@@ -2507,9 +2507,10 @@ def home_page():
     st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
     
     
-    metadata=scrollbar_weather()
+    
     banner_parts = []
     if doWeather:
+        metadata=scrollbar_weather()
         for room in metadata:
             part = (
                 f"<b>{room['label']}</b>: "
