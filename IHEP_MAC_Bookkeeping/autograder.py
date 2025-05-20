@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 configuration = {}
 with open('dbase_info/conn.yaml', 'r') as file:
     configuration = yaml.safe_load(file)
-async def fetch_iv_grade(ass_date_start,cut1,cut2):
+async def fetch_iv_grade(ass_date_start,cut1,cut2,name=[]):
     # instantiate db connection  
     conn = await asyncpg.connect(
             host = configuration['db_hostname'],
@@ -28,7 +28,8 @@ async def fetch_iv_grade(ass_date_start,cut1,cut2):
     # Initialize dictionaries for storing the data
     #v_info = {}
     i_ratio = {}
-    
+    if name!=[]:
+        module_names_array=name
     for i in module_names_array:
         print(i)
         voltage_target1 = 600  # for example
@@ -69,5 +70,5 @@ ORDER BY date_test DESC
         else:
             i_ratio[i]=[]
     return i_ratio
-test=asyncio.run(fetch_iv_grade('2025-05-01',0.0001,0.001))
-print(test)
+#test=asyncio.run(fetch_iv_grade('2025-05-01',0.0001,0.001))
+#print(test)

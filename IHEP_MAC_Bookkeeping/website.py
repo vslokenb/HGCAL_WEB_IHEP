@@ -19,7 +19,7 @@ from streamlit_autorefresh import st_autorefresh
 
 
 PACKAGED_CSV = "data/packaged_modules.csv"
-
+doWeather=False
 # Function to handle navigation
 def navigate(step_change):
     new_index = st.session_state.step_index + step_change
@@ -318,10 +318,12 @@ def show_module_info_viewer():
     if selected_module:
         with st.spinner(f"Loading data for module {selected_module}..."):
             module_df = asyncio.run(get_full_info(selected_module))
+            grade = asyncio.run(fetch_iv_grade('2025-03-04',0.0001,0.001,selected_module))
 
         if not module_df.empty:
             st.subheader(f"Information for `{selected_module}`")
             st.dataframe(module_df)
+            st.subheader(f"IV grading: {grade[0]}")
         else:
             st.warning("No data found for this module.")
 def show_proto_info_viewer():
@@ -2506,15 +2508,16 @@ def home_page():
     
     metadata=scrollbar_weather()
     banner_parts = []
-    for room in metadata:
-        part = (
-            f"<b>{room['label']}</b>: "
-            f"🌡️ {room['temp']}°C, "
-            f"💧 {room['humidity']}% RH, "
-            f"⬇️ {room['pressure']} hPa, "
-            f"🕒 {room['time']}"
-        )
-        banner_parts.append(part)
+    if doWeather:
+        for room in metadata:
+            part = (
+                f"<b>{room['label']}</b>: "
+                f"🌡️ {room['temp']}°C, "
+                f"💧 {room['humidity']}% RH, "
+                f"⬇️ {room['pressure']} hPa, "
+                f"🕒 {room['time']}"
+            )
+            banner_parts.append(part)
     info=asyncio.run(inventory_tracker('2025-03-04'))
     df = pd.DataFrame(info)
     module_count = df.loc[0, "module count"]
@@ -2616,9 +2619,10 @@ def main():
             st.sidebar.write("### Select an Option")
 
 
-
-            option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary", "Weather Report"), key="option_select")  # Unique key for option select
-        
+            if doWeather:
+                option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary", "Weather Report"), key="option_select")  # Unique key for option select
+            else:    
+                option = st.sidebar.selectbox("", ("Home", "Module Assembly Check List", "Unfinished Modules", "Finished Modules", "Packaging Modules", "Module Status Summary"), key="option_select")  # Unique key for option select 
         if option == "Home":
             home_page()
         if option == "Module Assembly Check List":
@@ -2669,7 +2673,7 @@ def main():
                     with col3:
                         st.pyplot(plot2)
                         st.caption("ADC noise Summary")
-        if option=="Weather Report":
+        if doWeather and option=="Weather Report":
             st.title("APD Lab Weatherstation information")
             plot_choice = st.sidebar.radio("Select Plot Type:", ["Temp/Pressure/Humidity", "Particle Count"])
             refresh_weather = st.sidebar.button("🔄 Refresh Data")

@@ -91,7 +91,7 @@ def whats_the_weather():
 
 
 def scrollbar_weather():
-    directory = "/home/daq2-admin/APD-WeatherStation/data_folder/"
+    directory = "/Users/sloks/Public/TTU-MAC-software/APD_weatherstation/data_folder/"
     prefixes = {"p129.118.107.232": "Lobby","p129.118.107.233": "Room A", "p129.118.107.234": "Room B", "p129.118.107.204": "Room C", "p129.118.107.205": "Room D", "p129.118.107.235": "Chase area"}
     grouped_files = defaultdict(list)
     output_figs=[]
