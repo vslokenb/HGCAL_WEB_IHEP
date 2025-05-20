@@ -36,7 +36,7 @@ async def inventory_tracker(ass_date_start):
         module_count=await conn.fetch(module_counting,ass_date)
         print("number of modules assembled since start of v3b: ",module_count[0]['count'])
 
-        hxb_counting=f"""SELECT COUNT(*) from hexaboard WHERE module_no > 0 AND roc_version = 'HGCROCV3b-2' OR roc_version = 'HGCROCV3c';"""
+        hxb_counting=f"""SELECT COUNT(*) from hexaboard WHERE module_no >= 1 AND roc_version != 'V3';"""
         hxb_sum=await conn.fetch("""SELECT COUNT(*) from hexaboard WHERE roc_version = 'HGCROCV3b-2' OR roc_version = 'HGCROCV3c';""")
         hxb_total=hxb_sum[0]['count']
         hxb_count=await conn.fetch(hxb_counting)
