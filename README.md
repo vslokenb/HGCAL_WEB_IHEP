@@ -24,6 +24,8 @@ Follow the instructions below to set up and run the webpage locally.
     python3 -m venv venv
     source venv/bin/activate
    ```
+   Make sure to configure the file in `dbase_info/conn.yaml` to match the Postgres configruation at your MAC! The host machine *must* have read access to your database.
+
 4. **Install Required Dependencies**
 
    ```bash
@@ -46,3 +48,12 @@ For the official production, the system is deployed on the CERN Webserver using 
 [HGCAL IHEP MAC CERN Webpage](https://hgcal-hgcal-ihep-website.app.cern.ch/)
 The CERN deployment runs as a containerized application, utilizing the Docker image available at:
 [Docker Hub Repository](https://hub.docker.com/repository/docker/ziruiality/hgcal_web_ihep/general)
+
+
+## Additional features
+
+The cleanroom at TTU is configured to monitor pressure, temperature, humidity, and particle count in real time. Displays of this can be activated by changing the following flag to `True` in `IHEP_Bookkeeping/website.py`. This currently requires local storage of readout information, and is managed by the functions defined in `IHEP_Bookkeeping/plot_weather.py`. 
+
+```
+doWeather=False
+```
