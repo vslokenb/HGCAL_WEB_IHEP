@@ -46,16 +46,16 @@ async def inventory_tracker(ass_date_start):
         proto_count=await conn.fetch(proto_counting,ass_date)
         print("number of protomodules assembled since start of v3b: ",proto_count[0]['count'])
 
-        bp_counting=f"""SELECT COUNT(*) from baseplate WHERE proto_no > 12 ;"""
+        bp_counting=f"""SELECT COUNT(*) from baseplate WHERE proto_no >= 1 AND bp_material != 'CF/Kapton';"""
         bp_count=await conn.fetch(bp_counting)
-        bp_sum=await conn.fetch("""SELECT COUNT(*) from baseplate;""")
-        bp_total=bp_sum[0]['count'] - 14
+        bp_sum=await conn.fetch("""SELECT COUNT(*) from baseplate WHERE bp_material != 'CF/Kapton';""")
+        bp_total=bp_sum[0]['count']
         print("number of baseplates used since start of v3b: ",bp_count[0]['count'])
 
-        sens_counting=f"""SELECT COUNT(*) from sensor WHERE proto_no > 12 ;"""
+        sens_counting=f"""SELECT COUNT(*) from sensor WHERE sen_no < 10000 AND proto_no >= 1 ;"""
         sens_count=await conn.fetch(sens_counting)
-        sens_sum=await conn.fetch("""SELECT COUNT(*) from sensor;""")
-        sens_total=sens_sum[0]['count'] - 14
+        sens_sum=await conn.fetch("""SELECT COUNT(*) from sensor WHERE sen_no < 10000;""")
+        sens_total=sens_sum[0]['count'] 
         print("number of sensors used since start of v3b: ",sens_count[0]['count'])
 
 
@@ -79,10 +79,10 @@ async def baseplate_stats():
             user = 'viewer', #configuration['postg']
             password = configuration['DBPassword']
         )
-    cuw_counting = """SELECT COUNT(*) FROM baseplate WHERE proto_no > 12 AND bp_material = 'CuW';"""
+    cuw_counting = """SELECT COUNT(*) FROM baseplate WHERE proto_no > 0 AND bp_material = 'CuW';"""
     cuw_sum = """SELECT COUNT(*) FROM baseplate WHERE bp_material = 'CuW';"""
 
-    ti_counting = """SELECT COUNT(*) FROM baseplate WHERE proto_no > 12 AND bp_material = 'Ti';"""
+    ti_counting = """SELECT COUNT(*) FROM baseplate WHERE proto_no > 0 AND bp_material = 'Ti';"""
     ti_sum = """SELECT COUNT(*) FROM baseplate WHERE bp_material = 'Ti';"""
 
     cuw_count = await conn.fetch(cuw_counting)
