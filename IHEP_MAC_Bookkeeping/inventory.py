@@ -62,9 +62,9 @@ async def inventory_tracker(ass_date_start):
         return [ {
         "module count": module_count[0]['count'],
         "protomodule count": proto_count[0]['count'],
-        "hexaboard usage": f"{hxb_count[0]['count']} of {hxb_total}",
-        "baseplate usage": f"{bp_count[0]['count']} of {bp_total}",
-        "sensor usage": f"{sens_count[0]['count']} of {sens_total}",
+        "hexaboard usage": f"{hxb_count[0]['count']+3} of {hxb_total}",
+        "baseplate usage": f"{bp_count[0]['count']+3} of {bp_total}",
+        "sensor usage": f"{sens_count[0]['count']+3} of {sens_total}",
         }]
     except Exception as e:
         print(f"Error: {e}")
@@ -91,7 +91,7 @@ async def baseplate_stats():
     ti_count = await conn.fetch(ti_counting)
     ti_total = await conn.fetch(ti_sum)
 
-    return {'CuW used': cuw_count[0]['count'],
+    return {'CuW used': cuw_count[0]['count']+3,
         'CuW total': cuw_total[0]['count'],
         'Ti used': ti_count[0]['count'],
         'Ti total': ti_total[0]['count']
@@ -117,7 +117,7 @@ async def hxb_stats():
     print("number of v3b used since start of v3b: ",v3b_count[0]['count'])
 
     return {"v3c used": v3c_count[0]['count'], 
-        "v3b used": v3b_count[0]['count'],
+        "v3b used": v3b_count[0]['count']+3,
         "v3c total":v3c_total,
         "v3b total":v3b_total
         }
