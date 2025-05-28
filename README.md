@@ -1,5 +1,6 @@
 # HGCAL IHEP MAC Webpages
 
+Please use the ***For deployment*** branch if customizing this to your MAC. ***Main*** branch has some customization which is TTU specific.
 This repository contains the code for the CMS HGCAL IHEP MAC Webpages. 
 
 ## Local Running
