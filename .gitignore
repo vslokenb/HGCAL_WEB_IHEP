@@ -5,4 +5,4 @@ __pycache__/
 .env
 venv/
 *.csv
-inventory.py
+IHEP_MAC_Bookkeeping/inventory.py
