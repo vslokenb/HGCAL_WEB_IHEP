@@ -94,12 +94,14 @@ def whats_the_weather():
 
 
 def scrollbar_weather():
-    directory = "/path/to/APD_weatherstation/data_folder/"
+    directory = "/home/daq2-admin/APD-WeatherStation/data_folder/"
     prefixes = {"p129.118.107.232": "Lobby","p129.118.107.233": "Room A", "p129.118.107.234": "Room B", "p129.118.107.204": "Room C", "p129.118.107.205": "Room D", "p129.118.107.235": "Chase area"}
     grouped_files = defaultdict(list)
     output_figs=[]
+    #room_metadata=[]
     all_files = glob.glob(os.path.join(directory, "*.csv"))
-    #print(all_files)
+    #print("testing",all_files)
+    #print(grouped_files)
     for filepath in all_files:
         filename = os.path.basename(filepath)
         for prefix in prefixes:
@@ -164,26 +166,35 @@ def particle_count_plot():
     all_records = []
     directory="/home/daq2-admin/APD-WeatherStation/particle_counter/data_files"
     for filepath in glob.glob(os.path.join(directory, "counter_data*.json")):
+        print(filepath)
         with open(filepath, 'r') as f:
-            try:
-                data = json.load(f)
+            for line in f:
+                try:
+                    data = json.loads(line)
                 # Handle both single object and list of objects
-                if isinstance(data, dict):
-                    data = [data]
+                    if isinstance(data, dict):
+                        data = [data]
 
-                for entry in data:
-                    record = {
-                        "timestamp": entry.get("timestamp"),
-                        **entry.get("diff_counts_m3", {})
-                    }
+                    for entry in data:
+                        ts = entry.get("timestamp")
+                        if not ts:
+                            continue
+                        record = {
+                            "timestamp": entry.get("timestamp"),
+                            **entry.get("diff_counts_m3", {})
+                        }
                     all_records.append(record)
 
-            except Exception as e:
-                print(f"Error reading {filepath}: {e}")
+                except Exception as e:
+                    print(f"Error reading {filepath}: {e}")
 
     # Create DataFrame
     df = pd.DataFrame(all_records)
+    print(df.head())
     df['timestamp'] = pd.to_datetime(df['timestamp'])
+    if 'timestamp' not in df.columns or df.empty:
+        print("❌ No valid data with timestamps found.")
+        return None 
     df=df.sort_values('timestamp').reset_index(drop=True)
     expected_channels = ["0.30 um", "0.50 um", "1.00 um", "2.50 um", "5.00 um", "10.00 um"]
     max_vals = [102000, 35200, 8320, 8320, 293, 293]
