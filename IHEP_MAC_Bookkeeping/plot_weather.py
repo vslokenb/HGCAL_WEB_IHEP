@@ -163,7 +163,7 @@ def segment_data(timestamps, values, max_gap=timedelta(hours=(44/60))):
 def particle_count_plot():
     all_records = []
     directory="/home/daq2-admin/APD-WeatherStation/particle_counter/data_files"
-    for filepath in glob(os.path.join(directory, "counter_data*.json")):
+    for filepath in glob.glob(os.path.join(directory, "counter_data*.json")):
         with open(filepath, 'r') as f:
             try:
                 data = json.load(f)
