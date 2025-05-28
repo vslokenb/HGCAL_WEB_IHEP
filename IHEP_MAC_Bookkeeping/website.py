@@ -2681,6 +2681,7 @@ def main():
             refresh_weather = st.sidebar.button("🔄 Refresh Data")
             auto_refresh = st.sidebar.checkbox(f"Auto-refresh every hour", value=False)
             weatherstation=whats_the_weather()
+            pc=particle_count_plot()
             st.caption(f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             #st.write(f"Loaded {len(weatherstation)} plots.")
             if plot_choice=='Temp/Pressure/Humidity':
@@ -2692,10 +2693,11 @@ def main():
                 datetime.time.sleep(3600)
                 st.experimental_rerun()
             if plot_choice=='Particle Count':
-                st.write("WIP")
+                st.write("Particle count from clean room")
+                st.pyplot(pc)
             if refresh_weather:
                 weatherstation=whats_the_weather()
-                #pc=particle_count()
+                pc=particle_count_plot()
             #if auto_refresh:
 
 
