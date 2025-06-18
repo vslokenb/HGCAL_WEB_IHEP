@@ -2560,24 +2560,36 @@ def home_page():
 
         info = asyncio.run(inventory_tracker('2025-03-04'))
         df = pd.DataFrame(info)
-        inventory_data = {
-            "Item": [
-                "Assembled Modules",
-                "Assembled Protomodules",
-                "Hexaboards Used",
-                "Baseplates Used",
-                "Sensors Used"
-            ],
-            "Count": [
-                df.loc[0, "module count"],
-                df.loc[0, "protomodule count"],
-                df.loc[0, "hexaboard usage"],
-                df.loc[0, "baseplate usage"],
-                df.loc[0, "sensor usage"]
-            ]
-        }
-        inventory_df = pd.DataFrame(inventory_data)
-        st.dataframe(inventory_df, use_container_width=True)
+        module_count = df.loc[0, "module count"]
+        protomodule_count = df.loc[0, "protomodule count"]
+        hexaboard_usage = df.loc[0, "hexaboard usage"]
+        baseplate_usage = df.loc[0, "baseplate usage"]
+        sensor_usage = df.loc[0, "sensor usage"]
+
+        st.markdown(f"""
+            <div style='
+                border-radius: 10px;
+                padding: 24px;
+                background-color: #003366;
+                color: white;
+                font-size: 20px;
+                text-align: center;
+                box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+                margin-bottom: 16px;
+                height: 300px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                line-height: 1.6;
+            '>
+                <div style='font-size: 28px; font-weight: bold; margin-bottom: 20px;'>Total Inventory</div>
+                <div>Assembled Modules: <b>{module_count}</b></div>
+                <div>Assembled Protomodules: <b>{protomodule_count}</b></div>
+                <div>Hexaboards Used: <b>{hexaboard_usage}</b></div>
+                <div>Baseplates Used: <b>{baseplate_usage}</b></div>
+                <div>Sensors Used: <b>{sensor_usage}</b></div>
+            </div>
+        """, unsafe_allow_html=True)
 
     # -----------------------------
     # Footer: Last updated timestamp

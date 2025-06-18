@@ -109,9 +109,10 @@ def scrollbar_weather():
                 grouped_files[prefix].append(filepath)
                 break
     #required_columns = {"Time", "Humidity", "Temperature", "Pressure"}       
+    room_metadata = []
     for prefix, files in grouped_files.items():
         dfs=[]
-        room_metadata = [] 
+         
         for file_path in files:
             try:
                 df = pd.read_csv(file_path)
