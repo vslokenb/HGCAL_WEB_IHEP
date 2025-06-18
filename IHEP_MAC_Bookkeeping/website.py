@@ -2512,7 +2512,7 @@ def home_page():
         unsafe_allow_html=True,
     )
     #st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns([2, 1])
     #if doWeather:
     #    col1, col2 = st.columns([1, 1])
     with col1:
@@ -2520,34 +2520,37 @@ def home_page():
             st.markdown("### Room Conditions")
         
             metadata = scrollbar_weather()
-            weather_df = pd.DataFrame(metadata)
-            weather_df = weather_df.rename(columns={
-                "label": "Room",
-                "temp": "Temp (°C)",
-                "humidity": "Humidity (%)",
-                "pressure": "Pressure (hPa)",
-                "time": "Timestamp"
-            })
+            room_cols = st.columns(3)  # Adjust to fit screen width
+            for i, room in enumerate(metadata):
+                with room_cols[i % 3]:
+                    temp = room['temp']
+                    humidity = room['humidity']
+                    pressure = room['pressure']
+                    time_str = room['time']
+                    label = room['label']
 
-            # Optional styling: highlight out-of-range values
-            def highlight_weather(val, col):
-                if col == "Temp (°C)":
-                    return 'background-color: #ffcccc;' if val > 26.5 or val < 18 else ''
-                elif col == "Humidity (%)":
-                    return 'background-color: #ffffcc;' if val > 60 else ''
-                elif col == "Pressure (hPa)":
-                    return 'background-color: #ffcccc;' if val > 910 or val < 880 else ''
-                return ''
+                    # Color logic
+                    temp_color = "red" if temp > 28 else "orange" if temp > 26 else "lightgreen"
+                    humid_color = "red" if humidity > 70 or humidity < 15 else "lightgreen"
 
-            styled_weather = weather_df.style.applymap(
-                lambda v: highlight_weather(v, "Temp (°C)"), subset=["Temp (°C)"]
-            ).applymap(
-                lambda v: highlight_weather(v, "Humidity (%)"), subset=["Humidity (%)"]
-            )
-
-            st.dataframe(styled_weather, use_container_width=True)
-        #else:
-        #    st.warning("Weather monitoring is disabled.")
+                    st.markdown(f"""
+                        <div style='
+                            border-radius: 10px;
+                            padding: 16px;
+                            background-color: #111;
+                            color: white;
+                            font-size: 18px;
+                            text-align: center;
+                            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+                            margin-bottom: 16px;
+                        '>
+                            <div style='font-size: 22px; font-weight: bold;'>{label}</div>
+                            <div style='color: {temp_color}; font-size: 28px;'>🌡️ {temp}°C</div>
+                            <div style='color: {humid_color}; font-size: 24px;'>💧 {humidity}% RH</div>
+                            <div style='font-size: 20px;'>⬇️ {pressure} hPa</div>
+                            <div style='font-size: 16px; color: gray;'>🕒 {time_str}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
 
     # -----------------------------
     # Inventory Dashboard Section
