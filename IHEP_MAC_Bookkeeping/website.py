@@ -18,6 +18,8 @@ from plot_weather import *
 from streamlit_autorefresh import st_autorefresh
 from autograder import *
 
+from streamlit_autorefresh import st_autorefresh
+
 
 PACKAGED_CSV = "data/packaged_modules.csv"
 doWeather=False
@@ -2504,65 +2506,154 @@ def save_flags_to_file(flags_dict, details_dict, filename, username, usergroup, 
         st.success(f"Flags saved to {filename}")
 ################################################################################################################################################
 def home_page():
-    st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
-    
-    
-    
-    banner_parts = []
-    if doWeather:
-        metadata=scrollbar_weather()
-        for room in metadata:
-            part = (
-                f"<b>{room['label']}</b>: "
-                f"🌡️ {room['temp']}°C, "
-                f"💧 {room['humidity']}% RH, "
-                f"⬇️ {room['pressure']} hPa, "
-                f"🕒 {room['time']}"
+
+    st.markdown(
+        "<h1 style='text-align: center; color: #004080;'>CMS HGCal IHEP/TTU MAC Dashboard</h1>",
+        unsafe_allow_html=True,
+    )
+    #st.title("CMS HGCal IHEP/TTU MAC: Module Assembly and Status Bookkeeping System")
+    col1, col2 = st.columns([1, 1])
+    #if doWeather:
+    #    col1, col2 = st.columns([1, 1])
+    with col1:
+        if doWeather:
+            st.markdown("### Room Conditions")
+        
+            metadata = scrollbar_weather()
+            weather_df = pd.DataFrame(metadata)
+            weather_df = weather_df.rename(columns={
+                "label": "Room",
+                "temp": "Temp (°C)",
+                "humidity": "Humidity (%)",
+                "pressure": "Pressure (hPa)",
+                "time": "Timestamp"
+            })
+
+            # Optional styling: highlight out-of-range values
+            def highlight_weather(val, col):
+                if col == "Temp (°C)":
+                    return 'background-color: #ffcccc;' if val > 26.5 or val < 18 else ''
+                elif col == "Humidity (%)":
+                    return 'background-color: #ffffcc;' if val > 60 else ''
+                elif col == "Pressure (hPa)":
+                    return 'background-color: #ffcccc;' if val > 910 or val < 880 else ''
+                return ''
+
+            styled_weather = weather_df.style.applymap(
+                lambda v: highlight_weather(v, "Temp (°C)"), subset=["Temp (°C)"]
+            ).applymap(
+                lambda v: highlight_weather(v, "Humidity (%)"), subset=["Humidity (%)"]
             )
-            banner_parts.append(part)
-    info=asyncio.run(inventory_tracker('2025-03-04'))
-    df = pd.DataFrame(info)
-    module_count = df.loc[0, "module count"]
-    protomodule_count = df.loc[0, "protomodule count"]
-    hexaboard_usage = df.loc[0, "hexaboard usage"]
-    baseplate_usage = df.loc[0, "baseplate usage"]
-    sensor_usage = df.loc[0, "sensor usage"]
-    inventory_summary = (
-        f"<b>Inventory</b>: Assembled modules: {module_count}, "
-        f"Assembled protomodules: {protomodule_count}, "
-        f"Hexaboards: {hexaboard_usage}, "
-        f"Used baseplates: {baseplate_usage}, "
-        f"Used sensors: {sensor_usage}"
+
+            st.dataframe(styled_weather, use_container_width=True)
+        #else:
+        #    st.warning("Weather monitoring is disabled.")
+
+    # -----------------------------
+    # Inventory Dashboard Section
+    # -----------------------------
+    with col2:
+        st.markdown("### Inventory Summary")
+
+        info = asyncio.run(inventory_tracker('2025-03-04'))
+        df = pd.DataFrame(info)
+        inventory_data = {
+            "Item": [
+                "Assembled Modules",
+                "Assembled Protomodules",
+                "Hexaboards Used",
+                "Baseplates Used",
+                "Sensors Used"
+            ],
+            "Count": [
+                df.loc[0, "module count"],
+                df.loc[0, "protomodule count"],
+                df.loc[0, "hexaboard usage"],
+                df.loc[0, "baseplate usage"],
+                df.loc[0, "sensor usage"]
+            ]
+        }
+        inventory_df = pd.DataFrame(inventory_data)
+        st.dataframe(inventory_df, use_container_width=True)
+
+    # -----------------------------
+    # Footer: Last updated timestamp
+    # -----------------------------
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    st.markdown(
+        f"<div style='text-align: center; color: gray; margin-top: 40px;'>"
+        f"Last updated: <b>{timestamp}</b></div>",
+        unsafe_allow_html=True,
     )
 
-    banner_text = " &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ".join(banner_parts + [inventory_summary])
-    st.markdown(f"""
-    <div style="
-        background-color: #000000;
-        color: #00aaff;
-        font-family: 'Arial', sans-serif;
-        font-weight: bold;
-        font-size: 18px;
-        padding: 12px;
-        white-space: nowrap;
-        overflow: hidden;
-        box-sizing: border-box;
-        border-bottom: 3px solid #00aaff;
-        text-transform: uppercase;
-        text-align: center;
-        letter-spacing: 1px;
-    ">
-        <marquee behavior="scroll" direction="left" scrollamount="5">
-        {banner_text}
-        </marquee>
-    </div>
-    """, unsafe_allow_html=True)
+    # -----------------------------
+    # Optional: Banner image or logo
+    # -----------------------------
     st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
-    # Add content for the home page
+
+    # banner_parts = []
+    # if doWeather:
+    #     metadata=scrollbar_weather()
+    #     for room in metadata:
+    #         part = (
+    #             f"<b>{room['label']}</b>: "
+    #             f"🌡️ {room['temp']}°C, "
+    #             f"💧 {room['humidity']}% RH, "
+    #             f"⬇️ {room['pressure']} hPa, "
+    #             f"🕒 {room['time']}"
+    #         )
+    #         banner_parts.append(part)
+    # info=asyncio.run(inventory_tracker('2025-03-04'))
+    # df = pd.DataFrame(info)
+    # module_count = df.loc[0, "module count"]
+    # protomodule_count = df.loc[0, "protomodule count"]
+    # hexaboard_usage = df.loc[0, "hexaboard usage"]
+    # baseplate_usage = df.loc[0, "baseplate usage"]
+    # sensor_usage = df.loc[0, "sensor usage"]
+    # inventory_summary = (
+    #     f"<b>Inventory</b>: Assembled modules: {module_count}, "
+    #     f"Assembled protomodules: {protomodule_count}, "
+    #     f"Used hexaboards: {hexaboard_usage}, "
+    #     f"Used baseplates: {baseplate_usage}, "
+    #     f"Used sensors: {sensor_usage}"
+    # )
+
+    # banner_text = " &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ".join(banner_parts + [inventory_summary])
+    # st.markdown(f"""
+    # <div style="
+    #     background-color: #000000;
+    #     color: #00aaff;
+    #     font-family: 'Arial', sans-serif;
+    #     font-weight: bold;
+    #     font-size: 18px;
+    #     padding: 12px;
+    #     white-space: nowrap;
+    #     overflow: hidden;
+    #     box-sizing: border-box;
+    #     border-bottom: 3px solid #00aaff;
+    #     text-transform: uppercase;
+    #     text-align: center;
+    #     letter-spacing: 1px;
+    # ">
+    #     <marquee behavior="scroll" direction="left" scrollamount="5">
+    #     {banner_text}
+    #     </marquee>
+    # </div>
+    # """, unsafe_allow_html=True)
+    # timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # st.markdown(
+    #     f"<p style='text-align: center; color: gray;'>Last updated: {timestamp}</p>",
+    #     unsafe_allow_html=True
+    # )
+    # st.image("IHEP_MAC_Bookkeeping/ReeseLabs_hexagon.jpg", use_container_width=True)
+    # # Add content for the home page
+    
+
+
 ##############################################################################################################################################
 def main():
     st.set_page_config(layout="wide", page_title="HGCAL IHEP/TTU MAC", page_icon="IHEP_MAC_Bookkeeping/hex_ver_1.png")
-    st_autorefresh(interval=60 * 60 * 1000, limit=None, key="banner_refresh")
+    st_autorefresh(interval=60 * 30 * 1000, limit=None, key="banner_refresh")
 
 
 
