@@ -25,7 +25,7 @@ Follow the instructions below to set up and run the webpage locally.
     python3 -m venv venv
     source venv/bin/activate
    ```
-   Make sure to configure the file in `dbase_info/conn.yaml` to match the Postgres configruation at your MAC! The host machine *must* have read access to your database.
+   Make sure to configure the file in `dbase_info/conn.yaml` to match the Postgres configruation at your MAC! The host machine *must* have read access to your database. Customize password log in information in `user/user_info.csv`.
 
 4. **Install Required Dependencies**
 
@@ -39,7 +39,7 @@ Follow the instructions below to set up and run the webpage locally.
    ```
 ## Streamlit Cloud Deployment
 
-This webpage has been deployed to Streamlit Cloud. You can visit the following link to access the live webpage:
+**NOT UPDATED** : This webpage can been deployed to Streamlit Cloud. You can visit the following link to access the IHEP version of this live webpage (Postgres updates not included):
 
 [HGCAL IHEP MAC Webpage on Streamlit Cloud](https://hgcalwebihep-tgpbgf9zcivmoknet5wva5.streamlit.app/)
 
